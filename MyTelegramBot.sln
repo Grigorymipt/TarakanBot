@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyTelegramBot", "MyTelegramBot\MyTelegramBot.csproj", "{2CCA83CB-910D-467C-8A70-560A7B524441}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MongoDatabase", "MongoDatabase\MongoDatabase.csproj", "{5683086D-3731-490E-9B0C-7D4256025FAD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{04452875-E21A-4FD7-AA45-00D5A10BBFC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crypto", "Crypto\Crypto.csproj", "{17883044-E878-47A1-B415-BA0B9E41C226}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2CCA83CB-910D-467C-8A70-560A7B524441}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CCA83CB-910D-467C-8A70-560A7B524441}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CCA83CB-910D-467C-8A70-560A7B524441}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CCA83CB-910D-467C-8A70-560A7B524441}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5683086D-3731-490E-9B0C-7D4256025FAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5683086D-3731-490E-9B0C-7D4256025FAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5683086D-3731-490E-9B0C-7D4256025FAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5683086D-3731-490E-9B0C-7D4256025FAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04452875-E21A-4FD7-AA45-00D5A10BBFC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04452875-E21A-4FD7-AA45-00D5A10BBFC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04452875-E21A-4FD7-AA45-00D5A10BBFC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04452875-E21A-4FD7-AA45-00D5A10BBFC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17883044-E878-47A1-B415-BA0B9E41C226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17883044-E878-47A1-B415-BA0B9E41C226}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17883044-E878-47A1-B415-BA0B9E41C226}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17883044-E878-47A1-B415-BA0B9E41C226}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
