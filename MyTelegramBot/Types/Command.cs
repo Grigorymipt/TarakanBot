@@ -42,7 +42,7 @@ namespace MyTelegramBot.Types {
         /// <value>
         /// Property <c>ArgumentParser</c> represents the command argument parser.
         /// </value>
-        public CommandParser ArgumentParser { get; set; }
+        
         private string[] names;
         /// <value>
         ///  Property <c>Names</c> represents the command trigger names.
@@ -67,7 +67,6 @@ namespace MyTelegramBot.Types {
         /// </summary>
         public Command(Bot bot) : base(bot) 
         {
-            ArgumentParser = new CommandParser();
         }
         /// <summary>Checks if the <c>Command</c> matches the command conditions.</summary>
         public override bool Validate(Context context, CancellationToken cancellationToken)
@@ -75,6 +74,8 @@ namespace MyTelegramBot.Types {
             if (context.Update.Type != UpdateType.Message)
                 return false;
             if (context.Update.Message!.Type != MessageType.Text)
+                return false;
+            if (GetUser(context.Update.Message).Result.RefId == null)
                 return false;
             string messageText = context.Update.Message.Text.Replace($"@{Bot.Me.Username}","");
 
@@ -90,6 +91,7 @@ namespace MyTelegramBot.Types {
         {
             string response = await RunAsync(context, cancellationToken);
             Int64 chatId = context.Update.Message.Chat.Id;
+            
             if (response.Length == 0)
             {
                 return;

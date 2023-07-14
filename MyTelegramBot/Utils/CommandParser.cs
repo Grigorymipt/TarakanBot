@@ -113,13 +113,20 @@ namespace MyTelegramBot.Utils
         {
             ParsedCommand parsedCommand = new ParsedCommand();
             string[] divided = text.Split(Divider, 2);
-            if (divided.Length != 2)
+            try
             {
-                throw new ArgumentException("There are no arguments in the text.", "text");
+                parsedCommand.ArgumentsText = divided.Last();
             }
-            parsedCommand.CommandText = divided.First();
-            parsedCommand.ArgumentsText = divided.Last();
-            parsedCommand.Arguments = parsedCommand.ArgumentsText.Split(SplitKey);
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+                parsedCommand.ArgumentsText = null;
+            }
+            finally
+            {
+                parsedCommand.CommandText = divided.First();
+                parsedCommand.Arguments = parsedCommand.ArgumentsText.Split(SplitKey);
+            }
             return parsedCommand;
         }
         /// <summary>

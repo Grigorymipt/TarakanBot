@@ -7,6 +7,9 @@ using MongoDatabase.ModelTG;
 using MyTelegramBot.Convertors;
 using Document = MongoDatabase.ModelTG.Document;
 using User = MongoDatabase.ModelTG.User;
+using MyTelegramBot.Types;
+using MyTelegramBot.Utils;
+
 
 namespace MyTelegramBot.Types {
     /// <summary>Abstract Class <c>Listener</c> describes a bot event handler with 
@@ -23,7 +26,9 @@ namespace MyTelegramBot.Types {
         public Listener(Bot bot)
         {
             Bot = bot;
+            ArgumentParser = new CommandParser();
         }
+        public CommandParser ArgumentParser { get; set; }
         /// <summary>Checks if the <c>Update</c> matches the listener condition.</summary>
         public abstract bool Validate(Context context, CancellationToken cancellationToken);
         /// <summary>Handles the <c>Update</c> if it is successfully validated.</summary>
@@ -32,17 +37,33 @@ namespace MyTelegramBot.Types {
         public async Task<User> GetUser(Message message) // TODO: add async here
         {
             var collection = new UserRepository();
-            var user = await collection.GetDocumentAsync(IdConvertor.ToGuid(message.From.Id)); 
+            var user = await collection.GetDocumentAsync(message.From.Username); 
             if (user == null)
             {
                 var document = new User()
                 {
-                    Id = IdConvertor.ToGuid(message.From.Id)
+                    Id = IdConvertor.ToGuid(message.From.Id),
+                    UserName = message.From.Username
                 };
                 await collection.CreateDocumentAsync(document);
                 user = await collection.GetDocumentAsync(document.Id);
-
             }
+            return user;
+        }
+
+        public async Task<User> CreateUser(Message message)
+        {
+            var collection = new UserRepository();
+            Console.WriteLine(message.Text);
+            var parent = await collection.GetDocumentAsync(ArgumentParser.Parse(message.Text).ArgumentsText);
+            var user = await GetUser(message);
+            if (parent != null)
+            {
+                string parentUserName = parent.UserName;
+                user.RefId = parentUserName;
+            }
+            else
+                user.RefId = null;
             return user;
         }
     }

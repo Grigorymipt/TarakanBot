@@ -22,6 +22,7 @@ namespace MyTelegramBot {
                 new MeCommand(this),
                 new EchoCommand(this),
                 new MessageListener(this),
+                new PromoCommand(this),
                 // TODO: Put more commands and other listeners.
             };
         }
@@ -35,7 +36,7 @@ namespace MyTelegramBot {
                 AllowedUpdates = {},
             };
 
-            Console.WriteLine("Starting bot..."); 
+            Console.WriteLine("Starting bot...");
             botClient.StartReceiving(
                 HandleUpdateAsync,
                 HandleErrorAsync,
@@ -44,6 +45,7 @@ namespace MyTelegramBot {
             );
 
             Me = await botClient.GetMeAsync();
+            
             Console.WriteLine($"Start listening for @{Me.Username}");
             Console.Read();
 
@@ -60,7 +62,6 @@ namespace MyTelegramBot {
             foreach (Listener listener in Listeners) {
                 if (listener.Validate(context, cancellationToken))
                 {
-                    Console.WriteLine(listener);
                     await listener.Handler(context, cancellationToken);
                 }
             }

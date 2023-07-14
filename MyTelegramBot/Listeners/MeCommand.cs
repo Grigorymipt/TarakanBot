@@ -14,6 +14,7 @@ namespace MyTelegramBot.Listeners {
         public override async Task<string> RunAsync(Context context, CancellationToken cancellationToken)
         {
             var message = context.Update.Message;
+            
             User user;
             if (ArgumentParser.Validate(message.Text, 1))
             {
@@ -29,7 +30,7 @@ namespace MyTelegramBot.Listeners {
             }
             else 
             {
-                user = await GetUser(context.Update.Message); //TODO: async
+                user = await GetUser(context.Update.Message);
             }
             return "<b>MyTestBot profile</b> \n\n" +
                    $"TG-ID: {user.Id} \n" +

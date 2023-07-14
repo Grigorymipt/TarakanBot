@@ -7,10 +7,11 @@ namespace MyTelegramBot.Types
     {
         public ITelegramBotClient BotClient { get; }
         public Update Update { get; }
+        
         public Context(Update update, ITelegramBotClient botClient)
         {
             Update = update;
-            BotClient = botClient;
+            BotClient = botClient; 
         }
     }
 }

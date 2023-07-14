@@ -17,8 +17,9 @@ namespace MyTelegramBot.Listeners {
         }
         public override async Task Handler(Context context, CancellationToken cancellationToken)
         {
-            var user = await GetUser(context.Update.Message); // TODO: async
+            var user = await GetUser(context.Update.Message);
             user.Messages++;
+            user.Update();
         }
     }
 }

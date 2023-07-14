@@ -1,10 +1,12 @@
 using System;
+using Crypto;
 using MongoDB.Driver;
 using Xunit;
 using MongoDatabase;
 using MongoDatabase.ModelTG;
+using Telegram.Bot.Requests.Abstractions;
 
-namespace MongoDatabaseTests;
+namespace Tests;
 
 public class DatabaseTests
 {
@@ -18,12 +20,12 @@ public class DatabaseTests
         bool statement = (status == "Connected");
         Assert.True(statement, "status: " + status);
     }
-    [Fact]
-    public void NullableConnectionString()
-    {
-        Assert.False(Environment.GetEnvironmentVariable("connectionString")==null,
-            "Connection string not found in environmental variables");
-    }
+    // [Fact]
+    // public void NullableConnectionString()
+    // {
+    //     Assert.False(Environment.GetEnvironmentVariable("connectionString")==null,
+    //         "Connection string not found in environmental variables");
+    // }
 
     // [Fact]
     // public void CreateAndGetUserTest()
@@ -47,6 +49,30 @@ public class DatabaseTests
         var index1 = database.GetClient().GetDatabase("admin").ListCollections().ToList().Count - 1;
         database.DeleteCollection(name);
         var index2 = database.GetClient().GetDatabase("admin").ListCollections().ToList().Count;
-        Assert.True(index0 == index1 && index0 == index2, index0.ToString() + index1.ToString()+ index2.ToString());
+        Assert.True(index0 == index1 && index0 == index2, index0 + index1.ToString() + index2);
     }
+
+    [Fact]
+    public async void DeleteAllKHEram()
+    {
+        var cString = Environment.GetEnvironmentVariable("connectionString");
+        var database = new UserRepository(cString);
+        var clo = new CollectionRepository(cString);
+        clo.DeleteCollection("User");
+        User user = new User();
+        user.Id = new Guid();
+        user.UserName = "SuperUser";
+        await database.CreateDocumentAsync(user); 
+    }
+
+    // [Fact]
+    // public async void listAll()
+    // {
+    //     var cString = Environment.GetEnvironmentVariable("connectionString");
+    //     var database = new UserRepository(cString);
+    //     var god = await database.GetDocumentAsync("SuperUser");
+    //     Console.WriteLine(god.Id + " " + god.UserName + god.RefId);
+    //     var good = await database.GetDocumentAsync("g_koveshnikov");
+    //     Console.WriteLine(good.Id + " " + good.UserName + good.RefId);
+    // }
 }

@@ -1,0 +1,13 @@
+version: "3.3"
+services:
+    bot:
+        container_name: bot
+        stdin_open: true
+        build:
+            context: .
+            dockerfile: Dockerfile.MyTelegramBot
+        environment:          
+            BotToken: "5927812369:AAGE7xo6QfkMyufS0GYwNl3eAI0WQZ3mLZo"
+            connectionString: "mongodb://admin:qi%Cf%C0@garouhiqua.beget.app/admin"
+
+

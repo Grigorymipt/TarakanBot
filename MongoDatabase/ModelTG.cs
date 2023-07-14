@@ -3,7 +3,7 @@ using MongoDB.Driver;
 namespace MongoDatabase.ModelTG;
 
 
-public class Document
+public abstract class Document
 {
     public Guid Id { get; set; }
     public readonly string Name;
@@ -12,15 +12,24 @@ public class Document
     {
         Name = name;
     }
+    public abstract void Update();
         
 }
 public class User : Document
 {
     public User() : base("User"){}
-    public string? RefId { get; set; }
+    public string UserName { get; set; }
+    public string RefId { get; set; }
     public List<User>? Children { get; set; } = new();
     public List<string>? Channels { get; set; }
     public int? Messages { get; set; } = 0;
+
+    public async override void Update()
+    {
+        UserRepository userRepository = new UserRepository();
+        User oldDocument = await userRepository.GetDocumentAsync(this.Id);
+        await userRepository.UpdateDocumentAsync(oldDocument, this);
+    }
 }
 public abstract class MongoDocument{}
 public class Channel : Document
@@ -30,6 +39,10 @@ public class Channel : Document
     public string Title { get; set; }
     public string Describtion { get; set; }
     public int CategoryID { get; set; }
+    public override void Update()
+    {
+        throw new NotImplementedException();
+    }
 }
 
 public class Category : Document
@@ -38,4 +51,8 @@ public class Category : Document
     public string ISOTwoLettersCultureCode { get; set; } = "RU";
     public string Title { get; set; }
     public List<Channel> Channels { get; set; }
+    public override void Update()
+    {
+        throw new NotImplementedException();
+    }
 }

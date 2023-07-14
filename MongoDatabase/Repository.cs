@@ -32,7 +32,7 @@ public class Repository
         }
         catch
         {
-            _connectionString = null;
+            _connectionString = "mongodb://admin:qi%Cf%C0@garouhiqua.beget.app/admin"; //add db
         }
         finally
         {

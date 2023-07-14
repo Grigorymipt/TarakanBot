@@ -54,7 +54,8 @@ public abstract class DocumentRepository<T> : Repository
     {
         await Task.Run(() => UpdateDocument(oldDocument, newDocument));
     }
-
     public abstract Document GetDocument(Guid Id);
+    public abstract Document GetDocument(string UserName);
     public abstract Task<T> GetDocumentAsync(Guid Id);
+    public abstract Task<T> GetDocumentAsync(string UserName);
 }
