@@ -16,6 +16,7 @@ public class PromoCommand : Command
     public PromoCommand(Bot bot): base(bot) {
         Names = new string[]{"/promo", "!promo"};
     }
+    //Grisha молодец
 
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
