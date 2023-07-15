@@ -6,3 +6,5 @@ riderModule.iml
 apsettings.json
 Dockerfile
 .idea
+Dockerfile.MyTelegramBot
+docker-compose.yml
