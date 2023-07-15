@@ -76,6 +76,7 @@ namespace MyTelegramBot.Types {
             if (context.Update.Message!.Type != MessageType.Text)
                 return false;
             var user = await GetUser(context.Update.Message);
+            if (user == null) return false;
             if (user.RefId == null)
                 return false;
             string messageText = context.Update.Message.Text.Replace($"@{Bot.Me.Username}","");
