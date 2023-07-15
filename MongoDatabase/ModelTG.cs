@@ -24,11 +24,11 @@ public class User : Document
     public List<string>? Channels { get; set; }
     public int? Messages { get; set; } = 0;
 
-    public async override void Update()
+    public override async void Update()
     {
         UserRepository userRepository = new UserRepository();
         User oldDocument = await userRepository.GetDocumentAsync(this.Id);
-        await userRepository.UpdateDocumentAsync(oldDocument, this);
+        userRepository.UpdateDocument(oldDocument, this);
     }
 }
 public abstract class MongoDocument{}

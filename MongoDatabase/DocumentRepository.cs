@@ -18,11 +18,6 @@ public abstract class DocumentRepository<T> : Repository
     {
         documentCollection.InsertOne(document);
     }
-    private async Task CreateDocumentAsync(Document document)
-    {
-        await Task.Run(() => CreateDocument(document));
-    }
-
     public void DeleteDocument(Document document)
     {
         var filter = Builders<Document>.Filter.Eq(u => u.Id, document.Id);
@@ -49,10 +44,6 @@ public abstract class DocumentRepository<T> : Repository
         newDocument.Id = oldDocument.Id;
         DeleteDocument(oldDocument);
         CreateDocument(newDocument);
-    }
-    public async Task UpdateDocumentAsync(Document oldDocument, Document newDocument)
-    {
-        await Task.Run(() => UpdateDocument(oldDocument, newDocument));
     }
     public abstract Document GetDocument(Guid Id);
     public abstract Document GetDocument(string UserName);
