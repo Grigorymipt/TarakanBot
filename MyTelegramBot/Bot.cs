@@ -23,6 +23,8 @@ namespace MyTelegramBot {
                 new EchoCommand(this),
                 new MessageListener(this),
                 new PromoCommand(this),
+                new CatalogCommand(this),
+                new NewsAndMediaCommand(this),
                 // TODO: Put more commands and other listeners.
             };
         }
@@ -65,6 +67,11 @@ namespace MyTelegramBot {
                     await listener.Handler(context, cancellationToken);
                 }
             }
+        }
+
+        async Task HandleCallBackAsync()
+        {
+            
         }
         Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {

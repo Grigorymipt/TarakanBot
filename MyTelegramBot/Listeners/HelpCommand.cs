@@ -11,7 +11,8 @@ namespace MyTelegramBot.Listeners {
             return "<b>MyTestBot commands</b> \n\n" +
                    "/start - starts bot \n" +
                    "/help - opens this message \n" +
-                   "/me - user profile \n\n" +
+                   "/me - user profile \n" +
+                   "/catalog - каталог категорий \n" +
                    "/promo - user profile \n\n" +
                    "Bot calculates message number for each user in each chat.";
         }

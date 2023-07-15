@@ -53,21 +53,15 @@ public class DatabaseTests
     }
 
     [Fact]
-    public async void DeleteAllKHEram()
+    public void DeleteAllKHEram()
     {
         var cString = Environment.GetEnvironmentVariable("connectionString");
         var database = new UserRepository(cString);
-        var clo = new CollectionRepository(cString);
-        clo.DeleteCollection("User");
-        
-        //
-        // var cole = clo.GetCollection<User>("User");
-        // User user = new User();
-        // user.Id = new Guid();
-        // user.UserName = "SuperUser";
-        // await database.CreateDocumentAsync(user);
-        // Console.WriteLine(database.GetDocumentAsync(user.Id).Result.UserName);
-
+        User user = new User();
+        user.Id = new Guid();
+        user.UserName = "SuperUser";
+        database.CreateDocument(user);
+        Console.WriteLine(database.GetDocumentAsync(user.Id).Result.UserName);
     }
 
     // [Fact]

@@ -13,8 +13,8 @@ namespace MyTelegramBot.Listeners {
         public async override Task<string> RunAsync(Context context, CancellationToken cancellationToken)
         {
             User user = await GetUser(context.Update.Message); // TODO: Reduce DB calls
-            
-            if (user.RefId == null) (await CreateUser(context.Update.Message)).Update();
+            if (user == null) user = CreateUser(context.Update.Message);
+            else if (user.RefId == null) user = UpdateUser(context.Update.Message);
             if (user.RefId != null) return $"Welcome! Press /help to see my functions";
             return "Этим ботом можно пользоваться, только перейдя в него " +
                    "по реферальной ссылке от пользователя, который уже имеет доступ к боту."; 

@@ -37,33 +37,45 @@ namespace MyTelegramBot.Types {
         protected async Task<User> GetUser(Message message) // TODO: add async here
         {
             var collection = new UserRepository();
-            User user = await collection.GetDocumentAsync(message.From.Username); 
-            if (user == null)
-            {
-                var document = new User()
-                {
-                    Id = IdConvertor.ToGuid(message.From.Id),
-                    UserName = message.From.Username
-                };
-                collection.CreateDocument(document);
-                user = await collection.GetDocumentAsync(document.Id);
-            }
+            User user = await collection.GetDocumentAsync(message.From.Username);
+            return user;
+        }
+        protected User GetUserSync(Message message) // TODO: add async here
+        {
+            var collection = new UserRepository();
+            User user = collection.GetDocument(message.From.Username);
             return user;
         }
 
-        public async Task<User> CreateUser(Message message)
+        public User CreateUser(Message message)
         {
             var collection = new UserRepository();
             Console.WriteLine(message.Text);
-            var parent = await collection.GetDocumentAsync(ArgumentParser.Parse(message.Text).ArgumentsText);
-            var user = await GetUser(message);
+            var parent = collection.GetDocument(ArgumentParser.Parse(message.Text).ArgumentsText);
+            var user = new User();
             if (parent != null)
             {
                 string parentUserName = parent.UserName;
                 user.RefId = parentUserName;
             }
-            else
-                user.RefId = null;
+            else user.RefId = null;
+            collection.CreateDocument(user);
+            return user;
+        }
+
+        public User UpdateUser(Message message)
+        {
+            var collection = new UserRepository();
+            Console.WriteLine(message.Text);
+            var parent = collection.GetDocument(ArgumentParser.Parse(message.Text).ArgumentsText);
+            var user = GetUserSync(message);
+            if (parent != null)
+            {
+                string parentUserName = parent.UserName;
+                user.RefId = parentUserName;
+            }
+            else user.RefId = null;
+            user.Update();
             return user;
         }
     }
