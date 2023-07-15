@@ -15,14 +15,21 @@ namespace MyTelegramBot.Listeners {
                 return false;
             return true;
         }
+        
         public override async Task Handler(Context context, CancellationToken cancellationToken)
         {
-            var user = await GetUser(context.Update.Message);
+            var user = await GetUser(context.Update.Message.From.Id);
             if (user != null)
             {
                 user.Messages++;
                 user.Update(); 
             }
+        }
+
+        public override async Task Handler(Context context, Dictionary<string, string> buttonList,
+            CancellationToken cancellationToken)
+        {
+            Handler(context, cancellationToken);
         }
     }
 }

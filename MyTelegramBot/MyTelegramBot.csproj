@@ -27,4 +27,22 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="Listeners\NewsAndMediaQuery.cs">
+        <DependentUpon>CatalogCommand.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\ImAdminQuery.cs">
+        <DependentUpon>StartCommand.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\CatalogCommand.cs">
+        <DependentUpon>StartCommand.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\ChoseCategoryQuery.cs">
+        <DependentUpon>ImAdminQuery.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\SaveCategoryQuery.cs">
+        <DependentUpon>ChoseCategoryQuery.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

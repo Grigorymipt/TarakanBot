@@ -24,7 +24,10 @@ namespace MyTelegramBot {
                 new MessageListener(this),
                 new PromoCommand(this),
                 new CatalogCommand(this),
-                new NewsAndMediaCommand(this),
+                new ImAdminQuery(this),
+                new NewsAndMediaQuery(this),
+                new ChoseCategoryQuery(this),
+                new SaveCategoryQuery(this),
                 // TODO: Put more commands and other listeners.
             };
         }
@@ -64,7 +67,10 @@ namespace MyTelegramBot {
             foreach (Listener listener in Listeners) {
                 if (await listener.Validate(context, cancellationToken))
                 {
-                    await listener.Handler(context, cancellationToken);
+                    if(listener.HandleType == HandleType.ButtonList)
+                        await listener.Handler(context, listener.Buttons, cancellationToken);
+                    else
+                        await listener.Handler(context, cancellationToken);
                 }
             }
         }

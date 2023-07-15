@@ -6,70 +6,47 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace MyTelegramBot.Listeners;
 
-public class CatalogCommand : Command
+public class CatalogCommand : Query
 {
     public CatalogCommand(Bot bot): base(bot) {
         Names = new string[]{"/catalog"};
+        Buttons= new Dictionary<string, string>()
+        {
+            {"Новости и медиа", "/listOfSubcategories"}, //TODO: get list from db
+            {"Технологии и IT", "list of subcategories"},
+            {"Финансы и инвестиции", "list of subcategories"},
+            {"Путешествия и туризм", "list of subcategories"},
+            {"Здоровье и фитнес", "list of subcategories"},
+            {"Мода и красота", "list of subcategories"},
+            {"Музыка и аудио", "list of subcategories"},
+            {"Спорт", "list of subcategories"},
+            {"Игры и гейминг", "list of subcategories"},
+            {"Искусство и дизайн", "list of subcategories"},
+            {"Психология и отношения", "list of subcategories"},
+            {"Образование и учеба", "list of subcategories"},
+            {"Животные и природа", "list of subcategories"},
+            {"Автомобили и техника", "list of subcategories"},
+            {"Дом и интерьер", "list of subcategories"},
+            {"Бизнес и стартапы", "list of subcategories"},
+            {"Красота и уход", "list of subcategories"},
+            {"Криптовалюты", "list of subcategories"},
+            {"Маркетинг/PR", "list of subcategories"},
+            {"Мотивация и саморазвитие", "list of subcategories"},
+            {"Наука", "list of subcategories"},
+            {"Недвижимость", "list of subcategories"},
+            {"Религия и духовность", "list of subcategories"},
+            {"Заработок", "list of subcategories"},
+            {"Ставки и азартные игры", "list of subcategories"},
+            {"Строительство и ремонт", "list of subcategories"},
+            {"18+", "list of subcategories"},
+            {"Хобби", "list of subcategories"},
+            {"Юриспруденция", "list of subcategories"},
+            {"Развлечения и отдых", "list of subcategories"}
+        };
     }
     public override string Run(Context context, CancellationToken cancellationToken)
     {
         return "Каталог категорий";
-    }
-
-    public override async Task Handler(Context context, CancellationToken cancellationToken)
-    {
-        string response = await RunAsync(context, cancellationToken);
-        Int64 chatId = context.Update.Message.Chat.Id;
-        List<string> categories = new List<string>()
-        {
-            "Новости и медиа", //TODO: get list from db
-            "Технологии и IT",
-            "Финансы и инвестиции",
-            "Путешествия и туризм",
-            "Здоровье и фитнес",
-            "Мода и красота",
-            "Музыка и аудио",
-            "Спорт",
-            "Игры и гейминг",
-            "Искусство и дизайн",
-            "Психология и отношения",
-            "Образование и учеба",
-            "Животные и природа",
-            "Автомобили и техника",
-            "Дом и интерьер",
-            "Бизнес и стартапы",
-            "Красота и уход",
-            "Криптовалюты",
-            "Маркетинг/PR",
-            "Мотивация и саморазвитие",
-            "Наука",
-            "Недвижимость",
-            "Религия и духовность",
-            "Заработок",
-            "Ставки и азартные игры",
-            "Строительство и ремонт",
-            "18+",
-            "Хобби",
-            "Юриспруденция",
-            "Развлечения и отдых"
-        };
-        List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
-        foreach (var category in categories)
-        {
-            InlineKeyboardButton reply = InlineKeyboardButton.WithCallbackData(category, "/NewsAndMedia");
-            Console.WriteLine(reply);
-            IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
-            categoryList.Add(inlineKeyboardButton);
-        }
-
-        IEnumerable<IEnumerable<InlineKeyboardButton>> enumerableList1 = categoryList;
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(enumerableList1);
-        Message sentMessage = await context.BotClient.SendTextMessageAsync(
-            chatId: chatId,
-            text: response,
-            parseMode: Config.ParseMode,
-            replyMarkup: inlineKeyboardMarkup
-        );
     }
 }
 

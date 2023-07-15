@@ -19,7 +19,7 @@ public class PromoCommand : Command
 
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
-        string response = await RunAsync(context, cancellationToken);
+        string response = Run(context, cancellationToken);
         Int64 chatId = context.Update.Message.Chat.Id;
        
         // TODO : factory for buttons

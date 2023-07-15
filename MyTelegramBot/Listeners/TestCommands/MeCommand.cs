@@ -30,7 +30,7 @@ namespace MyTelegramBot.Listeners {
             }
             else 
             {
-                user = await GetUser(context.Update.Message);
+                user = await GetUser(context.Update.Message.From.Id);
             }
             return "<b>MyTestBot profile</b> \n\n" +
                    $"TG-ID: {user.Id} \n" +

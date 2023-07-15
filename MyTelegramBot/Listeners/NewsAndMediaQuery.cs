@@ -3,10 +3,10 @@ using Telegram.Bot.Types.Enums;
 
 namespace MyTelegramBot.Listeners;
 
-public class NewsAndMediaCommand : Query
+public class NewsAndMediaQuery : Query
 {
-    public NewsAndMediaCommand(Bot bot): base(bot) {
-        Names = new string[]{"/NewsAndMedia"};
+    public NewsAndMediaQuery(Bot bot): base(bot) {
+        Names = new string[]{"/NewsAndMedia", "!news"};
     }
     public override string Run(Context context, CancellationToken cancellationToken)
     {
