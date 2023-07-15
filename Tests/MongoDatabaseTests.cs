@@ -59,11 +59,17 @@ public class DatabaseTests
         var database = new UserRepository(cString);
         var clo = new CollectionRepository(cString);
         clo.DeleteCollection("User");
+        
+        
+        var cole = clo.GetCollection<User>("User");
         User user = new User();
         user.Id = new Guid();
         user.UserName = "SuperUser";
-        await database.CreateDocumentAsync(user); 
+        await database.CreateDocumentAsync(user);
+        Console.WriteLine(database.GetDocumentAsync(user.Id).Result.UserName);
+
     }
+    
 
     // [Fact]
     // public async void listAll()
