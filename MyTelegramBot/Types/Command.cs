@@ -69,13 +69,14 @@ namespace MyTelegramBot.Types {
         {
         }
         /// <summary>Checks if the <c>Command</c> matches the command conditions.</summary>
-        public override bool Validate(Context context, CancellationToken cancellationToken)
+        public async override Task<bool> Validate(Context context, CancellationToken cancellationToken)
         {
             if (context.Update.Type != UpdateType.Message)
                 return false;
             if (context.Update.Message!.Type != MessageType.Text)
                 return false;
-            if (GetUser(context.Update.Message).Result.RefId == null)
+            var user = await GetUser(context.Update.Message);
+            if (user.RefId == null)
                 return false;
             string messageText = context.Update.Message.Text.Replace($"@{Bot.Me.Username}","");
 

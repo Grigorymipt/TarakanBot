@@ -17,10 +17,6 @@ public class UserRepository : DocumentRepository<User>
     {
         collection.InsertOne(document);
     }
-    public async Task CreateDocumentAsync(User document)
-    {
-        await Task.Run(() => CreateDocument(document));
-    } 
 
     public override User GetDocument(Guid Id)
     {
@@ -28,7 +24,7 @@ public class UserRepository : DocumentRepository<User>
         return collection.Find(filter).FirstOrDefault();
     }
     public override async Task<User> GetDocumentAsync(Guid Id)
-    {
+    { 
         return await Task<User>.Run(() => GetDocument(Id));
     }
 

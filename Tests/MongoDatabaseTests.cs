@@ -60,16 +60,23 @@ public class DatabaseTests
         var clo = new CollectionRepository(cString);
         clo.DeleteCollection("User");
         
-        
-        var cole = clo.GetCollection<User>("User");
-        User user = new User();
-        user.Id = new Guid();
-        user.UserName = "SuperUser";
-        await database.CreateDocumentAsync(user);
-        Console.WriteLine(database.GetDocumentAsync(user.Id).Result.UserName);
+        //
+        // var cole = clo.GetCollection<User>("User");
+        // User user = new User();
+        // user.Id = new Guid();
+        // user.UserName = "SuperUser";
+        // await database.CreateDocumentAsync(user);
+        // Console.WriteLine(database.GetDocumentAsync(user.Id).Result.UserName);
 
     }
-    
+
+    // [Fact]
+    // public void addDB()
+    // {
+    //     var cString = Environment.GetEnvironmentVariable("connectionString");
+    //     Repository repository = new Repository(cString);
+    // }
+
 
     // [Fact]
     // public async void listAll()

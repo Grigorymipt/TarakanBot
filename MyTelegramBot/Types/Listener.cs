@@ -30,14 +30,14 @@ namespace MyTelegramBot.Types {
         }
         public CommandParser ArgumentParser { get; set; }
         /// <summary>Checks if the <c>Update</c> matches the listener condition.</summary>
-        public abstract bool Validate(Context context, CancellationToken cancellationToken);
+        public abstract Task<bool> Validate(Context context, CancellationToken cancellationToken);
         /// <summary>Handles the <c>Update</c> if it is successfully validated.</summary>
         public abstract Task Handler(Context context, CancellationToken cancellationToken);
         /// <returns>The session of the sender of a given <c>Message</c> object.</returns>
-        public async Task<User> GetUser(Message message) // TODO: add async here
+        protected async Task<User> GetUser(Message message) // TODO: add async here
         {
             var collection = new UserRepository();
-            var user = await collection.GetDocumentAsync(message.From.Username); 
+            User user = await collection.GetDocumentAsync(message.From.Username); 
             if (user == null)
             {
                 var document = new User()
@@ -45,7 +45,7 @@ namespace MyTelegramBot.Types {
                     Id = IdConvertor.ToGuid(message.From.Id),
                     UserName = message.From.Username
                 };
-                await collection.CreateDocumentAsync(document);
+                collection.CreateDocument(document);
                 user = await collection.GetDocumentAsync(document.Id);
             }
             return user;

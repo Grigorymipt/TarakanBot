@@ -20,7 +20,7 @@ namespace MyTelegramBot.Listeners {
                    "по реферальной ссылке от пользователя, который уже имеет доступ к боту."; 
             // TODO: add collection(enum) with answers for each request(pos/neg/null)
         }
-        public override bool Validate(Context context, CancellationToken cancellationToken)
+        public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
         {
             if (context.Update.Type != UpdateType.Message)
                 return false;

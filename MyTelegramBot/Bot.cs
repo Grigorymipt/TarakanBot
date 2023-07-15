@@ -60,7 +60,7 @@ namespace MyTelegramBot {
         {
             Context context = new Context(update, botClient);
             foreach (Listener listener in Listeners) {
-                if (listener.Validate(context, cancellationToken))
+                if (await listener.Validate(context, cancellationToken))
                 {
                     await listener.Handler(context, cancellationToken);
                 }

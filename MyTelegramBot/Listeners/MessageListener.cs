@@ -9,7 +9,7 @@ namespace MyTelegramBot.Listeners {
     public class MessageListener : Listener
     {
         public MessageListener(Bot bot):base(bot) {}
-        public override bool Validate(Context context, CancellationToken cancellationToken)
+        public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
         {
             if (context.Update.Type != UpdateType.Message)
                 return false;
