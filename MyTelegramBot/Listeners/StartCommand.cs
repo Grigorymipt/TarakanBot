@@ -12,7 +12,7 @@ namespace MyTelegramBot.Listeners {
         }
         public async override Task<string> RunAsync(Context context, CancellationToken cancellationToken)
         {
-            User user = await GetUser(context.Update.Message); // TODO: Reduce DB calls
+            User user = GetUserSync(context.Update.Message); // TODO: Reduce DB calls
             if (user == null) user = CreateUser(context.Update.Message);
             else if (user.RefId == null) user = UpdateUser(context.Update.Message);
             if (user.RefId != null) return $"Welcome! Press /help to see my functions";

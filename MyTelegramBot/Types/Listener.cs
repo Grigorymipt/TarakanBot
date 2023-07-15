@@ -50,11 +50,16 @@ namespace MyTelegramBot.Types {
         public User CreateUser(Message message)
         {
             var collection = new UserRepository();
-            Console.WriteLine(message.Text);
             var parent = collection.GetDocument(ArgumentParser.Parse(message.Text).ArgumentsText);
-            var user = new User();
+            
+            var user = new User()
+            {
+                Id = IdConvertor.ToGuid(message.From.Id),
+                UserName = message.From.Username
+            };
             if (parent != null)
             {
+                Console.WriteLine(parent.UserName);
                 string parentUserName = parent.UserName;
                 user.RefId = parentUserName;
             }

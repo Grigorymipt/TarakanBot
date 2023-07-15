@@ -75,7 +75,7 @@ namespace MyTelegramBot.Types {
                 return false;
             if (context.Update.Message!.Type != MessageType.Text)
                 return false;
-            var user = await GetUser(context.Update.Message);
+            var user = GetUserSync(context.Update.Message);
             if (user == null) return false;
             if (user.RefId == null)
                 return false;
