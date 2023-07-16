@@ -28,7 +28,6 @@ namespace MyTelegramBot {
                 new NewsAndMediaQuery(this),
                 new ChoseCategoryQuery(this),
                 new SaveCategoryQuery(this),
-                new GetAdressInline(this),
                 new AlmostOnTargetQuery(this),
                 new SuggestionAcceptedQuery(this),
                 new PayForListingQuery(this),
