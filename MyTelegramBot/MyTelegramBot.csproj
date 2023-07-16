@@ -43,11 +43,8 @@
       <Compile Update="Listeners\SaveCategoryQuery.cs">
         <DependentUpon>ChoseCategoryQuery.cs</DependentUpon>
       </Compile>
-      <Compile Update="Listeners\GetAdressInline.cs">
-        <DependentUpon>SaveCategoryQuery.cs</DependentUpon>
-      </Compile>
       <Compile Update="Listeners\ChannelNotExists.cs">
-        <DependentUpon>GetAdressInline.cs</DependentUpon>
+        <DependentUpon>SaveCategoryQuery.cs</DependentUpon>
       </Compile>
       <Compile Update="Listeners\PayForListingQuery.cs">
         <DependentUpon>AlmostOnTargetQuery.cs</DependentUpon>
@@ -57,6 +54,9 @@
       </Compile>
       <Compile Update="Listeners\PaymentProcessingQuery.cs">
         <DependentUpon>PayForListingQuery.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\AlmostOnTargetQuery.cs">
+        <DependentUpon>SaveCategoryQuery.cs</DependentUpon>
       </Compile>
     </ItemGroup>
 
