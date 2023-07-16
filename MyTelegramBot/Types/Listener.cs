@@ -74,7 +74,7 @@ namespace MyTelegramBot.Types {
             User user = await collection.GetDocumentAsync(IdConvertor.ToGuid(Id));
             return user;
         }
-        protected User GetUserSync(long Id) // TODO: add async here
+        protected User GetUserSync(long Id)
         {
             var collection = new UserRepository();
             User user = collection.GetDocument(IdConvertor.ToGuid(Id));

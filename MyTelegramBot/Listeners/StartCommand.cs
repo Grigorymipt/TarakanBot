@@ -17,6 +17,7 @@ namespace MyTelegramBot.Listeners {
         }
         public override string Run(Context context, CancellationToken cancellationToken)
         {
+            Console.WriteLine(context.Update.Message.From.Id);
             User user = GetUserSync(context.Update.Message.From.Id); // TODO: Reduce DB calls
             if (user == null) user = CreateUser(context.Update.Message);
             else if (user.RefId == null) user = UpdateUser(context.Update.Message);

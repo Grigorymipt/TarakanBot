@@ -2,9 +2,9 @@ using MyTelegramBot.Types;
 
 namespace MyTelegramBot.Listeners;
 
-public class ImAdminQuery : Query
+public class GetAdressImAdminQuery : Query
 {
-    public ImAdminQuery(Bot bot) : base(bot)
+    public GetAdressImAdminQuery(Bot bot) : base(bot)
     {
         Names = new[] { "/admin" };
         Buttons= new Dictionary<string, string>(){{"Добавить канал", "/addChannel"}};

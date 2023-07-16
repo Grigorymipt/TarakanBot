@@ -84,4 +84,12 @@ public class DatabaseTests
     //     var good = await database.GetDocumentAsync("g_koveshnikov");
     //     Console.WriteLine(good.Id + " " + good.UserName + good.RefId);
     // }
+    [Fact]
+    public void GetChannels()
+    {
+        var user = new User();
+        string newChannel = "smth";
+        Console.WriteLine(user.Channels);
+        user.Channels.Add(newChannel);
+    }
 }

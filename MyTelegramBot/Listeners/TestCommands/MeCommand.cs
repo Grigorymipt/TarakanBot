@@ -32,10 +32,17 @@ namespace MyTelegramBot.Listeners {
             {
                 user = await GetUser(context.Update.Message.From.Id);
             }
-            return "<b>MyTestBot profile</b> \n\n" +
-                   $"TG-ID: {user.Id} \n" +
-                   $"Channels {user.Channels} \n" +
-                   $"Messages: {user.Messages} \n";
+
+            MessageToSend = "<b>MyTestBot profile</b> \n\n" +
+                            $"TG-ID: {user.Id} \n" +
+                            $"Channels: \n";
+            foreach (var channel in user.Channels)
+            {
+                MessageToSend += channel + "\n";
+            }
+            MessageToSend += $"Messages: {user.Messages} \n" ;
+            return MessageToSend;
         }
+        
     }
 }

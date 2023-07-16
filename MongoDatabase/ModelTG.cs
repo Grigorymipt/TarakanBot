@@ -17,13 +17,17 @@ public abstract class Document
 }
 public class User : Document
 {
-    public User() : base("User"){}
+    public User() : base("User")
+    {
+        Channels = new List<string>();
+    }
     public string UserName { get; set; }
     public string RefId { get; set; }
     public List<User>? Children { get; set; } = new();
-    public List<string>? Channels { get; set; }
+    public List<string> Channels { get; set; }
     public int? Messages { get; set; } = 0;
 
+    public string? LastMessage { get; set; }
     
     public override void Update()
     {

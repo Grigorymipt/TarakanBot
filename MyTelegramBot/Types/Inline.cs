@@ -5,7 +5,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace MyTelegramBot.Types;
 
-public abstract class Query : Listener
+public class Inline : Listener
 {
     private string[] names;
     /// <value>
@@ -28,26 +28,22 @@ public abstract class Query : Listener
     }
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
     {
-        if (context.Update.Type != UpdateType.CallbackQuery)
+        if (context.Update.Type != UpdateType.Message)
             return false;
-        var user = GetUserSync(context.Update.CallbackQuery.From.Id);
+        var user = GetUserSync(context.Update.Message.From.Id);
         if (user == null) return false;
-        if (user.RefId == null)
-            return false;
-        
-        string messageText = context.Update.CallbackQuery.Data;
-        //Console.WriteLine(messageText);
-        foreach(string name in Names) {
-            if (messageText.StartsWith($"{name} ") || messageText.Equals(name)) {
-                return true;
-            }
-        }
+        // if (user.RefId == null)
+        //     return false;
+        //
+        string messageText = context.Update.Message.Text;
+        // Console.WriteLine(messageText);
         return false;
     }
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
         string response = await RunAsync(context, cancellationToken);
-        Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
+        Int64 chatId = context.Update.Message.Chat.Id;
+        // Console.WriteLine(context.Update.Message.Text);
         if (response.Length == 0)
         {
             return;
@@ -89,7 +85,7 @@ public abstract class Query : Listener
     /// <summary>
     ///  Creates a <c>Command</c> for the specified <c>Bot</c>.
     /// </summary>
-    public Query(Bot bot) : base(bot) 
+    public Inline(Bot bot) : base(bot) 
     {
     }
 }

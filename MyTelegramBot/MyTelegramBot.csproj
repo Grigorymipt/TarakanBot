@@ -31,17 +31,32 @@
       <Compile Update="Listeners\NewsAndMediaQuery.cs">
         <DependentUpon>CatalogCommand.cs</DependentUpon>
       </Compile>
-      <Compile Update="Listeners\ImAdminQuery.cs">
+      <Compile Update="Listeners\GetAdressImAdminQuery.cs">
         <DependentUpon>StartCommand.cs</DependentUpon>
       </Compile>
       <Compile Update="Listeners\CatalogCommand.cs">
         <DependentUpon>StartCommand.cs</DependentUpon>
       </Compile>
       <Compile Update="Listeners\ChoseCategoryQuery.cs">
-        <DependentUpon>ImAdminQuery.cs</DependentUpon>
+        <DependentUpon>GetAdressImAdminQuery.cs</DependentUpon>
       </Compile>
       <Compile Update="Listeners\SaveCategoryQuery.cs">
         <DependentUpon>ChoseCategoryQuery.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\GetAdressInline.cs">
+        <DependentUpon>SaveCategoryQuery.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\ChannelNotExists.cs">
+        <DependentUpon>GetAdressInline.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\PayForListingQuery.cs">
+        <DependentUpon>AlmostOnTargetQuery.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\SuggestionAcceptedQuery.cs">
+        <DependentUpon>AlmostOnTargetQuery.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\PaymentProcessingQuery.cs">
+        <DependentUpon>PayForListingQuery.cs</DependentUpon>
       </Compile>
     </ItemGroup>
 

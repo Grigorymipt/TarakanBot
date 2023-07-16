@@ -93,7 +93,7 @@ namespace MyTelegramBot.Types {
         public override async Task Handler(Context context, CancellationToken cancellationToken)
         {
             // var thread = new Thread(new ThreadStart(this.Run));
-            string response = Run(context, cancellationToken);
+            string response = await RunAsync(context, cancellationToken);
             Int64 chatId = context.Update.Message.Chat.Id;
             
             if (response.Length == 0)
@@ -103,8 +103,7 @@ namespace MyTelegramBot.Types {
             Message sentMessage = await context.BotClient.SendTextMessageAsync(
                 chatId: chatId,
                 text: response,
-                parseMode: Config.ParseMode,
-                replyToMessageId: context.Update.Message.MessageId
+                parseMode: Config.ParseMode
             );
         }
 
@@ -123,7 +122,6 @@ namespace MyTelegramBot.Types {
             {
                 InlineKeyboardButton reply = InlineKeyboardButton
                     .WithCallbackData(category.Key, category.Value);
-                Console.WriteLine(reply);
                 IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
                 categoryList.Add(inlineKeyboardButton);
             }
