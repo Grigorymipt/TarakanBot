@@ -79,22 +79,25 @@ namespace MyTelegramBot {
                 }
             }
         }
-
-        async Task HandleCallBackAsync()
-        {
-            
-        }
-        Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+        async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
             var ErrorMessage = exception switch
             {
                 ApiRequestException apiRequestException
                     => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
-                _ => exception.ToString()
+                _ => exception.ToString(),
             };
-
-            Console.WriteLine(ErrorMessage);
-            return Task.CompletedTask;
+            int ErrorCode = -1;
+            switch(exception)
+            {
+                case ApiRequestException apiRequestException:
+                    ErrorCode = apiRequestException.ErrorCode;
+                    break;
+            };
+            if (ErrorCode != 40399)
+            {
+                Console.WriteLine(ErrorMessage);
+            }
         }
     }
 }
