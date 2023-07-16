@@ -35,6 +35,11 @@ namespace MyTelegramBot {
                 new SuggestionAcceptedQuery(this),
                 new PayForListingQuery(this),
                 new PaymentProcessingQuery(this),
+                new ContinueQuery(this),
+                new ContinueQuery(this),
+                new Rn43Command(this),
+                new SaveCategoriesToUserQuery(this),
+                
                 // TODO: Put more commands and other listeners.
             };
         }

@@ -89,7 +89,9 @@ namespace MyTelegramBot.Types {
             var user = new User()
             {
                 Id = IdConvertor.ToGuid(message.From.Id),
-                UserName = message.From.Username
+                UserName = message.From.Username,
+                Channels = new List<string>(),
+                Categories = new List<string>(),
             };
             if (parent != null)
             {

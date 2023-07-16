@@ -41,6 +41,14 @@ namespace MyTelegramBot.Listeners {
                 MessageToSend += channel + "\n";
             }
             MessageToSend += $"Messages: {user.Messages} \n" ;
+            MessageToSend += $"Categories: \n";
+            if (user.Categories != null)
+            {
+                foreach (var category in user.Categories)
+                {
+                    MessageToSend += category + "\n";
+                }
+            }
             return MessageToSend;
         }
         

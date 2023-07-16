@@ -28,6 +28,7 @@ public class User : Document
     public int? Messages { get; set; } = 0;
 
     public string? LastMessage { get; set; }
+    public List<string> Categories { get; set; }
     
     public override void Update()
     {
