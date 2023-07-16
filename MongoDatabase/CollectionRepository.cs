@@ -20,6 +20,22 @@ public class CollectionRepository : Repository
     public CollectionRepository(string connectionString = null, string databaseName = "admin") 
         : base(connectionString, databaseName)
     {
+        var collections = client.GetDatabase(base.databaseName).ListCollectionNames().ToList();
+        List<string> necessaryCollections = new List<string>(){"User", "Channel", "Category"};
+        foreach (var necessaryCollection in necessaryCollections)
+        {
+            try
+            {
+                if (collections.Contains(necessaryCollection) == false)
+                    throw new NullReferenceException($"Collection {necessaryCollection} does not exist.");
+            }
+            
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                CreateCollection(necessaryCollection);
+            }
+        }
     }
 
     public void CreateCollection(string collectionName)
@@ -30,7 +46,8 @@ public class CollectionRepository : Repository
     
     public IMongoCollection<T> GetCollection<T>(string collectionName)
     {
-        return client.GetDatabase(databaseName).GetCollection<T>(collectionName);
+        var collection = client.GetDatabase(databaseName).GetCollection<T>(collectionName);
+        return collection;
     }
     public void DeleteCollection(string collectionName)
     {

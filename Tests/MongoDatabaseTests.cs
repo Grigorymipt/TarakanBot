@@ -53,17 +53,26 @@ public class DatabaseTests
     }
 
     [Fact]
-    public async void DeleteAllKHEram()
+    public void DeleteAllKHEram()
     {
         var cString = Environment.GetEnvironmentVariable("connectionString");
         var database = new UserRepository(cString);
-        var clo = new CollectionRepository(cString);
-        clo.DeleteCollection("User");
+        var collec = new CollectionRepository();
+        collec.DeleteCollection("User");
         User user = new User();
         user.Id = new Guid();
         user.UserName = "SuperUser";
-        await database.CreateDocumentAsync(user); 
+        database.CreateDocument(user);
+        Console.WriteLine(database.GetDocumentAsync(user.Id).Result.UserName);
     }
+
+    // [Fact]
+    // public void addDB()
+    // {
+    //     var cString = Environment.GetEnvironmentVariable("connectionString");
+    //     Repository repository = new Repository(cString);
+    // }
+
 
     // [Fact]
     // public async void listAll()
@@ -75,4 +84,12 @@ public class DatabaseTests
     //     var good = await database.GetDocumentAsync("g_koveshnikov");
     //     Console.WriteLine(good.Id + " " + good.UserName + good.RefId);
     // }
+    [Fact]
+    public void GetChannels()
+    {
+        var user = new User();
+        string newChannel = "smth";
+        Console.WriteLine(user.Channels);
+        user.Channels.Add(newChannel);
+    }
 }

@@ -23,9 +23,19 @@ namespace MyTelegramBot {
                 new EchoCommand(this),
                 new MessageListener(this),
                 new PromoCommand(this),
+                new CatalogCommand(this),
+                new GetAdressImAdminQuery(this),
+                new NewsAndMediaQuery(this),
+                new ChoseCategoryQuery(this),
+                new SaveCategoryQuery(this),
+                new AlmostOnTargetQuery(this),
+                new SuggestionAcceptedQuery(this),
+                new PayForListingQuery(this),
+                new PaymentProcessingQuery(this),
                 // TODO: Put more commands and other listeners.
             };
         }
+        
         public async Task Init() 
         {
             Console.WriteLine("Initializing bot...");
@@ -60,11 +70,19 @@ namespace MyTelegramBot {
         {
             Context context = new Context(update, botClient);
             foreach (Listener listener in Listeners) {
-                if (listener.Validate(context, cancellationToken))
+                if (await listener.Validate(context, cancellationToken))
                 {
-                    await listener.Handler(context, cancellationToken);
+                    if(listener.HandleType == HandleType.ButtonList)
+                        await listener.Handler(context, listener.Buttons, cancellationToken);
+                    else
+                        await listener.Handler(context, cancellationToken);
                 }
             }
+        }
+
+        async Task HandleCallBackAsync()
+        {
+            
         }
         Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {

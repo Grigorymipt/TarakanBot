@@ -9,6 +9,7 @@ using Document = MongoDatabase.ModelTG.Document;
 using User = MongoDatabase.ModelTG.User;
 using MyTelegramBot.Types;
 using MyTelegramBot.Utils;
+using Telegram.Bot.Types.ReplyMarkups;
 
 
 namespace MyTelegramBot.Types {
@@ -20,6 +21,33 @@ namespace MyTelegramBot.Types {
         /// Property <c>Bot</c> represents a <c>Bot</c> instance with which <c>Listener</c> is related.
         /// </value>
         public Bot Bot { get; set; }
+
+
+        public HandleType HandleType { get; set; } = HandleType.Standard;
+        private Dictionary<string, string> buttons;
+        public Dictionary<string, string> Buttons
+        {
+            get => buttons;
+            set
+            {
+                buttons = value;
+                HandleType = HandleType.ButtonList;
+            }
+        }
+
+        private string filePath;
+        public bool fileToSend { get; set; } = false;
+        public string MessageToSend { get; set; } = "This command is under development and not currently available.";
+        public string FilePath
+        {
+            get => filePath;
+            set
+            {
+                filePath = value;
+                fileToSend = true;
+            }
+        }
+
         /// <summary>
         ///  Creates a <c>Listener</c> for the specified <c>Bot</c>.
         /// </summary>
@@ -30,41 +58,74 @@ namespace MyTelegramBot.Types {
         }
         public CommandParser ArgumentParser { get; set; }
         /// <summary>Checks if the <c>Update</c> matches the listener condition.</summary>
-        public abstract bool Validate(Context context, CancellationToken cancellationToken);
+        public abstract Task<bool> Validate(Context context, CancellationToken cancellationToken);
         /// <summary>Handles the <c>Update</c> if it is successfully validated.</summary>
         public abstract Task Handler(Context context, CancellationToken cancellationToken);
+
+        public abstract Task Handler(Context context, Dictionary<string, string> buttonsList,
+            CancellationToken cancellationToken);
+        
+        
+        
         /// <returns>The session of the sender of a given <c>Message</c> object.</returns>
-        public async Task<User> GetUser(Message message) // TODO: add async here
+        protected async Task<User> GetUser(long Id) // TODO: add async here
         {
             var collection = new UserRepository();
-            var user = await collection.GetDocumentAsync(message.From.Username); 
-            if (user == null)
-            {
-                var document = new User()
-                {
-                    Id = IdConvertor.ToGuid(message.From.Id),
-                    UserName = message.From.Username
-                };
-                await collection.CreateDocumentAsync(document);
-                user = await collection.GetDocumentAsync(document.Id);
-            }
+            User user = await collection.GetDocumentAsync(IdConvertor.ToGuid(Id));
+            return user;
+        }
+        protected User GetUserSync(long Id)
+        {
+            var collection = new UserRepository();
+            User user = collection.GetDocument(IdConvertor.ToGuid(Id));
             return user;
         }
 
-        public async Task<User> CreateUser(Message message)
+        public User CreateUser(Message message)
+        {
+            var collection = new UserRepository();
+            var parent = collection.GetDocument(ArgumentParser.Parse(message.Text).ArgumentsText);
+            
+            var user = new User()
+            {
+                Id = IdConvertor.ToGuid(message.From.Id),
+                UserName = message.From.Username
+            };
+            if (parent != null)
+            {
+                Console.WriteLine(parent.UserName);
+                string parentUserName = parent.UserName;
+                user.RefId = parentUserName;
+            }
+            else user.RefId = null;
+            collection.CreateDocument(user);
+            return user;
+        }
+
+        public User UpdateUser(Message message)
         {
             var collection = new UserRepository();
             Console.WriteLine(message.Text);
-            var parent = await collection.GetDocumentAsync(ArgumentParser.Parse(message.Text).ArgumentsText);
-            var user = await GetUser(message);
+            var parent = collection.GetDocument(ArgumentParser.Parse(message.Text).ArgumentsText);
+            var user = GetUserSync(message.From.Id);
             if (parent != null)
             {
                 string parentUserName = parent.UserName;
                 user.RefId = parentUserName;
             }
-            else
-                user.RefId = null;
+            else user.RefId = null;
+            user.Update();
             return user;
+        }
+        /// <summary>Processes a command synchronously.</summary>
+        /// <returns>Command result string.</returns>
+        public virtual string Run(Context context, CancellationToken cancellationToken) {
+            return MessageToSend;
+        }
+        /// <summary>Processes a command asynchronously.</summary>
+        /// <returns>Command result string.</returns>
+        public virtual async Task<string> RunAsync(Context context, CancellationToken cancellationToken) {
+            return Run(context, cancellationToken);
         }
     }
 }

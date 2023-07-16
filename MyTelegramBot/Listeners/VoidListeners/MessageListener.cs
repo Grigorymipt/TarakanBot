@@ -9,17 +9,27 @@ namespace MyTelegramBot.Listeners {
     public class MessageListener : Listener
     {
         public MessageListener(Bot bot):base(bot) {}
-        public override bool Validate(Context context, CancellationToken cancellationToken)
+        public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
         {
             if (context.Update.Type != UpdateType.Message)
                 return false;
             return true;
         }
+        
         public override async Task Handler(Context context, CancellationToken cancellationToken)
         {
-            var user = await GetUser(context.Update.Message);
-            user.Messages++;
-            user.Update();
+            var user = await GetUser(context.Update.Message.From.Id);
+            if (user != null)
+            {
+                user.Messages++;
+                user.Update(); 
+            }
+        }
+
+        public override async Task Handler(Context context, Dictionary<string, string> buttonList,
+            CancellationToken cancellationToken)
+        {
+            Handler(context, cancellationToken);
         }
     }
 }

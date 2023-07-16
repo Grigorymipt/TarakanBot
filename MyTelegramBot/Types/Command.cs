@@ -5,6 +5,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 using MyTelegramBot.Utils;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace MyTelegramBot.Types {
     /// <summary>
@@ -69,13 +70,15 @@ namespace MyTelegramBot.Types {
         {
         }
         /// <summary>Checks if the <c>Command</c> matches the command conditions.</summary>
-        public override bool Validate(Context context, CancellationToken cancellationToken)
+        public async override Task<bool> Validate(Context context, CancellationToken cancellationToken)
         {
             if (context.Update.Type != UpdateType.Message)
                 return false;
             if (context.Update.Message!.Type != MessageType.Text)
                 return false;
-            if (GetUser(context.Update.Message).Result.RefId == null)
+            var user = GetUserSync(context.Update.Message.From.Id);
+            if (user == null) return false;
+            if (user.RefId == null)
                 return false;
             string messageText = context.Update.Message.Text.Replace($"@{Bot.Me.Username}","");
 
@@ -89,6 +92,7 @@ namespace MyTelegramBot.Types {
         /// <summary>Handles the <c>Command</c> if it is successfully validated.</summary>
         public override async Task Handler(Context context, CancellationToken cancellationToken)
         {
+            // var thread = new Thread(new ThreadStart(this.Run));
             string response = await RunAsync(context, cancellationToken);
             Int64 chatId = context.Update.Message.Chat.Id;
             
@@ -99,19 +103,38 @@ namespace MyTelegramBot.Types {
             Message sentMessage = await context.BotClient.SendTextMessageAsync(
                 chatId: chatId,
                 text: response,
-                parseMode: Config.ParseMode,
-                replyToMessageId: context.Update.Message.MessageId
+                parseMode: Config.ParseMode
             );
         }
-        /// <summary>Processes a command synchronously.</summary>
-        /// <returns>Command result string.</returns>
-        public virtual string Run(Context context, CancellationToken cancellationToken) {
-            return "This command is under development and not currently available.";
+
+        /// <summary>
+        /// Handles the <c>Command</c> using <param name="buttonsList"></param>if it is successfully validated 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="buttonsList"></param>
+        /// <param name="cancellationToken"></param>
+        public override async Task Handler(Context context, Dictionary<string, string> buttonsList, CancellationToken cancellationToken)
+        {
+            string response = Run(context, cancellationToken);
+            Int64 chatId = context.Update.Message.Chat.Id;
+            List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
+            foreach (var category in buttonsList)
+            {
+                InlineKeyboardButton reply = InlineKeyboardButton
+                    .WithCallbackData(category.Key, category.Value);
+                IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
+                categoryList.Add(inlineKeyboardButton);
+            }
+
+            IEnumerable<IEnumerable<InlineKeyboardButton>> enumerableList1 = categoryList;
+            InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(enumerableList1);
+            Message sentMessage = await context.BotClient.SendTextMessageAsync(
+                chatId: chatId,
+                text: response,
+                parseMode: Config.ParseMode,
+                replyMarkup: inlineKeyboardMarkup
+            );
         }
-        /// <summary>Processes a command asynchronously.</summary>
-        /// <returns>Command result string.</returns>
-        public virtual async Task<string> RunAsync(Context context, CancellationToken cancellationToken) {
-            return Run(context, cancellationToken);
-        }
+       
     }
 }

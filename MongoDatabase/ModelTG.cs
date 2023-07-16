@@ -17,19 +17,25 @@ public abstract class Document
 }
 public class User : Document
 {
-    public User() : base("User"){}
+    public User() : base("User")
+    {
+        Channels = new List<string>();
+    }
     public string UserName { get; set; }
     public string RefId { get; set; }
     public List<User>? Children { get; set; } = new();
-    public List<string>? Channels { get; set; }
+    public List<string> Channels { get; set; }
     public int? Messages { get; set; } = 0;
 
-    public async override void Update()
+    public string? LastMessage { get; set; }
+    
+    public override void Update()
     {
         UserRepository userRepository = new UserRepository();
-        User oldDocument = await userRepository.GetDocumentAsync(this.Id);
-        await userRepository.UpdateDocumentAsync(oldDocument, this);
+        User oldDocument = userRepository.GetDocument(this.Id);
+        userRepository.UpdateDocument(oldDocument, this);
     }
+
 }
 public abstract class MongoDocument{}
 public class Channel : Document
