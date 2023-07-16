@@ -8,3 +8,5 @@ Dockerfile
 .idea
 Dockerfile.MyTelegramBot
 docker-compose.yml
+.vs
+
