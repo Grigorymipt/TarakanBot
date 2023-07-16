@@ -2,12 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using MongoDatabase;
+using MongoDatabase.ModelTG;
 using MyTelegramBot.Listeners;
 using MyTelegramBot.Types;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
+using User = Telegram.Bot.Types.User;
 
 namespace MyTelegramBot {
     public class Bot {
@@ -39,6 +42,51 @@ namespace MyTelegramBot {
         public async Task Init() 
         {
             Console.WriteLine("Initializing bot...");
+            
+            List<string> CheckCategories = new List<string>()
+            {
+                "Новости и медиа" , 
+                "Технологии и IT",
+                "Финансы и инвестиции",
+                "Путешествия и туризм",
+                "Здоровье и фитнес",
+                "Мода и красота",
+                "Музыка и аудио",
+                "Спорт",
+                "Игры и гейминг",
+                "Искусство и дизайн",
+                "Психология и отношения",
+                "Образование и учеба",
+                "Животные и природа",
+                "Автомобили и техника",
+                "Дом и интерьер",
+                "Бизнес и стартапы",
+                "Красота и уход",
+                "Криптовалюты",
+                "Маркетинг/PR",
+                "Мотивация и саморазвитие",
+                "Наука",
+                "Недвижимость",
+                "Религия и духовность",
+                "Заработок",
+                "Ставки и азартные игры",
+                "Строительство и ремонт",
+                "18+",
+                "Хобби",
+                "Юриспруденция",
+                "Развлечения и отдых"
+            };
+            var collection = new CategoryRepository();
+            foreach (var variableCategory in CheckCategories)
+            {
+                var category = collection.GetDocument(variableCategory);
+                if (category == null)
+                {
+                    category = new Category(){Title = variableCategory, Id = new Guid()};
+                    collection.CreateDocument(category); // TODO: Use Mytelegram API
+                }
+            }
+            
             TelegramBotClient botClient = new TelegramBotClient(Token);
             using CancellationTokenSource cts = new CancellationTokenSource();
             ReceiverOptions receiverOptions = new ReceiverOptions

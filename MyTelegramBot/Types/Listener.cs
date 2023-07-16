@@ -117,6 +117,43 @@ namespace MyTelegramBot.Types {
             user.Update();
             return user;
         }
+
+        public async Task<Category> GetCategoryAsync(Message message)
+        {
+            var Title = ArgumentParser.Parse(message.Text).ArgumentsText;
+            var category = await GetCategoryAsync(Title);
+            return category;
+        }
+        public async Task<Category> GetCategoryAsync(string Title)
+        {
+            var collection = new CategoryRepository();
+            var category = await collection.GetDocumentAsync(Title);
+            if (category == null) CreateCategory(Title);
+            return category;
+        }
+
+        public async Task<List<Category>> GetAllCategories()
+        {
+            var collection = new CategoryRepository();
+            return await collection.GetAllDocumentsAsync();
+        }
+        public void CreateCategory(Message message)
+        {
+            var messageArgs = ArgumentParser.Parse(message.Text).ArgumentsText;
+            CreateCategory(messageArgs);
+        }
+
+        public void CreateCategory(string Title)
+        {
+            var collection = new CategoryRepository();
+            
+            var category = new Category()
+            {
+                Id = new Guid(),
+                Title = Title
+            };
+            collection.CreateDocument(category);   
+        }
         /// <summary>Processes a command synchronously.</summary>
         /// <returns>Command result string.</returns>
         public virtual string Run(Context context, CancellationToken cancellationToken) {

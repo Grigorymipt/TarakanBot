@@ -2,8 +2,10 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
 namespace MyTelegramBot.Types;
-
-public class InlineQuery : Query
+/// <summary>
+/// Abstract Class <c>InlineQuery</c> sends Query, <c>Message</c> answer expected
+/// </summary>
+public abstract class InlineQuery : Query
 {
     public string MessageLabel { get; set; }
     public InlineQuery(Bot bot) : base(bot){}
@@ -17,7 +19,10 @@ public class InlineQuery : Query
     }
     
 }
-public class InlineReply : Command
+/// <summary>
+/// Abstract Class <c>InlineReply</c> catch users reply on according <c>InlineQuery</c>
+/// </summary>
+public abstract class InlineReply : Command
 {
     public string MessageLabel { get; set; }
 

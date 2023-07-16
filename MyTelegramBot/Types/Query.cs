@@ -4,7 +4,10 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace MyTelegramBot.Types;
-
+/// <summary>
+/// Abstract Class <c>Query</c> describes a bot <c>CallbackQueries</c> handler with
+/// a simplified interface, utilities and validate conditions.
+/// </summary>
 public abstract class Query : Listener
 {
     private string[] names;

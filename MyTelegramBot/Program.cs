@@ -10,6 +10,7 @@ namespace MyTelegramBot
             Bot bot = new Bot()
             {
                 Token = Config.BotToken,
+                
             };
 
             bot.Init().Wait();
