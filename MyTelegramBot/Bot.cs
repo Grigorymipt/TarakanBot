@@ -36,7 +36,6 @@ namespace MyTelegramBot {
                 new PayForListingQuery(this),
                 new PaymentProcessingQuery(this),
                 new ContinueQuery(this),
-                new ContinueQuery(this),
                 new Rn43Command(this),
                 new SaveCategoriesToUserQuery(this),
                 
@@ -90,6 +89,7 @@ namespace MyTelegramBot {
                     category = new Category(){Title = variableCategory, Id = new Guid()};
                     collection.CreateDocument(category); // TODO: Use Mytelegram API
                 }
+                Console.WriteLine(category.Id + "   " + category.Title);
             }
             
             TelegramBotClient botClient = new TelegramBotClient(Token);
@@ -132,7 +132,7 @@ namespace MyTelegramBot {
                 }
             }
         }
-        async Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+        Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
         {
             var ErrorMessage = exception switch
             {
@@ -151,6 +151,7 @@ namespace MyTelegramBot {
             {
                 Console.WriteLine(ErrorMessage);
             }
+            return Task.CompletedTask;
         }
     }
 }

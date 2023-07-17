@@ -21,7 +21,9 @@ public class UserRepository : DocumentRepository<User>
     public override User GetDocument(Guid Id)
     {
         var filter = Builders<User>.Filter.Eq(u => u.Id, Id);
-        return collection.Find(filter).FirstOrDefault();
+        var user = new User();
+        user = collection.Find(filter).FirstOrDefault();
+        return user;
     }
     public override async Task<User> GetDocumentAsync(Guid Id)
     { 

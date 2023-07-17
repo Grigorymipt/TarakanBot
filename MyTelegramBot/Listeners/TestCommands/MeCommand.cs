@@ -46,7 +46,7 @@ namespace MyTelegramBot.Listeners {
             {
                 foreach (var category in user.Categories)
                 {
-                    MessageToSend += category + "\n";
+                    MessageToSend += GetCategoryAsync(category).Result.Title + "\n";
                 }
             }
             return MessageToSend;

@@ -17,8 +17,8 @@ public class Rn43Command : Command // TODO: should be Query
         Buttons = new Dictionary<string, string>();
         foreach (var category in categories)
         {
-            Buttons.Add(category.Title, "/saveCategoryToUser");
+            Buttons.Add(category.Title, "/saveCategoryToUser " + category.Id);
         }
-        Buttons.Add("Продолжить", "/continue");
+        Buttons.Add("Продолжить", "/continueTo");
     }
 }

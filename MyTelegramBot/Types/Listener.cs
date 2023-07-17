@@ -37,7 +37,20 @@ namespace MyTelegramBot.Types {
 
         private string filePath;
         public bool fileToSend { get; set; } = false;
-        public string MessageToSend { get; set; } = "This command is under development and not currently available.";
+        protected string MessageToSend { get; set; } = "This command is under development and not currently available.";
+
+        private bool withoutMessage = false;
+        public bool WithoutMessage
+        {
+            get => withoutMessage;
+            set
+            {
+                if (value)
+                    MessageToSend = new string("");
+                withoutMessage = value;
+            }
+        }
+
         public string FilePath
         {
             get => filePath;
@@ -77,7 +90,7 @@ namespace MyTelegramBot.Types {
         protected User GetUserSync(long Id)
         {
             var collection = new UserRepository();
-            User user = collection.GetDocument(IdConvertor.ToGuid(Id));
+            var user = collection.GetDocument(IdConvertor.ToGuid(Id));
             return user;
         }
 
@@ -91,7 +104,7 @@ namespace MyTelegramBot.Types {
                 Id = IdConvertor.ToGuid(message.From.Id),
                 UserName = message.From.Username,
                 Channels = new List<string>(),
-                Categories = new List<string>(),
+                Categories = new List<Guid>(),
             };
             if (parent != null)
             {
@@ -122,15 +135,15 @@ namespace MyTelegramBot.Types {
 
         public async Task<Category> GetCategoryAsync(Message message)
         {
-            var Title = ArgumentParser.Parse(message.Text).ArgumentsText;
-            var category = await GetCategoryAsync(Title);
+            var Id = ArgumentParser.Parse(message.Text).ArgumentsText;
+            var category = await GetCategoryAsync(new Guid(Id));
             return category;
         }
-        public async Task<Category> GetCategoryAsync(string Title)
+        public async Task<Category> GetCategoryAsync(Guid Id)
         {
             var collection = new CategoryRepository();
-            var category = await collection.GetDocumentAsync(Title);
-            if (category == null) CreateCategory(Title);
+            var category = await collection.GetDocumentAsync(Id);
+            if (category == null) CreateCategory("This category is in progress of creation.");
             return category;
         }
 
@@ -144,7 +157,6 @@ namespace MyTelegramBot.Types {
             var messageArgs = ArgumentParser.Parse(message.Text).ArgumentsText;
             CreateCategory(messageArgs);
         }
-
         public void CreateCategory(string Title)
         {
             var collection = new CategoryRepository();

@@ -6,7 +6,8 @@ public class ContinueQuery : Query
 {
     public ContinueQuery(Bot bot) : base(bot)
     {
-        Names = new[] { "/continue" };
+        Buttons = new Dictionary<string, string>();
+        Names = new[] { "/continueTo" };
     }
     public override string Run(Context context, CancellationToken cancellationToken)
     {
@@ -17,6 +18,7 @@ public class ContinueQuery : Query
     private void CheckFiveCategories(Context context)
     {
         var user = GetUserSync(context.Update.CallbackQuery.From.Id);
+        MessageToSend = "🤷 Необходимо выбрать еще " + (5 - user.Categories.Count) + " категорий и нажать «продолжить»!";
         if (user is { Categories.Count: >= 5 })
         {
             MessageToSend = "😍 Хороший вкус! Теперь необходимо подписаться на 10 каналов! Это те самые 10 каналов, " +
@@ -24,8 +26,9 @@ public class ContinueQuery : Query
                             "кнопку 'пропустить' канал будет заменен на другой, в соответствии указанными интересами." +
                             " Не более 20 раз можно нажать «пропустить». 🚨🚔 Если канал нарушает правила пользования " +
                             "(кликабельно) #UserHub, то жми «пропустить», а затем «Black List» и наши специалисты разберутся с этим.";
-            Buttons = new Dictionary<string, string>(){{"🟢 Подписаться", "/subscribeTenChannels"}};
+            if(user is {Categories.Count: >= 5})
+                Buttons.Clear();
+                Buttons.Add("🟢 Подписаться", "/subscribeTenChannels");
         }
-        MessageToSend = "🤷 Необходимо выбрать еще .... категорий и нажать «продолжить»!";
     }
 }

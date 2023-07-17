@@ -20,6 +20,7 @@ public class User : Document
     public User() : base("User")
     {
         Channels = new List<string>();
+        Categories = new List<Guid>();
     }
     public string UserName { get; set; }
     public string RefId { get; set; }
@@ -28,7 +29,7 @@ public class User : Document
     public int? Messages { get; set; } = 0;
 
     public string? LastMessage { get; set; }
-    public List<string> Categories { get; set; }
+    public List<Guid> Categories { get; set; }
     
     public override void Update()
     {
