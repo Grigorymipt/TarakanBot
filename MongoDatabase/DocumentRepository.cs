@@ -49,4 +49,17 @@ public abstract class DocumentRepository<T> : Repository
     public abstract Document GetDocument(string UserName);
     public abstract Task<T> GetDocumentAsync(Guid Id);
     public abstract Task<T> GetDocumentAsync(string UserName);
+
+    // public async void Update<T>(Document document)
+    // {
+    //     var filter = Builders<Document>.Filter.Eq(u => u.Id, document.Id);
+    //     var d = typeof(T).Attributes;
+    //     foreach (var a in d)
+    //     {
+    //         
+    //     }
+    //     var update = Builders<Document>.Update.Set(u => ) 
+    //     var updatedDocument = document;
+    //     documentCollection.InsertOne(updatedDocument);
+    // }
 }

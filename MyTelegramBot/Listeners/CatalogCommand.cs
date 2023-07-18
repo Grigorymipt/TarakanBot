@@ -17,14 +17,15 @@ public class CatalogCommand : Query
 
     private async void InitButtons()
     {
-        var categories = await GetAllCategories();
+        var categories = await Database.GetAllCategories();
         Buttons = new Dictionary<string, string>();
         foreach (var category in categories)
         {
             Buttons.Add(category.Title, "/smth");
         }
     }
-    public override string Run(Context context, CancellationToken cancellationToken)
+
+    protected override string Run(Context context, CancellationToken cancellationToken)
     {
         return "Каталог категорий";
     }

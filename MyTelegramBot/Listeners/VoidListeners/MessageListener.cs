@@ -18,7 +18,7 @@ namespace MyTelegramBot.Listeners {
         
         public override async Task Handler(Context context, CancellationToken cancellationToken)
         {
-            var user = await GetUser(context.Update.Message.From.Id);
+            var user = await Database.GetUserAsync(context.Update.Message.From.Id);
             if (user != null)
             {
                 user.Messages++;

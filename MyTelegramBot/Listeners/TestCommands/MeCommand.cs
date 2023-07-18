@@ -11,7 +11,7 @@ namespace MyTelegramBot.Listeners {
         public MeCommand(Bot bot): base(bot) {
             Names = new string[]{"/me", "!me"};
         }
-        public override async Task<string> RunAsync(Context context, CancellationToken cancellationToken)
+        protected override async Task<string> RunAsync(Context context, CancellationToken cancellationToken)
         {
             var message = context.Update.Message;
             
@@ -30,7 +30,7 @@ namespace MyTelegramBot.Listeners {
             }
             else 
             {
-                user = await GetUser(context.Update.Message.From.Id);
+                user = await Database.GetUserAsync(context.Update.Message.From.Id);
             }
 
             MessageToSend = "<b>MyTestBot profile</b> \n\n" +
@@ -46,7 +46,7 @@ namespace MyTelegramBot.Listeners {
             {
                 foreach (var category in user.Categories)
                 {
-                    MessageToSend += GetCategoryAsync(category).Result.Title + "\n";
+                    MessageToSend += Database.GetCategoryAsync(category).Result.Title + "\n";
                 }
             }
             return MessageToSend;

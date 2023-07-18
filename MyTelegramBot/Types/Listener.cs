@@ -12,171 +12,94 @@ using MyTelegramBot.Utils;
 using Telegram.Bot.Types.ReplyMarkups;
 
 
-namespace MyTelegramBot.Types {
-    /// <summary>Abstract Class <c>Listener</c> describes a bot event handler with 
-    /// utilities and validate conditions. </summary>
-    public abstract class Listener
+namespace MyTelegramBot.Types ;
+/// <summary>Abstract Class <c>Listener</c> describes a bot event handler with 
+/// utilities and validate conditions. </summary>
+public abstract class Listener
+{
+    /// <value>
+    /// Property <c>Bot</c> represents a <c>Bot</c> instance with which <c>Listener</c> is related.
+    /// </value>
+    public Bot Bot { get; set; }
+
+
+    public HandleType HandleType { get; set; } = HandleType.Standard;
+    private Dictionary<string, string> buttons;
+    public Dictionary<string, string> Buttons
     {
-        /// <value>
-        /// Property <c>Bot</c> represents a <c>Bot</c> instance with which <c>Listener</c> is related.
-        /// </value>
-        public Bot Bot { get; set; }
+        get => buttons;
+        set
+        {
+            buttons = value;
+            HandleType = HandleType.ButtonList;
+        }
+    }
 
+    private string filePath;
+    public bool fileToSend { get; set; } = false;
+    protected string MessageToSend { get; set; } = "This command is under development and not currently available.";
 
-        public HandleType HandleType { get; set; } = HandleType.Standard;
-        private Dictionary<string, string> buttons;
-        public Dictionary<string, string> Buttons
+    private bool withoutMessage = false;
+    public bool WithoutMessage
+    {
+        get => withoutMessage;
+        set
         {
-            get => buttons;
-            set
-            {
-                buttons = value;
-                HandleType = HandleType.ButtonList;
-            }
+            if (value)
+                MessageToSend = "";
+            withoutMessage = value;
         }
+    }
 
-        private string filePath;
-        public bool fileToSend { get; set; } = false;
-        protected string MessageToSend { get; set; } = "This command is under development and not currently available.";
+    private string callbackQueryToSend;
 
-        private bool withoutMessage = false;
-        public bool WithoutMessage
+    public string CallbackQueryToSend
+    {
+        get => callbackQueryToSend;
+        set
         {
-            get => withoutMessage;
-            set
-            {
-                if (value)
-                    MessageToSend = new string("");
-                withoutMessage = value;
-            }
+            WithCallbackQuery = true;
+            callbackQueryToSend = value;
         }
+    }
 
-        public string FilePath
-        {
-            get => filePath;
-            set
-            {
-                filePath = value;
-                fileToSend = true;
-            }
-        }
+    public bool WithCallbackQuery { get; set; } = false;
 
-        /// <summary>
-        ///  Creates a <c>Listener</c> for the specified <c>Bot</c>.
-        /// </summary>
-        public Listener(Bot bot)
+    public string FilePath
+    {
+        get => filePath;
+        set
         {
-            Bot = bot;
-            ArgumentParser = new CommandParser();
+            filePath = value;
+            fileToSend = true;
         }
-        public CommandParser ArgumentParser { get; set; }
-        /// <summary>Checks if the <c>Update</c> matches the listener condition.</summary>
-        public abstract Task<bool> Validate(Context context, CancellationToken cancellationToken);
-        /// <summary>Handles the <c>Update</c> if it is successfully validated.</summary>
-        public abstract Task Handler(Context context, CancellationToken cancellationToken);
+    }
 
-        public abstract Task Handler(Context context, Dictionary<string, string> buttonsList,
-            CancellationToken cancellationToken);
-        
-        
-        
-        /// <returns>The session of the sender of a given <c>Message</c> object.</returns>
-        protected async Task<User> GetUser(long Id) // TODO: add async here
-        {
-            var collection = new UserRepository();
-            User user = await collection.GetDocumentAsync(IdConvertor.ToGuid(Id));
-            return user;
-        }
-        protected User GetUserSync(long Id)
-        {
-            var collection = new UserRepository();
-            var user = collection.GetDocument(IdConvertor.ToGuid(Id));
-            return user;
-        }
+    /// <summary>
+    ///  Creates a <c>Listener</c> for the specified <c>Bot</c>.
+    /// </summary>
+    public Listener(Bot bot)
+    {
+        Bot = bot;
+        ArgumentParser = new CommandParser();
+    }
+    public CommandParser ArgumentParser { get; set; }
+    /// <summary>Checks if the <c>Update</c> matches the listener condition.</summary>
+    public abstract Task<bool> Validate(Context context, CancellationToken cancellationToken);
+    /// <summary>Handles the <c>Update</c> if it is successfully validated.</summary>
+    public abstract Task Handler(Context context, CancellationToken cancellationToken);
 
-        public User CreateUser(Message message)
-        {
-            var collection = new UserRepository();
-            var parent = collection.GetDocument(ArgumentParser.Parse(message.Text).ArgumentsText);
-            
-            var user = new User()
-            {
-                Id = IdConvertor.ToGuid(message.From.Id),
-                UserName = message.From.Username,
-                Channels = new List<string>(),
-                Categories = new List<Guid>(),
-            };
-            if (parent != null)
-            {
-                Console.WriteLine(parent.UserName);
-                string parentUserName = parent.UserName;
-                user.RefId = parentUserName;
-            }
-            else user.RefId = null;
-            collection.CreateDocument(user);
-            return user;
-        }
-
-        public User UpdateUser(Message message)
-        {
-            var collection = new UserRepository();
-            Console.WriteLine(message.Text);
-            var parent = collection.GetDocument(ArgumentParser.Parse(message.Text).ArgumentsText);
-            var user = GetUserSync(message.From.Id);
-            if (parent != null)
-            {
-                string parentUserName = parent.UserName;
-                user.RefId = parentUserName;
-            }
-            else user.RefId = null;
-            user.Update();
-            return user;
-        }
-
-        public async Task<Category> GetCategoryAsync(Message message)
-        {
-            var Id = ArgumentParser.Parse(message.Text).ArgumentsText;
-            var category = await GetCategoryAsync(new Guid(Id));
-            return category;
-        }
-        public async Task<Category> GetCategoryAsync(Guid Id)
-        {
-            var collection = new CategoryRepository();
-            var category = await collection.GetDocumentAsync(Id);
-            if (category == null) CreateCategory("This category is in progress of creation.");
-            return category;
-        }
-
-        public async Task<List<Category>> GetAllCategories()
-        {
-            var collection = new CategoryRepository();
-            return await collection.GetAllDocumentsAsync();
-        }
-        public void CreateCategory(Message message)
-        {
-            var messageArgs = ArgumentParser.Parse(message.Text).ArgumentsText;
-            CreateCategory(messageArgs);
-        }
-        public void CreateCategory(string Title)
-        {
-            var collection = new CategoryRepository();
-            
-            var category = new Category()
-            {
-                Id = new Guid(),
-                Title = Title
-            };
-            collection.CreateDocument(category);   
-        }
-        /// <summary>Processes a command synchronously.</summary>
-        /// <returns>Command result string.</returns>
-        public virtual string Run(Context context, CancellationToken cancellationToken) {
-            return MessageToSend;
-        }
-        /// <summary>Processes a command asynchronously.</summary>
-        /// <returns>Command result string.</returns>
-        public virtual async Task<string> RunAsync(Context context, CancellationToken cancellationToken) {
-            return Run(context, cancellationToken);
-        }
+    public abstract Task Handler(Context context, Dictionary<string, string> buttonsList,
+        CancellationToken cancellationToken);
+    
+    /// <summary>Processes a command synchronously.</summary>
+    /// <returns>Command result string.</returns>
+    protected virtual string Run(Context context, CancellationToken cancellationToken) {
+        return MessageToSend;
+    }
+    /// <summary>Processes a command asynchronously.</summary>
+    /// <returns>Command result string.</returns>
+    protected virtual async Task<string> RunAsync(Context context, CancellationToken cancellationToken) {
+        return Run(context, cancellationToken);
     }
 }

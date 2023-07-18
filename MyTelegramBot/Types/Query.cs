@@ -33,7 +33,7 @@ public abstract class Query : Listener
     {
         if (context.Update.Type != UpdateType.CallbackQuery)
             return false;
-        var user = GetUserSync(context.Update.CallbackQuery.From.Id);
+        var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
         if (user == null) return false;
         if (user.RefId == null)
             return false;
@@ -51,10 +51,10 @@ public abstract class Query : Listener
     {
         string response = await RunAsync(context, cancellationToken);
         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
+
         if (response.Length == 0)
-        {
             return;
-        }
+
         Message sentMessage = await context.BotClient.SendTextMessageAsync(
             chatId: chatId,
             text: response,
@@ -63,8 +63,9 @@ public abstract class Query : Listener
     }
     public override async Task Handler(Context context, Dictionary<string, string> buttonsList, CancellationToken cancellationToken)
     {
-        string response = Run(context, cancellationToken);
+        string response = await RunAsync(context, cancellationToken);
         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
+
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
         foreach (var category in buttonsList)
         {
@@ -76,6 +77,7 @@ public abstract class Query : Listener
 
         IEnumerable<IEnumerable<InlineKeyboardButton>> enumerableList1 = categoryList;
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(enumerableList1);
+
         Message sentMessage = await context.BotClient.SendTextMessageAsync(
             chatId: chatId,
             text: response,

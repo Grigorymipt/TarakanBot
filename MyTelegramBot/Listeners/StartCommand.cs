@@ -15,12 +15,13 @@ namespace MyTelegramBot.Listeners {
                 {"Каталог", "/catalog"}
             };
         }
-        public override string Run(Context context, CancellationToken cancellationToken)
+
+        protected override string Run(Context context, CancellationToken cancellationToken)
         {
             Console.WriteLine(context.Update.Message.From.Id);
-            User user = GetUserSync(context.Update.Message.From.Id); // TODO: Reduce DB calls
-            if (user == null) user = CreateUser(context.Update.Message);
-            else if (user.RefId == null) user = UpdateUser(context.Update.Message);
+            User user = Database.GetUser(context.Update.Message.From.Id); // TODO: Reduce DB calls
+            if (user == null) user = Database.CreateUser(context.Update.Message);
+            else if (user.RefId == null) user = Database.UpdateUser(context.Update.Message);
             if (user.RefId != null) return "С помощью #UserHub ты сможешь быстро и удобно находить лучшие телеграмм " +
                                            "каналы на любую интересную тебе тему. Я что-то вроде поисковика в телеграмм, " +
                                            "где все каналы разбиты по категориям и рейтингу. " +

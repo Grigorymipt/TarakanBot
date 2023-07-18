@@ -9,7 +9,8 @@ public class ContinueQuery : Query
         Buttons = new Dictionary<string, string>();
         Names = new[] { "/continueTo" };
     }
-    public override string Run(Context context, CancellationToken cancellationToken)
+
+    protected override string Run(Context context, CancellationToken cancellationToken)
     {
         CheckFiveCategories(context);
         return base.Run(context, cancellationToken);
@@ -17,7 +18,7 @@ public class ContinueQuery : Query
 
     private void CheckFiveCategories(Context context)
     {
-        var user = GetUserSync(context.Update.CallbackQuery.From.Id);
+        var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
         MessageToSend = "🤷 Необходимо выбрать еще " + (5 - user.Categories.Count) + " категорий и нажать «продолжить»!";
         if (user is { Categories.Count: >= 5 })
         {
@@ -28,7 +29,8 @@ public class ContinueQuery : Query
                             "(кликабельно) #UserHub, то жми «пропустить», а затем «Black List» и наши специалисты разберутся с этим.";
             if(user is {Categories.Count: >= 5})
                 Buttons.Clear();
-                Buttons.Add("🟢 Подписаться", "/subscribeTenChannels");
+                Buttons.Add("Начать подписываться", "/subscribeTenChannels");
         }
     }
+    
 }

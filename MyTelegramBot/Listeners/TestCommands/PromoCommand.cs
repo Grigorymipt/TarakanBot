@@ -49,7 +49,7 @@ public class PromoCommand : Command
         );
     }
 
-    public override string Run(Context context, CancellationToken cancellationToken)
+    protected override string Run(Context context, CancellationToken cancellationToken)
     {
         return "Промо материалы";
     }

@@ -12,7 +12,7 @@ public class ChoseCategoryQuery : Query
     }
     private async void InitButtons()
     {
-        var categories = await GetAllCategories();
+        var categories = await Database.GetAllCategories();
         Buttons = new Dictionary<string, string>();
         foreach (var category in categories)
         {

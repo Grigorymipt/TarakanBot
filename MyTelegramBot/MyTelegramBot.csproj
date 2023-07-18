@@ -52,6 +52,18 @@
       <Compile Update="Listeners\AlmostOnTargetQuery.cs">
         <DependentUpon>SaveCategoryQuery.cs</DependentUpon>
       </Compile>
+      <Compile Update="Types\Listener.cs">
+        <DependentUpon>IListener.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Types\Query.cs">
+        <DependentUpon>Listener.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Types\Inline.cs">
+        <DependentUpon>Listener.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Types\Command.cs">
+        <DependentUpon>Listener.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

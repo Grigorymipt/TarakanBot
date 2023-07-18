@@ -12,8 +12,9 @@ public abstract class Document
     {
         Name = name;
     }
+
     public abstract void Update();
-        
+
 }
 public class User : Document
 {
@@ -30,6 +31,8 @@ public class User : Document
 
     public string? LastMessage { get; set; }
     public List<Guid> Categories { get; set; }
+    public int Subscribes { get; set; } = 0;
+    public int Attempts { get; set; } = 0;
     
     public override void Update()
     {
@@ -47,10 +50,15 @@ public class Channel : Document
     public string Title { get; set; }
     public string Describtion { get; set; }
     public int CategoryID { get; set; }
+
+    public int Reports { get; set; } = 0;
     public override void Update()
     {
-        throw new NotImplementedException();
+        ChannelRepository channelRepository = new ChannelRepository();
+        Channel oldDocument = channelRepository.GetDocument(this.Id);
+        channelRepository.UpdateDocument(oldDocument, this);
     }
+
 }
 
 public class Category : Document
@@ -61,6 +69,9 @@ public class Category : Document
     public List<Channel> Channels { get; set; }
     public override void Update()
     {
-        throw new NotImplementedException();
+        CategoryRepository categoryRepository = new CategoryRepository();
+        Category oldDocument = categoryRepository.GetDocument(this.Id);
+        categoryRepository.UpdateDocument(oldDocument, this);
     }
+
 }

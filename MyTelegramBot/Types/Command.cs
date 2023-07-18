@@ -7,6 +7,7 @@ using Telegram.Bot.Types.Enums;
 using MyTelegramBot.Utils;
 using Telegram.Bot.Types.ReplyMarkups;
 
+
 namespace MyTelegramBot.Types {
     /// <summary>
     /// Class <c>CommandNameInvalidException</c> describes an exception thrown when command name
@@ -76,7 +77,7 @@ namespace MyTelegramBot.Types {
                 return false;
             if (context.Update.Message!.Type != MessageType.Text)
                 return false;
-            var user = GetUserSync(context.Update.Message.From.Id);
+            var user = Database.GetUser(context.Update.Message.From.Id);
             if (user == null) return false;
             if (user.RefId == null)
                 return false;

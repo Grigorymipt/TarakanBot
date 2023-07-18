@@ -9,10 +9,11 @@ public abstract class InlineQuery : Query
 {
     public string MessageLabel { get; set; }
     public InlineQuery(Bot bot) : base(bot){}
+
     public override async Task<string> RunAsync(Context context, CancellationToken cancellationToken)
     {
         // Console.WriteLine(context.Update.CallbackQuery.From.Id);
-        var user = GetUserSync(context.Update.CallbackQuery.From.Id);
+        var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
         user.LastMessage = MessageLabel;
         user.Update();
         return MessageToSend;
@@ -29,10 +30,11 @@ public abstract class InlineReply : Command
     public InlineReply(Bot bot) : base(bot)
     {
     }
-    public override string Run(Context context, CancellationToken cancellationToken)
+
+    protected override string Run(Context context, CancellationToken cancellationToken)
     {
         Console.WriteLine(context.Update.Message.From.Id);
-        var user = GetUserSync(context.Update.Message.From.Id);
+        var user = Database.GetUser(context.Update.Message.From.Id);
         Console.WriteLine(context.Update.Message.Text);
         string newChannel = context.Update.Message.Text;
         var newUser = user;
@@ -46,7 +48,7 @@ public abstract class InlineReply : Command
     {
         if (context.Update.Type != UpdateType.Message)
             return false;
-        var user = GetUserSync(context.Update.Message.From.Id);
+        var user = Database.GetUser(context.Update.Message.From.Id);
         if (user == null) return false;
         if (user.RefId == null)
             return false;

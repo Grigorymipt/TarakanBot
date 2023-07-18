@@ -6,7 +6,8 @@ namespace MyTelegramBot.Listeners {
         public EchoCommand(Bot bot): base(bot) {
             Names = new string[]{"/echo", "!echo"};
         }
-        public override string Run(Context context, CancellationToken cancellationToken)
+
+        protected override string Run(Context context, CancellationToken cancellationToken)
         {
             var message = context.Update.Message;
             if (ArgumentParser.Validate(message.Text)) {

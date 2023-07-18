@@ -6,7 +6,8 @@ namespace MyTelegramBot.Listeners {
         public HelpCommand(Bot bot): base(bot) {
             Names = new string[]{"/help", "!help"};
         }
-        public override string Run(Context context, CancellationToken cancellationToken)
+
+        protected override string Run(Context context, CancellationToken cancellationToken)
         {
             return "<b>MyTestBot commands</b> \n\n" +
                    "/start - starts bot \n" +

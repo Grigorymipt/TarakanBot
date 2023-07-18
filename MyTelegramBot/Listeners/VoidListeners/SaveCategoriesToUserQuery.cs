@@ -11,10 +11,10 @@ public class SaveCategoriesToUserQuery : Query
         Names = new[] { "/saveCategoryToUser" };
         WithoutMessage = true;
     }
-    
-    public override string Run(Context context, CancellationToken cancellationToken)
+
+    protected override string Run(Context context, CancellationToken cancellationToken)
     {
-        var user = GetUserSync(context.Update.CallbackQuery.From.Id);
+        var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
         var newUser = user;
         newUser.Categories.Add(new Guid(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText));
         Console.WriteLine(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText);

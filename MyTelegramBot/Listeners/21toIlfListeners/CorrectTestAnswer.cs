@@ -2,18 +2,18 @@ using MyTelegramBot.Types;
 
 namespace MyTelegramBot.Listeners;
 
-public class Rn43Command : Command // TODO: should be Query
+public class CorrectTestAnswer : Query
 {
-    public Rn43Command(Bot bot) : base(bot)
+    public CorrectTestAnswer(Bot bot) : base(bot)
     {
-        Names = new[] { "/continue" };
+        Names = new[] { "/hundredMillions" };
         InitButtons();
         MessageToSend = "🤑 Верно! Еще несколько простых действий и миллион подписчиков твой! + Выбери минимум 5 тем," +
                         " которые тебя РЕАЛЬНО интересуют.";
     }
     private async void InitButtons()
     {
-        var categories = await GetAllCategories();
+        var categories = await Database.GetAllCategories();
         Buttons = new Dictionary<string, string>();
         foreach (var category in categories)
         {
