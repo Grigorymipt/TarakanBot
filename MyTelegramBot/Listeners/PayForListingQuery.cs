@@ -21,7 +21,7 @@ public class BuyListingNow : Query, IListener
     IEnumerable<LabeledPrice> prices;
     public BuyListingNow(Bot bot) : base(bot)
     {
-        Names = new[] { "/buyVIPNow" };
+        Names = new[] { "/buyListingNow" };
         MessageToSend = "Тут Сергей подкатывает платежку с применением @wallet. С меня кнопочка товара.";
         prices = new[]
         {
