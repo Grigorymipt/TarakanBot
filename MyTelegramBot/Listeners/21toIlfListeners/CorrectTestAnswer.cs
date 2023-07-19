@@ -2,7 +2,7 @@ using MyTelegramBot.Types;
 
 namespace MyTelegramBot.Listeners;
 
-public class CorrectTestAnswer : Command, IListener
+public class CorrectTestAnswer : Query, IListener
 {
     public CorrectTestAnswer(Bot bot) : base(bot)
     {
