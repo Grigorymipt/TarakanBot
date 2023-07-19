@@ -25,7 +25,7 @@ public class BuyListingNow : Query, IListener
         MessageToSend = "Тут Сергей подкатывает платежку с применением @wallet. С меня кнопочка товара.";
         prices = new[]
         {
-            new LabeledPrice("vipLabel", 10000)
+            new LabeledPrice("Listing", 10000)
         };
     }
 
@@ -86,7 +86,14 @@ public class ConfirmListingPayment : Listener, IListener // TODO: make abstract 
         Context context,
         Dictionary<string, string> dictionary,
         CancellationToken cancellationToken) 
-    {}
+    {
+        var preCheckoutQueryId = context.Update.PreCheckoutQuery.Id;
+        context.BotClient.AnswerPreCheckoutQueryAsync(
+            preCheckoutQueryId: preCheckoutQueryId,
+            cancellationToken: cancellationToken
+        );
+        
+    }
 
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
     {
