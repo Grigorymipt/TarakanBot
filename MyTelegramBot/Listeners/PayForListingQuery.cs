@@ -36,7 +36,7 @@ public class BuyListingNow : Query, IListener
             title: "Листинг",
             description: "Оплатить листинг канала",
             payload: "ListingPayload",
-            providerToken: "381764678:TEST:61960",
+            providerToken: Environment.GetEnvironmentVariable("providerToken"),
             currency: "RUB",
             prices: prices,
             cancellationToken: cancellationToken

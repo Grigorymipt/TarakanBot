@@ -65,7 +65,7 @@ public class BuyVIPNow : Query, IListener
             title: "🏆 VIP статус на месяц",
             description: "Вип статус на месяц",
             payload: "VipMonthlyPayload",
-            providerToken: "381764678:TEST:61960",
+            providerToken: Environment.GetEnvironmentVariable("providerToken"),
             currency: "RUB",
             prices: prices,
             cancellationToken: cancellationToken
