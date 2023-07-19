@@ -4,7 +4,7 @@ using MyTelegramBot.Types;
 
 namespace MyTelegramBot.Listeners;
 
-public class SaveCategoriesToUserQuery : Query
+public class SaveCategoriesToUserQuery : Query, IListener
 {
     public SaveCategoriesToUserQuery(Bot bot) : base(bot)
     {

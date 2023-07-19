@@ -1,11 +1,16 @@
 using MyTelegramBot.Types;
+using Telegram.Bot;
+using Telegram.Bot.Types.Enums;
+using TL;
+using LabeledPrice = Telegram.Bot.Types.Payments.LabeledPrice;
 
 namespace MyTelegramBot.Listeners;
 
-public class MoreAboutVIP : Query
+public class MoreAboutVIP : Query, IListener
 {
     public MoreAboutVIP(Bot bot) : base(bot)
     {
+        Names = new[] { "/moreAboutVIP" };
         MessageToSend = "🎯 Для чего тебе статус VIP: \n" +
                         "1. Независимо от количества приглашенных в #UserHub пользователей, ты будешь получать подписчиков, " +
                         "так как канал будет находиться на верхних позициях выбранной категории каталога #UserHub, а также в" +
@@ -19,8 +24,84 @@ public class MoreAboutVIP : Query
                         "листинга и всех других доходов #UserHub.";
         Buttons = new Dictionary<string, string>()
         {
-            {"Приобрести VIP 🏆 позже", "/buyVIPlater"},
+            {"Приобрести VIP 🏆 позже", "/buyVIPLater"},
             {"Приобрести статус VIP 🏆", "/buyVIPNow"}
         };
+    }
+}
+
+public class BuyVIPLater : Query, IListener
+{
+    public BuyVIPLater(Bot bot) : base(bot)
+    {
+        Names = new[] { "/buyVIPLater" };
+        MessageToSend = "Что-то я не нашел сообщения для такого случая...";
+    }
+
+    protected override string Run(Context context, CancellationToken cancellationToken)
+    {
+        //TODO: mb some logic to remind every N days/weeks?
+        return base.Run(context, cancellationToken);
+    }
+}
+
+public class BuyVIPNow : Query, IListener
+{
+    IEnumerable<LabeledPrice> prices;
+    public BuyVIPNow(Bot bot) : base(bot)
+    {
+        Names = new[] { "/buyVIPNow" };
+        MessageToSend = "Тут Сергей подкатывает платежку с применением @wallet. С меня кнопочка товара.";
+        prices = new[]
+        {
+            new LabeledPrice("vipLabel", 10000)
+        };
+    }
+
+    public override async Task Handler(Context context, CancellationToken cancellationToken)
+    {
+        var invoiceAsync = await context.BotClient.SendInvoiceAsync(
+            chatId: context.Update.CallbackQuery.Message.Chat.Id,
+            title: "🏆 VIP статус на месяц",
+            description: "Вип статус на месяц",
+            payload: "VipMonthlyPayload",
+            providerToken: "381764678:TEST:61960",
+            currency: "RUB",
+            prices: prices,
+            cancellationToken: cancellationToken
+            );
+        
+        // return base.Handler(context, cancellationToken);
+    }
+}
+
+public class ConfirmVipPayment : Listener, IListener // TODO: make abstract listener for payments
+{
+    public ConfirmVipPayment(Bot bot) : base(bot)
+    {
+        
+    }
+
+    public override async Task Handler(Context context, CancellationToken cancellationToken)
+    {
+        var preCheckoutQueryId = context.Update.PreCheckoutQuery.Id;
+        context.BotClient.AnswerPreCheckoutQueryAsync(
+            preCheckoutQueryId: preCheckoutQueryId,
+            cancellationToken: cancellationToken
+        );
+        //Todo: add node to DB
+    }
+
+    public override async Task Handler(
+        Context context,
+        Dictionary<string, string> dictionary,
+        CancellationToken cancellationToken) 
+    {}
+
+    public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
+    {
+        if (context.Update.Type != UpdateType.PreCheckoutQuery) return false;
+        if (context.Update.PreCheckoutQuery.InvoicePayload == "VipMonthlyPayload") return true;
+        return false;
     }
 }

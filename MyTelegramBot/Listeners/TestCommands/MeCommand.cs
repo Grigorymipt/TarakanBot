@@ -7,7 +7,7 @@ using MyTelegramBot.Convertors;
 using User = MongoDatabase.ModelTG.User;
 
 namespace MyTelegramBot.Listeners {
-    public class MeCommand : Command {
+    public class MeCommand : Command, IListener {
         public MeCommand(Bot bot): base(bot) {
             Names = new string[]{"/me", "!me"};
         }

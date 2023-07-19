@@ -2,7 +2,7 @@ using System.Threading;
 using MyTelegramBot.Types;
 
 namespace MyTelegramBot.Listeners {
-    public class HelpCommand : Command {
+    public class HelpCommand : Command, IListener {
         public HelpCommand(Bot bot): base(bot) {
             Names = new string[]{"/help", "!help"};
         }

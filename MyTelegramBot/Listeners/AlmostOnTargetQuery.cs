@@ -4,7 +4,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace MyTelegramBot.Listeners;
 
-public class AlmostOnTargetQuery : InlineReply //TODO: must be query from previous step
+public class AlmostOnTargetQuery : InlineReply, IListener //TODO: must be query from previous step
 {
     public AlmostOnTargetQuery(Bot bot) : base(bot)
     {

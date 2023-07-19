@@ -25,9 +25,10 @@ public class Bot {
         Listeners = new List<Listener>() { };
         foreach(var type in GetTypesImplementedBy<IListener>(Assembly.GetExecutingAssembly()))
         {
-            Listener instance = (Listener)Activator.CreateInstance(type);
+            Listener instance = (Listener)Activator.CreateInstance(type, this);
             Listeners.Add(instance);
         }
+        Console.WriteLine("Total Listeners: " + Listeners.Count);
     }
     
     public async Task Init() 
@@ -67,6 +68,7 @@ public class Bot {
             "Юриспруденция",
             "Развлечения и отдых"
         };
+
         var collection = new CategoryRepository();
         foreach (var variableCategory in CheckCategories)
         {

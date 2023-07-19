@@ -2,7 +2,7 @@ using MyTelegramBot.Types;
 
 namespace MyTelegramBot.Listeners;
 
-public class ChannelNotExists : Query
+public class ChannelNotExists : Query, IListener
 {
     public ChannelNotExists(Bot bot) : base(bot)
     {

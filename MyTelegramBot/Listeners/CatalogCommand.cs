@@ -8,7 +8,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace MyTelegramBot.Listeners;
 
-public class CatalogCommand : Query
+public class CatalogCommand : Query, IListener
 {
     public CatalogCommand(Bot bot): base(bot) {
         Names = new string[]{"/catalog"};

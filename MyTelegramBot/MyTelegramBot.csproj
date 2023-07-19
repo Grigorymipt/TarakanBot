@@ -15,6 +15,7 @@
       <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
       <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
       <PackageReference Include="Telegram.Bot" Version="19.0.0" />
+      <PackageReference Include="WTelegramClient" Version="3.5.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -63,6 +64,27 @@
       </Compile>
       <Compile Update="Types\Command.cs">
         <DependentUpon>Listener.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\21toIlfListeners\ContinueQuery.cs">
+        <DependentUpon>CorrectTestAnswer.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\21toIlfListeners\SubscribeTenChannelsQuery.cs">
+        <DependentUpon>ContinueQuery.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\21toIlfListeners\MoreAboutVIP.cs">
+        <DependentUpon>AlmostOnTarget2Query.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\21toIlfListeners\CorrectTestAnswer.cs">
+        <DependentUpon>StartTest.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\21toIlfListeners\AlmostOnTarget2Query.cs">
+        <DependentUpon>SubscribeTenChannelsQuery.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\21toIlfListeners\SubscribeTenVIPChannelsQuery.cs">
+        <DependentUpon>SubscribeTenChannelsQuery.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\21toIlfListeners\StartTest.cs">
+        <DependentUpon>WatchMovies.cs</DependentUpon>
       </Compile>
     </ItemGroup>
 

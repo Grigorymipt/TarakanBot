@@ -4,7 +4,6 @@ using MyTelegramBot.Convertors;
 using MyTelegramBot.Utils;
 using Telegram.Bot.Types;
 using User = MongoDatabase.ModelTG.User;
-
 namespace MyTelegramBot.Types;
 
 public static class Database
@@ -132,5 +131,4 @@ public static class Database
         var channel = await GetChannelAsync(new Guid(Id));
         return channel;
     }
-    
 }

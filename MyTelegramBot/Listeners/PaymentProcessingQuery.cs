@@ -2,7 +2,7 @@ using MyTelegramBot.Types;
 
 namespace MyTelegramBot.Listeners;
 
-public class PaymentProcessingQuery : Query
+public class PaymentProcessingQuery : Query, IListener
 {
     public PaymentProcessingQuery(Bot bot) : base(bot)
     {

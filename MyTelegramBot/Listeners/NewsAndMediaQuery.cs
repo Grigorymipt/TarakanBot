@@ -3,7 +3,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace MyTelegramBot.Listeners;
 
-public class NewsAndMediaQuery : Query
+public class NewsAndMediaQuery : Query, IListener
 {
     public NewsAndMediaQuery(Bot bot): base(bot) {
         Names = new string[]{"/NewsAndMedia", "!news"};

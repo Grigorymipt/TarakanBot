@@ -2,7 +2,7 @@ using MyTelegramBot.Types;
 using Telegram.Bot.Types;
 
 namespace MyTelegramBot;
-public class ChoseCategoryQuery : Query
+public class ChoseCategoryQuery : Query, IListener
 {
     public ChoseCategoryQuery(Bot bot) : base(bot)
     {

@@ -2,7 +2,7 @@ using MyTelegramBot.Types;
 
 namespace MyTelegramBot.Listeners;
 
-public class  GetAdressImAdminQuery : Query
+public class  GetAdressImAdminQuery : Query, IListener
 {
     public GetAdressImAdminQuery(Bot bot) : base(bot)
     {

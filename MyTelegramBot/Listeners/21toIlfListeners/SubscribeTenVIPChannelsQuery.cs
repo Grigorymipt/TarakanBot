@@ -1,36 +1,33 @@
-using System.Threading.Channels;
 using MyTelegramBot.Types;
 using Telegram.Bot;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
-using TL;
-using Channel = TL.Channel;
-using Message = Telegram.Bot.Types.Message;
 using User = MongoDatabase.ModelTG.User;
 
-namespace MyTelegramBot.Listeners;
+namespace MyTelegramBot.Listeners._21toIlfListeners;
 
-public class SubscribeTenChannelsQuery : Query, IListener
+public class SubscribeTenVIPChannelsQuery : Query, IListener
 {
     protected List<string> ChannelNames = new List<string>() { "google.com" };
     protected string ChannelName = "https://t.me/TestForTestingAndTestingForTest";
-    public SubscribeTenChannelsQuery(Bot bot) : base(bot)
+    public SubscribeTenVIPChannelsQuery(Bot bot) : base(bot)
     {
         MessageToSend = "Some @ - channel with short description, EX: " + ChannelName;
-        Names = new[] { "/subscribeTenChannels" };
+        Names = new[] { "/subscribeTenVIPChannels" };
         //Links = ...
         Buttons = new Dictionary<string, string>()
         {
-            { "🟢 Подписаться", "/subscribeListedChannel" }, // MakeLink
-            { "🔴 Пропустить", "/skipListedChannel" },
-            { "🔴 Black List 🔴", "/blockListedChannel " + ChannelName },
-            { "Подписался на 10 каналов", "/iSubscribed" }
+            { "🟢 Подписаться", "/subscribeListedVIPChannel" }, // MakeLink
+            { "🔴 Пропустить", "/skipListedVIPChannel" },
+            // { "🔴 Black List 🔴", "/blockListedVIPChannel " + ChannelName },
+            { "Подписался на 10 каналов", "/iSubscribedVIP" }
         };
     }
 
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        if (user.Subscribes > 5) //TODO: 20 in prod
+        if (user.SubscribesVip > 5) //TODO: 20 in prod
         {
             MessageToSend = "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять" +
                             " каналов, предложенных выше.";
@@ -48,7 +45,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
         foreach (var category in buttonsList)
         {
             InlineKeyboardButton reply;
-            if (category.Value == "/subscribeListedChannel" )
+            if (category.Value == "/subscribeListedVIPChannel" )
             {
                 reply = InlineKeyboardButton
                     .WithUrl(category.Key, ChannelName);
@@ -75,26 +72,26 @@ public class SubscribeTenChannelsQuery : Query, IListener
     }
 }
 
-public class SkipTenChannelsQuery : SubscribeTenChannelsQuery
+public class SkipTenVIPChannelsQuery : SubscribeTenVIPChannelsQuery, IListener
 {
-    public SkipTenChannelsQuery(Bot bot) : base(bot)
+    public SkipTenVIPChannelsQuery(Bot bot) : base(bot)
     {
-        Names = new []{"/skipListedChannel"};
+        Names = new []{"/skipListedVIPChannel"};
     }
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        user.Subscribes += 1;
+        user.SubscribesVip += 1;
         user.Update();
         return base.Run(context, cancellationToken);
     }
 }
 
-public class BlockTenChannelsQuery : SubscribeTenChannelsQuery
+public class BlockTenVIPChannelsQuery : SubscribeTenVIPChannelsQuery, IListener
 {
-    public BlockTenChannelsQuery(Bot bot) : base(bot)
+    public BlockTenVIPChannelsQuery(Bot bot) : base(bot)
     {
-        Names = new []{"/blockListedChannel"};
+        Names = new []{"/blockListedVIPChannel"};
         MessageToSend = "🤯 Благодарим! 🧐 Наша полиция нравов обязательно разберется с этим! \n\n" + MessageToSend;
     }
     protected override string Run(Context context, CancellationToken cancellationToken)
@@ -117,13 +114,13 @@ public class BlockTenChannelsQuery : SubscribeTenChannelsQuery
     }
 }
 
-class CheckSubscriptions : Query, IListener
+class CheckSubscriptionsVIP : Query, IListener
 {
     private bool UserSubscribed = false;
 
-    public CheckSubscriptions(Bot bot) : base(bot)
+    public CheckSubscriptionsVIP(Bot bot) : base(bot)
     {
-        Names = new[] { "/iSubscribed" };
+        Names = new[] { "/iSubscribedVIP" };
         Buttons = new Dictionary<string, string>();
     }
 
@@ -134,12 +131,10 @@ class CheckSubscriptions : Query, IListener
         if (userSubscribed) UserSubscribed = true;
         if (UserSubscribed)
         {
-            MessageToSend = "🎯 Отлично, теперь необходимо подписаться на 10 каналов VIP блоггеров. При нажатии на " +
-                            "кнопку пропустить канал будет заменен на другой, исходя из указанных интересов. " +
-                            "Нажать 'пропустить' можно не более 20 раз. 🚨🚔 Если канал нарушает правила пользования " +
-                            "#UserHub, то жми «пропустить» а затем «Black List» и наши специалисты разберутся с этим.";
+            MessageToSend = "😉 Отлично, проверка прошла успешно! \n 🚨 ВАЖНО. \n Не отписывайся от этих каналов, " +
+                            "иначе можно попасть в BlackList!";
             Buttons.Clear();
-            Buttons.Add("Принято!", "/subscribeTenVIPChannels");
+            Buttons.Add("Принято!", "/clear66step");
         }
         else
         {

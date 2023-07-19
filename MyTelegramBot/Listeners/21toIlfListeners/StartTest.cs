@@ -2,7 +2,7 @@ using MyTelegramBot.Types;
 
 namespace MyTelegramBot.Listeners._21toIlfListeners;
 
-public class StartTest : Query
+public class StartTest : Query, IListener
 {
     public StartTest(Bot bot) : base(bot)
     {

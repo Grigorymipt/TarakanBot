@@ -3,7 +3,7 @@ using Telegram.Bot;
 
 namespace MyTelegramBot.Listeners;
 
-public class SaveCategoryQuery : InlineQuery 
+public class SaveCategoryQuery : InlineQuery, IListener 
 {
     public SaveCategoryQuery(Bot bot) : base(bot)
     {

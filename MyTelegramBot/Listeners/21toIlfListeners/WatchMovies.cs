@@ -6,7 +6,7 @@ using InlineQuery = Telegram.Bot.Types.InlineQuery;
 
 namespace MyTelegramBot.Listeners._21toIlfListeners;
 
-public class WatchMovies : Command // TODO: Query
+public class WatchMovies : Command, IListener // TODO: Query, IListener
 {
     public WatchMovies(Bot bot) : base(bot)
     {

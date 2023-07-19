@@ -11,7 +11,7 @@ using Message = Telegram.Bot.Types.Message;
 
 namespace MyTelegramBot.Listeners;
 
-public class PromoCommand : Command
+public class PromoCommand : Command, IListener
 {
     public PromoCommand(Bot bot): base(bot) {
         Names = new string[]{"/promo", "!promo"};

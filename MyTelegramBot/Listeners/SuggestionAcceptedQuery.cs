@@ -2,7 +2,7 @@ using MyTelegramBot.Types;
 
 namespace MyTelegramBot.Listeners;
 
-public class SuggestionAcceptedQuery : Query
+public class SuggestionAcceptedQuery : Query, IListener
 {
     public SuggestionAcceptedQuery(Bot bot) : base(bot)
     {

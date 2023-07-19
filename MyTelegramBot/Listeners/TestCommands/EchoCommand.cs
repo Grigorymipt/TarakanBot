@@ -2,7 +2,7 @@ using System.Threading;
 using MyTelegramBot.Types;
 
 namespace MyTelegramBot.Listeners {
-    public class EchoCommand : Command {
+    public class EchoCommand : Command, IListener {
         public EchoCommand(Bot bot): base(bot) {
             Names = new string[]{"/echo", "!echo"};
         }
