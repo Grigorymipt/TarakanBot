@@ -71,8 +71,9 @@ public class DatabaseTests
         User confirmUser = new User();
         confirmUser.Id = IdConvertor.ToGuid(-11);
         //vercode:
-        long verificationCode = 25232;
+        long verificationCode = 65769;
         confirmUser.LastMessage = verificationCode.ToString();
+        database.DeleteDocument(IdConvertor.ToGuid(-11));
         database.CreateDocument(confirmUser);
     }
 

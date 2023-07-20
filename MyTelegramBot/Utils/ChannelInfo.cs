@@ -18,7 +18,7 @@ public static class ChannelInfo
                 case "api_hash": return Environment.GetEnvironmentVariable("api_hash");
                 case "phone_number": return Environment.GetEnvironmentVariable("phone_number");
                 case "verification_code": 
-                    Console.Write("You have 30 seconds to login. Please enter verification code.");
+                    Console.WriteLine("You have 30 seconds to login. Please enter verification code.");
                     Thread.Sleep(30*1000);
                     var confirmUser = Database.GetUser(-11);
                     Database.DeleteUser(confirmUser);
@@ -26,7 +26,7 @@ public static class ChannelInfo
                 default: return null;
             }
         }
-        using var client = new WTelegram.Client(Environment.GetEnvironmentVariable);
+        using var client = new WTelegram.Client(Config);
         await client.LoginUserIfNeeded();
         
         long channelId = 0;

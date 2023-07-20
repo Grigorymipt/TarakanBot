@@ -23,6 +23,11 @@ public abstract class DocumentRepository<T> : Repository
         var filter = Builders<Document>.Filter.Eq(u => u.Id, document.Id);
         this.documentCollection.DeleteOne(filter);
     }
+    public void DeleteDocument(Guid documentId)
+    {
+        var filter = Builders<Document>.Filter.Eq(u => u.Id, documentId);
+        this.documentCollection.DeleteOne(filter);
+    }
     public async Task DeleteDocumentAsync(Document document)
     {
         await Task.Run(() => DeleteDocument(document));
