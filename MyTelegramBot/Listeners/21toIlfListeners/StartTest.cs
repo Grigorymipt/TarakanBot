@@ -17,7 +17,7 @@ public class StartTest : Query, IListener
     }
 }
 
-public class WrongTestAnswer : StartTest
+public class WrongTestAnswer : StartTest, IListener
 {
     public WrongTestAnswer(Bot bot) : base(bot)
     {

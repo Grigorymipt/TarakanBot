@@ -35,7 +35,7 @@ public class WatchMovies : Command, IListener // TODO: Query, IListener
     }
 }
 
-public class SendKeyWord : Types.InlineQuery
+public class SendKeyWord : Types.InlineQuery, IListener
 {
     public SendKeyWord(Bot bot) : base(bot)
     {
@@ -45,7 +45,7 @@ public class SendKeyWord : Types.InlineQuery
     }
 }
 
-public class GetKeyWord : Types.InlineReply
+public class GetKeyWord : Types.InlineReply, IListener
 {
     public GetKeyWord(Bot bot) : base(bot)
     {
