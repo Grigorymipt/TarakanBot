@@ -89,6 +89,15 @@
       <Compile Update="Listeners\MyHandshakesQuery.cs">
         <DependentUpon>MenuCommand.cs</DependentUpon>
       </Compile>
+      <Compile Update="Listeners\HandshakeStatsQuery.cs">
+        <DependentUpon>MyHandshakesQuery.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\MyChannelsQuery.cs">
+        <DependentUpon>MenuCommand.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Listeners\MyVipStatusQuery.cs">
+        <DependentUpon>MyChannelsQuery.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

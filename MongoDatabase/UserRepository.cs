@@ -29,7 +29,6 @@ public class UserRepository : DocumentRepository<User>
     { 
         return await Task<User>.Run(() => GetDocument(Id));
     }
-
     public override User GetDocument(string UserName)
     {
         var filter = Builders<User>.Filter.Eq(u => u.UserName, UserName);

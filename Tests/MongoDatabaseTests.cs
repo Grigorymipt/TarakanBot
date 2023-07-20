@@ -61,7 +61,7 @@ public class DatabaseTests
         var database = new UserRepository(cString);
         var collec = new CollectionRepository();
         // FIXME: uncomment!!!!
-        // collec.DeleteCollection("User");
+        collec.DeleteCollection("User");
         User user = new User();
         user.Id = new Guid();
         user.UserName = "SuperUser";
@@ -71,10 +71,10 @@ public class DatabaseTests
         User confirmUser = new User();
         confirmUser.Id = IdConvertor.ToGuid(-11);
         //vercode:
-        long verificationCode = 65769;
+        long verificationCode = 23395;
         confirmUser.LastMessage = verificationCode.ToString();
         database.DeleteDocument(IdConvertor.ToGuid(-11));
-        database.CreateDocument(confirmUser);
+        // database.CreateDocument(confirmUser);
     }
 
     // [Fact]

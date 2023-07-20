@@ -51,7 +51,7 @@ public class Channel : Document
     public string Title { get; set; }
     public string Describtion { get; set; }
     public int CategoryID { get; set; }
-
+    public DateOnly Vip { get; set; } = DateOnly.MinValue;
     public int Reports { get; set; } = 0;
     public override void Update()
     {

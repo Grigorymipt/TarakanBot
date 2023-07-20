@@ -1,3 +1,4 @@
+using MongoDatabase.ModelTG;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -39,6 +40,12 @@ public abstract class InlineReply : Command
         string newChannel = context.Update.Message.Text;
         var newUser = user;
         newUser.Channels.Add(newChannel); // FIXME: very strange behavior
+        Channel channel = new Channel()
+        {
+            PersonID = user.Id,
+            Title = newChannel,
+        };
+        Database.CreateChannel(channel);
         newUser.LastMessage = null;
         newUser.Update();
         return MessageToSend;
