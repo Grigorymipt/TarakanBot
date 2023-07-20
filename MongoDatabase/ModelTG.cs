@@ -25,7 +25,7 @@ public class User : Document
     }
     public string UserName { get; set; }
     public string RefId { get; set; }
-    public List<User>? Children { get; set; } = new();
+    public List<string>? Children { get; set; } = new();
     public List<string> Channels { get; set; }
     public int? Messages { get; set; } = 0;
 

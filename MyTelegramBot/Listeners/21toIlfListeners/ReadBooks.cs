@@ -15,7 +15,7 @@ public class ReadBooks : Command, IListener // TODO: Query, IListener
 
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
-        Send.Document(context, "/home/pommes/RiderProjects/TelegramBot/Materials/conspect.pdf", cancellationToken);
+        // Send.Document(context, "/home/pommes/RiderProjects/TelegramBot/Materials/conspect.pdf", cancellationToken);
         return base.Run(context, cancellationToken);
     }
 }

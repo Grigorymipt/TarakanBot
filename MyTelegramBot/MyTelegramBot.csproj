@@ -86,6 +86,9 @@
       <Compile Update="Listeners\21toIlfListeners\StartTest.cs">
         <DependentUpon>WatchMovies.cs</DependentUpon>
       </Compile>
+      <Compile Update="Listeners\MyHandshakesQuery.cs">
+        <DependentUpon>MenuCommand.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

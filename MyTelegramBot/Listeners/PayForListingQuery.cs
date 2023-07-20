@@ -1,7 +1,9 @@
 using MyTelegramBot.Types;
 using Telegram.Bot;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.Payments;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace MyTelegramBot.Listeners;
 
@@ -88,11 +90,12 @@ public class ConfirmListingPayment : Listener, IListener // TODO: make abstract 
         CancellationToken cancellationToken) 
     {
         var preCheckoutQueryId = context.Update.PreCheckoutQuery.Id;
-        context.BotClient.AnswerPreCheckoutQueryAsync(
+        await context.BotClient.AnswerPreCheckoutQueryAsync(
             preCheckoutQueryId: preCheckoutQueryId,
             cancellationToken: cancellationToken
         );
         
+        //Todo: add node to DB
     }
 
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)

@@ -87,7 +87,23 @@ public class Bot {
         {
             AllowedUpdates = {},
         };
-
+         
+        // TODO: menu init encapsulate
+        var listCommands = new List<BotCommand>();
+        listCommands.Add(new BotCommand()
+        {
+            Command = "menu",
+            Description = "Пользовательское меню"
+        });
+        listCommands.Add(new BotCommand()
+        {
+            Command = "watchmovies",
+            Description = "Люблю смотреть фильмы"
+        });
+        await botClient.SetMyCommandsAsync(
+            listCommands.AsEnumerable()
+            );
+        
         Console.WriteLine("Starting bot...");
         botClient.StartReceiving(
             HandleUpdateAsync,

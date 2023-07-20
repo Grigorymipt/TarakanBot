@@ -10,7 +10,7 @@ public class WatchMovies : Command, IListener // TODO: Query, IListener
 {
     public WatchMovies(Bot bot) : base(bot)
     {
-        Names = new[] { "/watchMovies" };
+        Names = new[] { "/watchmovies", "/watchMovies" };
         MessageToSend = "😉 Отлично, тогда лови короткое видео обо мне. Смотри внимательно, в видео спрятано кодовое" +
                         " слово! Нужно будет отправить его мне, чтобы перейти к следующему шагу.";
         Buttons = new Dictionary<string, string>( ){ { "Посмотрел, отправить кодовое слово", "/sendKeyWord" } };
@@ -21,7 +21,7 @@ public class WatchMovies : Command, IListener // TODO: Query, IListener
     //     MessageToSend += "\n https://www.youtube.com/watch?v=A0_Abt4dzAA";
     //     await base.Handler(context, cancellationToken);
     //     // Int64 chatId = context.Update.Message.Chat.Id;
-    //     // var url = new Uri("file:///home/pommes/RiderProjects/TelegramBot/Materials/SHUYE.mp4");
+    //     // var url = new Uri();
     //     // InputFile video = new InputFileStream();
     //     // await context.BotClient.SendVideoAsync(
     //     //     chatId: chatId,
@@ -81,7 +81,7 @@ public class GetKeyWord : Types.InlineReply
                 Buttons.Clear();
                 Buttons.Add("💡 Пройти тест.", "/startTest");
                 ChatId chatId = context.Update.Message.Chat.Id;
-                Send.Document(context, "/home/pommes/RiderProjects/TelegramBot/Materials/conspect.pdf", cancellationToken);
+                //Send.Document(context, "/home/pommes/RiderProjects/TelegramBot/Materials/conspect.pdf", cancellationToken);
             }
 
             

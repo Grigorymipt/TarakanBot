@@ -92,4 +92,19 @@ public class DatabaseTests
         Console.WriteLine(user.Channels);
         user.Channels.Add(newChannel);
     }
+
+    [Fact]
+    public void EnumTest()
+    {
+        Console.WriteLine(Period.Day.ToString());   
+    }
+    public enum Period 
+    {
+        Day,
+        Week,
+        Month,
+        Quarter,
+        Year,
+        All,
+    }
 }
