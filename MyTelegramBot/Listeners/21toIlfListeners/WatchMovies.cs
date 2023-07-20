@@ -81,7 +81,7 @@ public class GetKeyWord : Types.InlineReply
                 Buttons.Clear();
                 Buttons.Add("💡 Пройти тест.", "/startTest");
                 ChatId chatId = context.Update.Message.Chat.Id;
-                //Send.Document(context, "/home/pommes/RiderProjects/TelegramBot/Materials/conspect.pdf", cancellationToken);
+                Send.Document(context, Environment.GetEnvironmentVariable("pathToMaterials")+"conspect.pdf", cancellationToken);
             }
 
             
