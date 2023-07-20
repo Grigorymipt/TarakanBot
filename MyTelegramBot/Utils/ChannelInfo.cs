@@ -10,6 +10,20 @@ public static class ChannelInfo
     
     private static async Task<List<long>> ListAllChannelUsers(string channelName)//
     {
+        static string Config(string what)
+        {
+            switch (what)
+            {
+                case "api_id": return Environment.GetEnvironmentVariable("api_id");
+                case "api_hash": return Environment.GetEnvironmentVariable("api_hash");
+                case "phone_number": return Environment.GetEnvironmentVariable("phone_number");
+                case "verification_code": 
+                    Console.Write("You have 30 seconds to login. Please enter verification code.");
+                    Thread.Sleep(30*1000);
+                    return Environment.GetEnvironmentVariable("verificationCode");
+                default: return null;
+            }
+        }
         using var client = new WTelegram.Client(Environment.GetEnvironmentVariable);
         await client.LoginUserIfNeeded();
         

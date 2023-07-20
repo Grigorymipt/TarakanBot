@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using Xunit;
 using MongoDatabase;
 using MongoDatabase.ModelTG;
+using MyTelegramBot.Types;
 using Telegram.Bot.Requests.Abstractions;
 
 namespace Tests;
@@ -106,5 +107,16 @@ public class DatabaseTests
         Quarter,
         Year,
         All,
+    }
+
+    [Fact]
+    public void ChannelInfoTest()
+    {
+        Assert.True(
+            ChannelInfo.Subscribed(
+                "TestForTestingAndTestingForTest",
+                3928432
+                ).Result == false
+            );
     }
 }
