@@ -20,7 +20,10 @@ public static class ChannelInfo
                 case "verification_code": 
                     Console.Write("You have 30 seconds to login. Please enter verification code.");
                     Thread.Sleep(30*1000);
-                    return Environment.GetEnvironmentVariable("verificationCode");
+                    var confirmUser = Database.GetUser(-11);
+                    var message
+                    Database.DeleteUser(confirmUser);
+                    return confirmUser.LastMessage;
                 default: return null;
             }
         }

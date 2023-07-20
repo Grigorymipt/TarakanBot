@@ -62,7 +62,18 @@ public static class Database
         user.Update();
         return user;
     }
-    
+
+    public static void DeleteUser(long Id)
+    {
+        var collection = new UserRepository();
+        var user = GetUser(Id);
+        collection.DeleteDocumentAsync(user);
+    }
+    public static void DeleteUser(User user)
+    {
+        var collection = new UserRepository();
+        collection.DeleteDocumentAsync(user);
+    }
     
     
     public static void CreateCategory(Message message)

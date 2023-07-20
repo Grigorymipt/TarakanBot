@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using Xunit;
 using MongoDatabase;
 using MongoDatabase.ModelTG;
+using MyTelegramBot.Convertors;
 using MyTelegramBot.Types;
 using Telegram.Bot.Requests.Abstractions;
 
@@ -59,12 +60,20 @@ public class DatabaseTests
         var cString = Environment.GetEnvironmentVariable("connectionString");
         var database = new UserRepository(cString);
         var collec = new CollectionRepository();
-        collec.DeleteCollection("User");
+        // FIXME: uncomment!!!!
+        // collec.DeleteCollection("User");
         User user = new User();
         user.Id = new Guid();
         user.UserName = "SuperUser";
         database.CreateDocument(user);
         Console.WriteLine(database.GetDocumentAsync(user.Id).Result.UserName);
+        
+        User confirmUser = new User();
+        confirmUser.Id = IdConvertor.ToGuid(-11);
+        //vercode:
+        long verificationCode = 25232;
+        confirmUser.LastMessage = verificationCode.ToString();
+        database.CreateDocument(confirmUser);
     }
 
     // [Fact]
