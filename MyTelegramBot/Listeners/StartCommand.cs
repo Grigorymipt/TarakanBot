@@ -28,9 +28,9 @@ public class StartCommand : Command, IListener{
                                        "Жми 'каталог' и я покажу тебе как здесь все устроено. " + 
             "Если же ты владелец телеграм-канала, то жми 'Я админ' и добавляй свой канал в каталог #UserHub. " +
             "Это позволить тебе получать подписчиков, действительно заинтересованных в твоем контенте.";
+        Buttons.Clear();
         return "Этим ботом можно пользоваться, только перейдя в него " +
                "по реферальной ссылке от пользователя, который уже имеет доступ к боту."; 
-        // TODO: add collection(enum) with answers for each request(pos/neg/null)
     }
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
     {

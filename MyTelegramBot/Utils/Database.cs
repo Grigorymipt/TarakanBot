@@ -40,7 +40,7 @@ public static class Database
         return user;
     }
     /// <returns>The session of the sender of a given <c>Message</c> object.</returns>
-    public static async Task<User> GetUserAsync(long Id) // TODO: add async here
+    public static async Task<User> GetUserAsync(long Id)
     {
         var collection = new UserRepository();
         User user = await collection.GetDocumentAsync(IdConvertor.ToGuid(Id));

@@ -4,7 +4,7 @@ using Telegram.Bot.Types.Enums;
 
 namespace MyTelegramBot.Listeners;
 
-public class AlmostOnTargetQuery : InlineReply, IListener //TODO: must be query from previous step
+public class AlmostOnTargetQuery : InlineReply, IListener 
 {
     public AlmostOnTargetQuery(Bot bot) : base(bot)
     {
@@ -19,5 +19,23 @@ public class AlmostOnTargetQuery : InlineReply, IListener //TODO: must be query 
                         " бесплатно и навсегда. Если же этот вариант не подходит, то ты можешь приобрести пожизненный " +
                         "листинг в каталоге всего за 100$";
         MessageLabel = "GetAddressInline";
+    }
+    protected override string Run(Context context, CancellationToken cancellationToken)
+    {
+        // Console.WriteLine(context.Update.Message.From.Id);
+        var user = Database.GetUser(context.Update.Message.From.Id);
+        // Console.WriteLine(context.Update.Message.Text);
+        string newChannel = context.Update.Message.Text;
+        var newUser = user;
+        newUser.Channels.Add(newChannel); // FIXME: very strange behavior
+        Channel channel = new Channel()
+        {
+            PersonID = user.Id,
+            Title = newChannel,
+        };
+        Database.CreateChannel(channel);
+        newUser.LastMessage = null;
+        newUser.Update();
+        return MessageToSend;
     }
 }

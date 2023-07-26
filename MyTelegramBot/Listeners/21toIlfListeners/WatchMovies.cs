@@ -83,8 +83,6 @@ public class GetKeyWord : Types.InlineReply, IListener
                 ChatId chatId = context.Update.Message.Chat.Id;
                 Send.Document(context, Environment.GetEnvironmentVariable("pathToMaterials")+"conspect.pdf", cancellationToken);
             }
-
-            
         }
         return base.Run(context, cancellationToken);
     }

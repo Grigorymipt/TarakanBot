@@ -96,7 +96,7 @@
         <DependentUpon>MenuCommand.cs</DependentUpon>
       </Compile>
       <Compile Update="Listeners\MyVipStatusQuery.cs">
-        <DependentUpon>MyChannelsQuery.cs</DependentUpon>
+        <DependentUpon>MenuCommand.cs</DependentUpon>
       </Compile>
     </ItemGroup>
 

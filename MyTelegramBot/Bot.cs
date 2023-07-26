@@ -34,7 +34,6 @@ public class Bot {
     public async Task Init() 
     {
         Console.WriteLine("Initializing bot...");
-        
         List<string> CheckCategories = new List<string>()
         {
             "Новости и медиа" , 
@@ -82,6 +81,8 @@ public class Bot {
         }
         
         TelegramBotClient botClient = new TelegramBotClient(Token);
+        botClient.SetWebhookAsync("62.113.98.40:80"
+            );
         using CancellationTokenSource cts = new CancellationTokenSource();
         ReceiverOptions receiverOptions = new ReceiverOptions
         {
@@ -103,7 +104,6 @@ public class Bot {
         await botClient.SetMyCommandsAsync(
             listCommands.AsEnumerable()
             );
-        
         Console.WriteLine("Starting bot...");
         botClient.StartReceiving(
             HandleUpdateAsync,
@@ -145,20 +145,10 @@ public class Bot {
                 => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
             _ => exception.ToString(),
         };
-        int ErrorCode = -1;
-        switch(exception)
-        {
-            case ApiRequestException apiRequestException:
-                ErrorCode = apiRequestException.ErrorCode;
-                break;
-        };
-        if (ErrorCode != 40399)
-        {
-            Console.WriteLine(ErrorMessage);
-        }
         return Task.CompletedTask;
     }
-    public static IEnumerable<Type> GetTypesImplementedBy<T>(Assembly assembly)
+
+    private static IEnumerable<Type> GetTypesImplementedBy<T>(Assembly assembly)
     {
         foreach (var type in assembly.GetTypes().Where(mytype => mytype.GetInterfaces().Contains(typeof(T))))
         {

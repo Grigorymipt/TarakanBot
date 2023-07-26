@@ -32,25 +32,6 @@ public abstract class InlineReply : Command
     {
     }
 
-    protected override string Run(Context context, CancellationToken cancellationToken)
-    {
-        Console.WriteLine(context.Update.Message.From.Id);
-        var user = Database.GetUser(context.Update.Message.From.Id);
-        Console.WriteLine(context.Update.Message.Text);
-        string newChannel = context.Update.Message.Text;
-        var newUser = user;
-        newUser.Channels.Add(newChannel); // FIXME: very strange behavior
-        Channel channel = new Channel()
-        {
-            PersonID = user.Id,
-            Title = newChannel,
-        };
-        Database.CreateChannel(channel);
-        newUser.LastMessage = null;
-        newUser.Update();
-        return MessageToSend;
-    }
-
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
     {
         if (context.Update.Type != UpdateType.Message)

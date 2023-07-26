@@ -1,3 +1,4 @@
+using MongoDatabase.ModelTG;
 using MyTelegramBot.Types;
 using Telegram.Bot.Types;
 using InlineQuery = MyTelegramBot.Types.InlineQuery;
@@ -53,7 +54,19 @@ public class CheckChannelExistence : InlineReply, IListener
             Buttons.Clear();
             Buttons.Add("Отправить еще раз", "/clear66step");
         }
-        return base.Run(context, cancellationToken);
+        var user = Database.GetUser(context.Update.Message.From.Id);
+        string newChannel = context.Update.Message.Text;
+        var newUser = user;
+        newUser.Channels.Add(newChannel); // FIXME: very strange behavior
+        Channel channel = new Channel()
+        {
+            PersonID = user.Id,
+            Title = newChannel,
+        }; // TODO: remove creating channel in abstract class
+        Database.CreateChannel(channel);
+        newUser.LastMessage = null;
+        newUser.Update();
+        return MessageToSend;
     }
 }
 
