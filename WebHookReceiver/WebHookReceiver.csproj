@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>WebHookReceiver</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Telegram.Bot">
+        <HintPath>..\..\..\.nuget\packages\telegram.bot\19.0.0\lib\net6.0\Telegram.Bot.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+</Project>

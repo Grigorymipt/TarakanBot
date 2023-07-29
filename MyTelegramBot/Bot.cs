@@ -1,13 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic.CompilerServices;
 using MongoDatabase;
 using MongoDatabase.ModelTG;
-using MyTelegramBot.Listeners;
-using MyTelegramBot.Listeners._21toIlfListeners;
 using MyTelegramBot.Types;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
@@ -81,9 +74,19 @@ public class Bot {
         }
         
         TelegramBotClient botClient = new TelegramBotClient(Token);
-        botClient.SetWebhookAsync("62.113.98.40:80"
-            );
+        
         using CancellationTokenSource cts = new CancellationTokenSource();
+        //TODO: remove hardcode
+        botClient.SetWebhookAsync(
+            url: "http://testfortestingandtestingfortest.ru:80/",
+            certificate: null,
+            ipAddress: "62.113.98.40",
+            maxConnections: default,
+            allowedUpdates: default,
+            dropPendingUpdates: default,
+            secretToken: null,
+            cancellationToken: cts.Token
+        );
         ReceiverOptions receiverOptions = new ReceiverOptions
         {
             AllowedUpdates = {},
