@@ -10,11 +10,16 @@ using User = Telegram.Bot.Types.User;
 
 namespace MyTelegramBot ;
 public class Bot {
+    private readonly ITelegramBotClient _botClient;
+    private readonly ILogger<Bot> _logger;
+
     public List<Listener> Listeners { get; set; }
     public User Me { get; set; }
     public string Token { get; set; }
-    public Bot()
+    public Bot(ITelegramBotClient botClient, ILogger<Bot> logger)
     {
+        _botClient = botClient;
+        _logger = logger;
         Listeners = new List<Listener>() { };
         foreach(var type in GetTypesImplementedBy<IListener>(Assembly.GetExecutingAssembly()))
         {
@@ -73,11 +78,11 @@ public class Bot {
             Console.WriteLine(category.Id + "   " + category.Title);
         }
         
-        TelegramBotClient botClient = new TelegramBotClient(Token);
+        
         
         using CancellationTokenSource cts = new CancellationTokenSource();
         //TODO: remove hardcode
-        botClient.SetWebhookAsync(
+        _botClient.SetWebhookAsync(
             url: "http://testfortestingandtestingfortest.ru:80/",
             certificate: null,
             ipAddress: "62.113.98.40",
@@ -104,20 +109,21 @@ public class Bot {
             Command = "watchmovies",
             Description = "Люблю смотреть фильмы"
         });
-        await botClient.SetMyCommandsAsync(
+        await _botClient.SetMyCommandsAsync(
             listCommands.AsEnumerable()
             );
-        Console.WriteLine("Starting bot...");
-        botClient.StartReceiving(
-            HandleUpdateAsync,
-            HandleErrorAsync,
-            receiverOptions,
-            cancellationToken: cts.Token
-        );
-
-        Me = await botClient.GetMeAsync();
         
-        Console.WriteLine($"Start listening for @{Me.Username}");
+        Console.WriteLine("Starting bot...");
+        // _botClient.StartReceiving(
+        //     HandleUpdateAsync,
+        //     HandleErrorAsync,
+        //     receiverOptions,
+        //     cancellationToken: cts.Token
+        // );
+
+        // Me = await botClient.GetMeAsync();
+        
+        // Console.WriteLine($"Start listening for @{Me.Username}");
         Console.Read();
 
         cts.Cancel();
@@ -126,10 +132,10 @@ public class Bot {
     {
         return HandleUpdateAsync(context.BotClient, context.Update, cancellationToken);
     }
-
-    async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+   //TODO: unused para botClient
+    public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
-        Context context = new Context(update, botClient);
+        Context context = new Context(update, _botClient);
         foreach (Listener listener in Listeners) {
             if (await listener.Validate(context, cancellationToken))
             {
