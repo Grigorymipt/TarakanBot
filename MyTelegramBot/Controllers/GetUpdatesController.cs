@@ -20,6 +20,7 @@ public class GetUpdatesController : ControllerBase
         [FromServices] Bot handleUpdateService,
         CancellationToken cancellationToken)
     {
+        Console.WriteLine("TelegramAPIWebhookReceived");
         _logger.Log(LogLevel.Information, eventId: new EventId(), message: "TelegramAPIWebhookReceived");
         await handleUpdateService.HandleUpdateAsync(botClient: default, update, cancellationToken);
         return Ok();
