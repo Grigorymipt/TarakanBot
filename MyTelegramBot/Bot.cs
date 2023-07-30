@@ -83,7 +83,7 @@ public class Bot {
         using CancellationTokenSource cts = new CancellationTokenSource();
         //TODO: remove hardcode
         _botClient.SetWebhookAsync(
-            url: "http://testfortestingandtestingfortest.ru:80/",
+            url: "http://testfortestingandtestingfortest.ru:8080/GetUpdates",
             certificate: null,
             ipAddress: "62.113.98.40",
             maxConnections: default,
