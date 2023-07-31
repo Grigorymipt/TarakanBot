@@ -23,6 +23,7 @@ public static class WebHook
             app.UseSwaggerUI();
         }
         app.UseHttpsRedirection();
+        app.UseHsts();
         app.UseAuthorization();
         app.MapControllers();
         app.Run();
