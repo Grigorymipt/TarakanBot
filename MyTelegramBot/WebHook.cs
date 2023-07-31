@@ -1,3 +1,4 @@
+using System.Net;
 using Telegram.Bot;
 namespace MyTelegramBot;
 
@@ -14,6 +15,11 @@ public static class WebHook
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         
+        builder.Services.AddHttpsRedirection(options =>
+        {
+            options.RedirectStatusCode = (int)HttpStatusCode.TemporaryRedirect;
+            options.HttpsPort = 443;
+        });
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -22,6 +28,7 @@ public static class WebHook
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
         app.UseHttpsRedirection();
         app.UseHsts();
         app.UseAuthorization();
