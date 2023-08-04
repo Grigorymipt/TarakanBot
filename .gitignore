@@ -9,4 +9,4 @@ Dockerfile
 Dockerfile.MyTelegramBot
 docker-compose.yml
 .vs
-
+.vscode
