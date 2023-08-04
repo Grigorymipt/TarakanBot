@@ -16,7 +16,7 @@ public class GetUpdatesController : ControllerBase
     public GetUpdatesController(ILogger<GetUpdatesController> logger) => _logger = logger;
     [HttpPost]
     public async Task<IActionResult> Post(
-        //[FromBody] Update update,
+        [FromBody] Update update,
         [FromServices] Bot handleUpdateService,
         CancellationToken cancellationToken)
     {
