@@ -17,7 +17,7 @@ public class GetUpdatesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Post(
         //[FromBody] Update update,
-        //[FromServices] Bot handleUpdateService,
+        [FromServices] Bot handleUpdateService,
         CancellationToken cancellationToken)
     {
         Console.WriteLine("TelegramAPIWebhookReceived");
