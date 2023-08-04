@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Configuration;
 using MyTelegramBot;
-using Telegram.Bot.Types;
-
 namespace WebHookReceiver.Controllers;
 
 [ApiController]
@@ -16,7 +13,7 @@ public class GetUpdatesController : ControllerBase
     public GetUpdatesController(ILogger<GetUpdatesController> logger) => _logger = logger;
     [HttpPost]
     public async Task<IActionResult> Post(
-        [FromBody] Update update,
+        //[FromBody] Update update,
         [FromServices] Bot handleUpdateService,
         CancellationToken cancellationToken)
     {
