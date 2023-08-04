@@ -1,0 +1,7 @@
+export connectionString=mongodb://admin:qi%Cf%C0@garouhiqua.beget.app/admin ;
+export api_id=21404278 ;
+export providerToken=381764678:TEST:61960 ;
+export BotToken=6186816139:AAHa4r1qv-2hC33dNbLqqh8dy0AegLRd-T8 ;
+export api_hash=5b82390c2de9e26b59b3d4b8cf281d45 ;
+export phone_number=+79951534380 ;
+export pathToMaterials=/home/pommes/RiderProjects/TelegramBot/Materials/

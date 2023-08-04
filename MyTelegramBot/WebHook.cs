@@ -1,4 +1,6 @@
 using System.Net;
+using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Telegram.Bot;
 namespace MyTelegramBot;
 
@@ -15,11 +17,20 @@ public static class WebHook
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         
-        builder.Services.AddHttpsRedirection(options =>
+        builder.WebHost.ConfigureKestrel(serverOptions =>
         {
-            options.RedirectStatusCode = (int)HttpStatusCode.TemporaryRedirect;
-            options.HttpsPort = 443;
+            serverOptions.Listen(IPAddress.Any, 8443, options =>
+            {
+                options.UseHttps();
+                options.Protocols = HttpProtocols.Http1AndHttp2AndHttp3;
+            });
         });
+        Console.WriteLine("---------------------!!!!!!!!!!!!!!!!_----------------");
+        // builder.Services.AddHttpsRedirection(options =>
+        // {
+        //     options.RedirectStatusCode = (int)HttpStatusCode.TemporaryRedirect;
+        //     options.HttpsPort = 443;
+        // });
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -36,3 +47,4 @@ public static class WebHook
         app.Run();
     }
 }
+
