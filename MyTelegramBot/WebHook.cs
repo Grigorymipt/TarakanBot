@@ -21,11 +21,11 @@ public static class WebHook
         {
             serverOptions.Listen(IPAddress.Any, 8080, options =>
             {
-                options.Protocols = HttpProtocols.Http1AndHttp2AndHttp3;
+                options.Protocols = HttpProtocols.Http1AndHttp2;
             });
             serverOptions.Listen(IPAddress.Any, 80, options =>
             {
-                options.Protocols = HttpProtocols.Http1AndHttp2AndHttp3;
+                options.Protocols = HttpProtocols.Http1AndHttp2;
             });
         });
         Console.WriteLine("---------------------!!!!!!!!!!!!!!!!_----------------");

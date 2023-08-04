@@ -7,7 +7,7 @@
         <Nullable>enable</Nullable>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
       <UserSecretsId>a2fa7633-e282-4006-868d-2dc7ba54664f</UserSecretsId>
-      <EnablePreviewFeatures>true</EnablePreviewFeatures>
+      <EnablePreviewFeatures>false</EnablePreviewFeatures>
   </PropertyGroup>
 
     <ItemGroup>
