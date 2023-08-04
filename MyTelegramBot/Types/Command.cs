@@ -81,7 +81,8 @@ public abstract class Command : Listener
         if (user == null) return false;
         if (user.RefId == null)
             return false;
-        string messageText = context.Update.Message.Text.Replace($"@{Bot.Me.Username}","");
+        var inputText = context.Update.Message.Text;
+        string messageText = inputText.Replace($"@{Bot.Me.Username}","");
 
         foreach(string name in Names) {
             if (messageText.StartsWith($"{name} ") || messageText.Equals(name)) {
