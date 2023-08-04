@@ -27,7 +27,7 @@ public static class WebHook
         builder.Services.AddHttpClient("telegram_bot_client")
                 .AddTypedClient<ITelegramBotClient>(httpClient =>
                 {
-                    TelegramBotClientOptions options = new(Environment.GetEnvironmentVariable(Config.BotToken));
+                    TelegramBotClientOptions options = new(Config.BotToken);
                     return new TelegramBotClient(options, httpClient);
                 });
         builder.WebHost.ConfigureKestrel(serverOptions =>
