@@ -24,6 +24,10 @@ public static class WebHook
                 options.UseHttps();
                 options.Protocols = HttpProtocols.Http1AndHttp2AndHttp3;
             });
+            serverOptions.Listen(IPAddress.Any, 8080, options =>
+            {
+                options.Protocols = HttpProtocols.Http1AndHttp2AndHttp3;
+            });
         });
         Console.WriteLine("---------------------!!!!!!!!!!!!!!!!_----------------");
         // builder.Services.AddHttpsRedirection(options =>
