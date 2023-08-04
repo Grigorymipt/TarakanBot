@@ -2,6 +2,8 @@ using System.Net;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Telegram.Bot;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace MyTelegramBot;
 
 public static class WebHook
@@ -11,7 +13,7 @@ public static class WebHook
         var builder = WebApplication.CreateBuilder(args);
         // Add services to the container.
         builder.Services.AddScoped<Bot>();
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddNewtonsoftJson();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
@@ -28,12 +30,7 @@ public static class WebHook
                 options.Protocols = HttpProtocols.Http1AndHttp2;
             });
         });
-        Console.WriteLine("---------------------!!!!!!!!!!!!!!!!_----------------");
-        // builder.Services.AddHttpsRedirection(options =>
-        // {
-        //     options.RedirectStatusCode = (int)HttpStatusCode.TemporaryRedirect;
-        //     options.HttpsPort = 443;
-        // });
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
