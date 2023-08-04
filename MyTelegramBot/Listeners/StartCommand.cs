@@ -38,7 +38,9 @@ public class StartCommand : Command, IListener{
             return false;
         if (context.Update.Message!.Type != MessageType.Text)
             return false;
-        string messageText = context.Update.Message.Text.Replace($"@{Bot.Me.Username}","");
+        string? inputText = context.Update.Message.Text;
+        if (inputText == null) return false;
+        string messageText = inputText.Replace($"@{Bot?.Me?.Username?.ToString()}","");
 
         foreach(string name in Names) {
             if (messageText.StartsWith($"{name} ") || messageText.Equals(name)) {
