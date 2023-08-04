@@ -83,7 +83,7 @@ public abstract class Command : Listener
             return false;
         string? inputText = context.Update.Message.Text;
         if (inputText == null) return false;
-        string messageText = inputText.Replace($"@{Bot.Me.Username}","");
+        string messageText = inputText.Replace($"@{Bot?.Me?.Username?.ToString()}","");
 
         foreach(string name in Names) {
             if (messageText.StartsWith($"{name} ") || messageText.Equals(name)) {
