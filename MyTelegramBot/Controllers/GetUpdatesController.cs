@@ -20,7 +20,7 @@ public class GetUpdatesController : ControllerBase
         var updateType = update.GetType();
         Console.WriteLine("TelegramAPIWebhookReceived");
         _logger.Log(LogLevel.Information, eventId: new EventId(), message: $"UpdateType: {updateType}");
-        //await handleUpdateService.HandleUpdateAsync(botClient: default, update, cancellationToken);
+        await handleUpdateService.HandleUpdateAsync(botClient: default, update, cancellationToken);
     
         return Ok();
     }
