@@ -19,11 +19,6 @@ public static class WebHook
         
         builder.WebHost.ConfigureKestrel(serverOptions =>
         {
-            serverOptions.Listen(IPAddress.Any, 8443, options =>
-            {
-                options.UseHttps();
-                options.Protocols = HttpProtocols.Http1AndHttp2AndHttp3;
-            });
             serverOptions.Listen(IPAddress.Any, 8080, options =>
             {
                 options.Protocols = HttpProtocols.Http1AndHttp2AndHttp3;

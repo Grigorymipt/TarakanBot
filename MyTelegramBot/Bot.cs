@@ -75,7 +75,6 @@ public class Bot {
                 category = new Category(){Title = variableCategory, Id = new Guid()};
                 collection.CreateDocument(category); // TODO: Use Mytelegram API
             }
-            Console.WriteLine(category.Id + "   " + category.Title);
         }
         
         
