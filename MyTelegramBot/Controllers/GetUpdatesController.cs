@@ -20,19 +20,13 @@ public class GetUpdatesController : ControllerBase
         var updateType = update.GetType();
         Console.WriteLine("TelegramAPIWebhookReceived");
         _logger.Log(LogLevel.Information, eventId: new EventId(), message: update.Type.ToString());
-        Task.Run(() => handleUpdateService.HandleUpdateAsync(botClient: default, update, cancellationToken));
-
+        await handleUpdateService.HandleUpdateAsync(botClient: default, update, cancellationToken);
         return Ok();
     }
 
     [HttpGet]
-    public string GetSendUpdates()
+    public string Get()
     {
-        return "HelloWorld";
+        return "Use This URL to send a POST query (WebHook)";
     }
-    // [HttpPost]
-    // public async Task PostSendUpdates(Update update)
-    // {
-    //     
-    // }
 }
