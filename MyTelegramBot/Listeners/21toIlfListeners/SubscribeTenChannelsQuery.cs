@@ -54,7 +54,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
         {
             { "🟢 Подписаться", "/subscribeListedChannel" }, // MakeLink
             { "🔴 Пропустить", "/skipListedChannel" },
-            { "🔴 Black List 🔴", "/blockListedChannel " + "ChannelName" },
+            { "🔴 Black List 🔴", "/blockListedChannel " + ChannelName },
             { "Подписался на 10 каналов", "/iSubscribed" }
         };
     }
@@ -62,7 +62,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        if (user.Subscribes > 5) //TODO: 20 in prod
+        if (user.Subscribes.Count > 5) //TODO: 20 in prod
         {
             MessageToSend = "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять" +
                             " каналов, предложенных выше.";
@@ -117,7 +117,7 @@ public class SkipTenChannelsQuery : SubscribeTenChannelsQuery
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        user.Subscribes += 1;
+        user.Subscribes.Add(Database.GetChannel(ChannelName));
         user.Update();
         return base.Run(context, cancellationToken);
     }
@@ -139,7 +139,7 @@ public class BlockTenChannelsQuery : SubscribeTenChannelsQuery
             channel.Update();
         }
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        if (user.Subscribes > 5) //TODO: 20 in prod
+        if (user.Subscribes.Count > 5) //TODO: 20 in prod
         {
             MessageToSend ="🤯 Благодарим! 🧐 Наша полиция нравов обязательно разберется с этим! \n\n" +
                            "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять" +

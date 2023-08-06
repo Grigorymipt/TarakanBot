@@ -32,7 +32,7 @@ public class User : Document
 
     public string? LastMessage { get; set; }
     public List<Guid> Categories { get; set; }
-    public int Subscribes { get; set; } = 0;
+    public List<Channel> Subscribes { get; set; }
     public int SubscribesVip { get; set; } = 0;
     public int Attempts { get; set; } = 0;
     
