@@ -47,14 +47,14 @@ public class SubscribeTenChannelsQuery : Query, IListener
 
     public SubscribeTenChannelsQuery(Bot bot) : base(bot)
     {
-        MessageToSend = "Some @ - channel with short description, EX: " + ChannelName;
+        MessageToSend = "Some @ - channel with short description, EX: " + "ChannelName"; //uncomme
         Names = new[] { "/subscribeTenChannels" };
         //Links = ...
         Buttons = new Dictionary<string, string>()
         {
             { "🟢 Подписаться", "/subscribeListedChannel" }, // MakeLink
             { "🔴 Пропустить", "/skipListedChannel" },
-            { "🔴 Black List 🔴", "/blockListedChannel " + ChannelName },
+            { "🔴 Black List 🔴", "/blockListedChannel " + "ChannelName" },
             { "Подписался на 10 каналов", "/iSubscribed" }
         };
     }
@@ -68,7 +68,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
                             " каналов, предложенных выше.";
             Buttons.Clear(); //FIXME
         }
-        if (ChannelName == null) MessageToSend = "В #Userhub меньше 20 каналов, подпишитесь на представленные выше";
+        // if (ChannelName == null) MessageToSend = "В #Userhub меньше 20 каналов, подпишитесь на представленные выше";
         return base.Run(context, cancellationToken);
     }
 
