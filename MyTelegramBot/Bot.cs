@@ -32,6 +32,15 @@ public class Bot {
     public async Task Init() 
     {
         Console.WriteLine("Initializing bot...");
+        
+        var users = new UserRepository();
+        var su = new MongoDatabase.ModelTG.User()
+        {
+            UserName = "SuperUser"
+        };
+        Console.WriteLine("DATABASES" + users.GetClient().ListDatabaseNames());
+        users.CreateDocument(su);
+
         List<string> CheckCategories = new List<string>()
         {
             "Новости и медиа" , 
@@ -75,16 +84,7 @@ public class Bot {
                 category = new Category(){Title = variableCategory, Id = new Guid()};
                 collection.CreateDocument(category); // TODO: Use Mytelegram API
             }
-        }
-
-        var users = new UserRepository();
-        var su = new MongoDatabase.ModelTG.User()
-        {
-            UserName = "SuperUser"
-        };
-        Console.WriteLine("DATABASES" + users.GetClient().ListDatabaseNames());
-        users.CreateDocument(su);
-        
+        }        
         
         using CancellationTokenSource cts = new CancellationTokenSource();
         //TODO: remove hardcode
