@@ -37,7 +37,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
                 var channels = Channels;
                 channels.Remove(channelToList);
                 Channels = channels;
-                Console.WriteLine(channels.FirstOrDefault().ToString());
+                Console.WriteLine(channelToList.ToString());
                 return channelToList.ToString(); //
             }
             return null;
