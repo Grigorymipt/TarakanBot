@@ -43,6 +43,6 @@ public class ChannelRepository : DocumentRepository<Channel>
         var builder = Builders<Channel>.Sort;
         var sort = builder.Ascending(f => f.dateTime);
         var documentList = await collection.Find(filter).Sort(sort).ToListAsync();
-        return documentList.GetRange(0, count);
+        return documentList.GetRange(0, Math.Min(count, documentList.Count));
     }
 }
