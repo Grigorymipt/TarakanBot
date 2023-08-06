@@ -76,7 +76,13 @@ public class Bot {
                 collection.CreateDocument(category); // TODO: Use Mytelegram API
             }
         }
-        
+
+        var users = new UserRepository();
+        var su = new MongoDatabase.ModelTG.User()
+        {
+            UserName = "SuperUser"
+        };
+        users.CreateDocument(su);
         
         
         using CancellationTokenSource cts = new CancellationTokenSource();
