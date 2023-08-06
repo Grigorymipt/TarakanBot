@@ -164,4 +164,10 @@ public static class Database
         var channel = await GetChannelAsync(new Guid(Id));
         return channel;
     }
+    public static async Task<List<Channel>> FindChannelToListAsync()
+    {   
+        var collection = new ChannelRepository();
+        List<Channel> channels = await collection.GetOldestDocuments(20);
+        return channels;
+    }
 }

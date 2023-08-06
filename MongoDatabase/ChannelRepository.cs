@@ -24,7 +24,8 @@ public class ChannelRepository : DocumentRepository<Channel>
     }
     public override async Task<Channel> GetDocumentAsync(Guid Id)
     { 
-        return await Task<Channel>.Run(() => GetDocument(Id));
+        var filter = Builders<Channel>.Filter.Eq(u => u.Id, Id);
+        return await collection.Find(filter).FirstOrDefaultAsync<Channel>();
     }
     public override Channel GetDocument(string Title)
     {
@@ -36,15 +37,12 @@ public class ChannelRepository : DocumentRepository<Channel>
         return await Task<Channel>.Run(() => GetDocument(Title));
     }
 
-    public List<Channel> GetAllDocuments()
+    public async Task<List<Channel>> GetOldestDocuments(int count = 20)
     {
         var filter = Builders<Channel>.Filter.Empty;
-        return collection.Find(filter).ToList();
-    }
-    public async Task<List<Channel>> GetAllDocumentsAsync()
-    {
-        var filter = Builders<Channel>.Filter.Empty;
-        var categories = await collection.FindAsync(filter);
-        return categories.ToList();
+        var builder = Builders<Channel>.Sort;
+        var sort = builder.Ascending(f => f.dateTime);
+        var documentList = await collection.Find(filter).Sort(sort).ToListAsync();
+        return documentList.GetRange(0, count);
     }
 }

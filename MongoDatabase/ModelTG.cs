@@ -7,12 +7,13 @@ public abstract class Document
 {
     public Guid Id { get; set; }
     public readonly string Name;
+    public DateTime dateTime;
 
     protected Document(string name)
     {
+        dateTime = DateTime.Now;
         Name = name;
     }
-
     public abstract void Update();
 
 }

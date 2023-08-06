@@ -26,6 +26,12 @@ public class AlmostOnTargetQuery : InlineReply, IListener
         var user = Database.GetUser(context.Update.Message.From.Id);
         // Console.WriteLine(context.Update.Message.Text);
         string newChannel = context.Update.Message.Text;
+        if (newChannel.First() == '@')
+        {
+            Buttons.Clear();
+            Buttons.Add("Ввести имя канала заново","/saveCategory");
+            return "Некорректное имя канала!";
+        }
         var newUser = user;
         newUser.Channels.Add(newChannel); // FIXME: very strange behavior
         Channel channel = new Channel()

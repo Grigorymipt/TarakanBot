@@ -11,8 +11,39 @@ namespace MyTelegramBot.Listeners;
 
 public class SubscribeTenChannelsQuery : Query, IListener
 {
-    protected List<string> ChannelNames = new List<string>() { "google.com" };
-    protected string ChannelName = "https://t.me/TestForTestingAndTestingForTest";
+    // protected List<string> ChannelNames = new List<string>() { "google.com" };
+
+    private List<MongoDatabase.ModelTG.Channel> channels;
+    private List<MongoDatabase.ModelTG.Channel> Channels
+    { 
+        get
+        {
+            channels ??= Database.FindChannelToListAsync().Result;
+            return channels;
+        }
+        set 
+        {
+            channels = value;
+        }
+    }
+    private string channelName;
+    protected string ChannelName
+    {
+        get
+        {
+            if (Channels.Count > 0)
+            {
+                var channelToList = Channels.First();
+                var channels = Channels;
+                channels.Remove(channelToList);
+                Channels = channels;
+                return channels.First().ToString();
+            }
+            return null;
+        }
+    }
+
+
     public SubscribeTenChannelsQuery(Bot bot) : base(bot)
     {
         MessageToSend = "Some @ - channel with short description, EX: " + ChannelName;
@@ -36,6 +67,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
                             " каналов, предложенных выше.";
             Buttons.Clear(); //FIXME
         }
+        if (ChannelName == null) MessageToSend = "В #Userhub меньше 20 каналов, подпишитесь на представленные выше";
         return base.Run(context, cancellationToken);
     }
 
