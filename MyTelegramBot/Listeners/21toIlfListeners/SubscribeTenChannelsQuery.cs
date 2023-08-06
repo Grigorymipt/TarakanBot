@@ -14,7 +14,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
     // protected List<string> ChannelNames = new List<string>() { "google.com" };
 
     private List<MongoDatabase.ModelTG.Channel> channels;
-    private List<MongoDatabase.ModelTG.Channel> Channels
+    protected List<MongoDatabase.ModelTG.Channel> Channels
     { 
         get
         {
@@ -149,7 +149,7 @@ public class BlockTenChannelsQuery : SubscribeTenChannelsQuery
     }
 }
 
-class CheckSubscriptions : Query, IListener
+class CheckSubscriptions : SubscribeTenChannelsQuery, IListener
 {
     private bool UserSubscribed = false;
 
@@ -162,23 +162,32 @@ class CheckSubscriptions : Query, IListener
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
         var userId = context.Update.CallbackQuery.From.Id;
-        var userSubscribed = ChannelInfo.Subscribed(channelName: "TestForTestingAndTestingForTest", userId).Result;
-        if (userSubscribed) UserSubscribed = true;
-        if (UserSubscribed)
+        int totalAmount = 0;
+        foreach (var channel in Channels)
         {
-            MessageToSend = "🎯 Отлично, теперь необходимо подписаться на 10 каналов VIP блоггеров. При нажатии на " +
-                            "кнопку пропустить канал будет заменен на другой, исходя из указанных интересов. " +
-                            "Нажать 'пропустить' можно не более 20 раз. 🚨🚔 Если канал нарушает правила пользования " +
-                            "#UserHub, то жми «пропустить» а затем «Black List» и наши специалисты разберутся с этим.";
-            Buttons.Clear();
-            Buttons.Add("Принято!", "/subscribeTenVIPChannels");
+            var userSubscribed = ChannelInfo.Subscribed(channelName: channel.Title, userId).Result;
+            if (userSubscribed) UserSubscribed = true;
+            if (UserSubscribed)
+                totalAmount += 1;
+        }
+        if (totalAmount < 1) // TODO: prod - 10
+        {
+            MessageToSend = "вы не подписаны на n, каналов, не надо так(";
         }
         else
         {
-            MessageToSend = "Тут подтягиваем логику проверки подписки и: вы не подписаны на n, каналов, не надо так(";
-            //TODO: logics
+            MessageToSend = "🎯 Отлично, теперь необходимо подписаться на 10 каналов VIP блоггеров. При нажатии на " +
+                                "кнопку пропустить канал будет заменен на другой, исходя из указанных интересов. " +
+                                "Нажать 'пропустить' можно не более 20 раз. 🚨🚔 Если канал нарушает правила пользования " +
+                                "#UserHub, то жми «пропустить» а затем «Black List» и наши специалисты разберутся с этим.";
+                Buttons.Clear();
+                Buttons.Add("Принято!", "/subscribeTenVIPChannels");
         }
 
         return base.Run(context, cancellationToken);
     }
+    // public override async Task Handler(Context context, Dictionary<string, string> buttonsList, CancellationToken cancellationToken)
+    // {
+    //     base.Handler(context, buttonsList, cancellationToken);
+    // }
 }
