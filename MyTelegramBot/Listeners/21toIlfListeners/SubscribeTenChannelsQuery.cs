@@ -13,35 +13,26 @@ public class SubscribeTenChannelsQuery : Query, IListener
 {
     // protected List<string> ChannelNames = new List<string>() { "google.com" };
 
-    private List<MongoDatabase.ModelTG.Channel> channels;
-    protected List<MongoDatabase.ModelTG.Channel> Channels
-    { 
-        get
-        {
-            channels ??= Database.FindChannelToListAsync().Result;
-            return channels;
-        }
-        set 
-        {
-            channels = value;
-        }
-    }
-    private string channelName;
-    protected string ChannelName
+    // private List<MongoDatabase.ModelTG.Channel> channels;
+    // protected List<MongoDatabase.ModelTG.Channel> Channels
+    // { 
+    //     get
+    //     {
+    //         channels ??= Database.FindChannelToListAsync().Result;
+    //         return channels;
+    //     }
+    //     set 
+    //     {
+    //         channels = value;
+    //     }
+    // }
+    // private string channelName;
+    protected string ChannelName()
     {
-        get
-        {
-            if (Channels.Count > 0)
-            {
-                var channelToList = Channels.FirstOrDefault();
-                var channels = Channels;
-                channels.Remove(channelToList);
-                Channels = channels;
-                Console.WriteLine(channelToList.ToString());
-                return channelToList.ToString(); //
-            }
-            return null;
-        }
+        var channel = Database.FindChannelToListAsync().Result.First();
+        channel.dateTime = DateTime.Now;
+        channel.Update();
+        return channel.dateTime.ToString();
     }
 
 
@@ -84,7 +75,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
             if (category.Value == "/subscribeListedChannel" )
             {
                 reply = InlineKeyboardButton
-                    .WithUrl(category.Key, ChannelName);
+                    .WithUrl(category.Key, ChannelName());
             }
             else
             {
@@ -117,7 +108,7 @@ public class SkipTenChannelsQuery : SubscribeTenChannelsQuery
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        user.Subscribes.Add(Database.GetChannel(ChannelName));
+        user.Subscribes.Add(Database.GetChannel(ChannelName()));
         user.Update();
         return base.Run(context, cancellationToken);
     }
@@ -164,7 +155,8 @@ class CheckSubscriptions : SubscribeTenChannelsQuery, IListener
     {
         var userId = context.Update.CallbackQuery.From.Id;
         int totalAmount = 0;
-        foreach (var channel in Channels)
+        User user = Database.GetUser(userId);
+        foreach (var channel in user.Subscribes)
         {
             var userSubscribed = ChannelInfo.Subscribed(channelName: channel.Title, userId).Result;
             if (userSubscribed) UserSubscribed = true;
