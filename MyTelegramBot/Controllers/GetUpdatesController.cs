@@ -4,6 +4,7 @@ using Telegram.Bot.Types;
 using Microsoft.Extensions.Logging.Configuration;
 using MyTelegramBot;
 namespace WebHookReceiver.Controllers;
+using Telegram.Bot.Types.Enums;
 
 [ApiController]
 [Route("[controller]")]
@@ -17,11 +18,18 @@ public class GetUpdatesController : ControllerBase
         [FromServices] MyTelegramBot.Bot handleUpdateService,
         CancellationToken cancellationToken)
     {
-        var updateType = update.GetType();
+        UpdateType updateType = update.Type;
+        var text = updateType switch
+        {
+            UpdateType.Message => update.Message?.Text?.ToString(),
+            UpdateType.CallbackQuery => update.CallbackQuery?.Message?.Text?.ToString(),
+            _ => "not recognized"
+        };
         Console.WriteLine("TelegramAPIWebhookReceived");
+        Console.WriteLine(text);
         _logger.Log(LogLevel.Information, eventId: new EventId(), message: update.Type.ToString());
         await handleUpdateService.HandleUpdateAsync(botClient: default, update, cancellationToken);
-        return Ok();
+        return Ok();    
     }
 
     [HttpGet]
