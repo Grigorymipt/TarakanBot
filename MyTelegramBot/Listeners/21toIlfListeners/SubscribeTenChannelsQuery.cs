@@ -33,13 +33,12 @@ public class SubscribeTenChannelsQuery : Query, IListener
         {
             if (Channels.Count > 0)
             {
-                Console.WriteLine($"we have {Channels.Count} channels");
-                var channelToList = Channels.First();
+                var channelToList = Channels.FirstOrDefault();
                 var channels = Channels;
                 channels.Remove(channelToList);
                 Channels = channels;
                 Console.WriteLine(channels.FirstOrDefault().ToString());
-                return channels.FirstOrDefault().ToString(); //
+                return channelToList.ToString(); //
             }
             return null;
         }
