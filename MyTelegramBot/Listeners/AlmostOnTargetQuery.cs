@@ -32,7 +32,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
             Buttons.Add("Ввести имя канала заново","/saveCategory");
             return "Некорректное имя канала!";
         }
-        newChannel.Remove('@');
+        // newChannel.Remove('@');
         var newUser = user;
         newUser.Channels.Add(newChannel); // FIXME: very strange behavior
         Channel channel = new Channel()
