@@ -82,6 +82,7 @@ public class Bot {
         {
             UserName = "SuperUser"
         };
+        Console.WriteLine("DATABASES" + users.GetClient().ListDatabaseNames());
         users.CreateDocument(su);
         
         
