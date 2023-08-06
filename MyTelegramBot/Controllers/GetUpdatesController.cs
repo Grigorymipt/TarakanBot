@@ -41,8 +41,10 @@ public class GetUpdatesController : ControllerBase
     }
 
     [HttpGet]
-    public string Get()
+    [Route("{id?}")]
+    public string Get(int? id)
     {
+        Environment.SetEnvironmentVariable("VerificationCode", id.ToString());
         return "Use This URL to send a POST query (WebHook)";
     }
 }

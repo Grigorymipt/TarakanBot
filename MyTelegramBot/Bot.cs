@@ -111,6 +111,9 @@ public class Bot {
             listCommands.AsEnumerable()
             );
         
+        //Login Telegram API account:
+        await ChannelInfo.Login();
+
         Console.WriteLine("Starting bot...");
         // _botClient.StartReceiving(
         //     HandleUpdateAsync,

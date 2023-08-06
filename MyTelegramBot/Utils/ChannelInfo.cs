@@ -7,10 +7,7 @@ namespace MyTelegramBot.Types;
 public static class ChannelInfo
 {
     public static void AddChannelToList(){}
-    
-    private static async Task<List<long>> ListAllChannelUsers(string channelName)//
-    {
-        static string Config(string what)
+    private static string Config(string what)
         {
             switch (what)
             {
@@ -20,12 +17,19 @@ public static class ChannelInfo
                 case "verification_code": 
                     Console.WriteLine("You have 30 seconds to login. Please enter verification code.");
                     Thread.Sleep(30*1000);
-                    var confirmUser = Database.GetUser(-11);
-                    Database.DeleteUser(confirmUser);
-                    return confirmUser.LastMessage;
+                    if (Environment.GetEnvironmentVariable("VerificationCode") == null) throw new ArgumentNullException("You haven`t send verification code.");
+                    return Environment.GetEnvironmentVariable("VerificationCode");
                 default: return null;
             }
         }
+    public static async Task Login()
+    {
+        using var client = new WTelegram.Client(Config);
+        await client.LoginUserIfNeeded();
+    }
+    private static async Task<List<long>> ListAllChannelUsers(string channelName)//
+    {
+        
         using var client = new WTelegram.Client(Config);
         await client.LoginUserIfNeeded();
         
