@@ -81,7 +81,7 @@ public class GetKeyWord : Types.InlineReply, IListener
                 Buttons.Clear();
                 Buttons.Add("💡 Пройти тест.", "/startTest");
                 ChatId chatId = context.Update.Message.Chat.Id;
-                Send.Document(context, Environment.GetEnvironmentVariable("pathToMaterials")+"conspect.pdf", cancellationToken);
+                //Send.Document(context, Environment.GetEnvironmentVariable("pathToMaterials")+"conspect.pdf", cancellationToken);
             }
         }
         return base.Run(context, cancellationToken);
