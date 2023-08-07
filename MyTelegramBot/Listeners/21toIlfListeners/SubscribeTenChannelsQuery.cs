@@ -75,10 +75,11 @@ public class SubscribeTenChannelsQuery : Query, IListener
         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
 
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
+        var channelName = ChannelName(context.Update.CallbackQuery.From.Id);
         foreach (var category in buttonsList)
         {
             InlineKeyboardButton reply;
-            var channelName = ChannelName(context.Update.CallbackQuery.From.Id);
+            
             if (category.Value == "/subscribeListedChannel" && channelName != null)
             { 
                 try
