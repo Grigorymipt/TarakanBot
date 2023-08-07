@@ -116,6 +116,7 @@ public class SkipTenChannelsQuery : SubscribeTenChannelsQuery
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
+        if(user.Subscribes == null) user.Subscribes = new List<MongoDatabase.ModelTG.Channel>();
         user.Subscribes.Add(Database.GetChannel(ChannelName()));
         user.Update();
         return base.Run(context, cancellationToken);
@@ -138,7 +139,7 @@ public class BlockTenChannelsQuery : SubscribeTenChannelsQuery
             channel.Update();
         }
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        if (user.Subscribes.Count > 5) //TODO: 20 in prod
+        if (user.Subscribes?.Count > 5) //TODO: 20 in prod
         {
             MessageToSend ="🤯 Благодарим! 🧐 Наша полиция нравов обязательно разберется с этим! \n\n" +
                            "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять" +
@@ -164,7 +165,8 @@ class CheckSubscriptions : SubscribeTenChannelsQuery, IListener
         var userId = context.Update.CallbackQuery.From.Id;
         int totalAmount = 0;
         User user = Database.GetUser(userId);
-        foreach (var channel in user.Subscribes)
+        foreach (var channel in 
+            user.Subscribes ??= new List<MongoDatabase.ModelTG.Channel>())
         {
             var userSubscribed = ChannelInfo.Subscribed(channelName: channel.Title, userId).Result;
             if (userSubscribed) UserSubscribed = true;

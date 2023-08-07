@@ -27,7 +27,7 @@ public static class ChannelInfo
         using var client = new WTelegram.Client(Config);
         await client.LoginUserIfNeeded();
     }
-    private static async Task<List<long>> ListAllChannelUsers(string channelName)//
+    private static async Task<Channels_ChannelParticipants> ListAllChannelUsers(string channelName, ChannelParticipantsFilter filter = null)//
     {
         
         using var client = new WTelegram.Client(Config);
@@ -45,22 +45,37 @@ public static class ChannelInfo
                     accessHash = channel1.access_hash;
                     break;
             }
-        List<long> channelUsers = new List<long>();
         InputChannelBase inputChannelBase = new InputChannel(channelId, accessHash);
-        var list = await client.Channels_GetAllParticipants(inputChannelBase);
-        foreach (var element in list.participants)
-        {
-            channelUsers.Add(element.UserId);
-            Console.WriteLine(element.UserId);
-        }
-        return channelUsers;
+        var list = await client.Channels_GetParticipants(inputChannelBase, filter: filter);
+        
+        return list;
+        
     }
     public static async Task<bool> Subscribed(string channelName, long userId)
     {
-        List<long> subscribers = await ChannelInfo.ListAllChannelUsers(channelName);
-        var user = subscribers.Find(u => u == userId);
+        var subscribers = await ListAllChannelUsers(channelName);
+        List<long> channelUsers = new List<long>();
+        foreach (var element in subscribers.participants)
+        {
+            channelUsers.Add(element.UserId);
+            // Console.WriteLine(element.UserId);
+        }
+        var user = channelUsers.Find(u => u == userId);
         if (user == userId)
             return true;
+        return false;
+    }
+    public static async Task<bool> IsAdmin(string channelName, long userId)
+    {
+        
+        var participants = await ListAllChannelUsers(channelName, new ChannelParticipantsAdmins());
+        foreach (var participant in participants.participants) // This is the better way to enumerate the result
+        {
+            var user = participants.users[participant.UserId];
+            if(user.id == userId) return true;
+            // if (participant is ChannelParticipantCreator cpc) Console.WriteLine($"{user} is the owner '{cpc.rank}'");
+            // else if (participant is ChannelParticipantAdmin cpa) Console.WriteLine($"{user} is admin '{cpa.rank}'");
+        }
         return false;
     }
 }
