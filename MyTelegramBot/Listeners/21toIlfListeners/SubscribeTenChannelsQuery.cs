@@ -27,9 +27,14 @@ public class SubscribeTenChannelsQuery : Query, IListener
     //     }
     // }
     // private string channelName;
-    protected string ChannelName()
+    protected string ChannelName(long userId)
     {
+        //FIFO logics
         var channel = Database.FindChannelToListAsync().Result.First();
+        var user = Database.GetUser(userId);
+        user.Subscribes??=new List<MongoDatabase.ModelTG.Channel>();
+        user.Subscribes.Add(channel);
+        user.Update();
         channel.dateTime = DateTime.Now;
         channel.Update();
         return channel.Title.ToString();
@@ -38,14 +43,14 @@ public class SubscribeTenChannelsQuery : Query, IListener
 
     public SubscribeTenChannelsQuery(Bot bot) : base(bot)
     {
-        MessageToSend = "Some @ - channel with short description, EX: " + "ChannelName"; //uncomme
+        MessageToSend = "Some @ - channel with short description, EX: " + "Channel Name"; //uncomme
         Names = new[] { "/subscribeTenChannels" };
         //Links = ...
         Buttons = new Dictionary<string, string>()
         {
             { "🟢 Подписаться", "/subscribeListedChannel" }, // MakeLink
             { "🔴 Пропустить", "/skipListedChannel" },
-            { "🔴 Black List 🔴", "/blockListedChannel " + "ChannelName" },
+            { "🔴 Black List 🔴", "/blockListedChannel " },
             { "Подписался на 10 каналов", "/iSubscribed" }
         };
     }
@@ -72,13 +77,14 @@ public class SubscribeTenChannelsQuery : Query, IListener
         foreach (var category in buttonsList)
         {
             InlineKeyboardButton reply;
-            if (category.Value == "/subscribeListedChannel" && ChannelName() != null)
+            var channelName = ChannelName(context.Update.CallbackQuery.From.Id);
+            if (category.Value == "/subscribeListedChannel" && channelName != null)
             { 
                 try
                 {
                     // Console.WriteLine("");
                     reply = InlineKeyboardButton
-                        .WithUrl(category.Key, "https://t.me/" + ChannelName());
+                        .WithUrl(category.Key, "https://t.me/" + channelName);
                 }
                 catch(Exception ex)
                 {
@@ -115,10 +121,10 @@ public class SkipTenChannelsQuery : SubscribeTenChannelsQuery
     }
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
-        User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        if(user.Subscribes == null) user.Subscribes = new List<MongoDatabase.ModelTG.Channel>();
-        user.Subscribes.Add(Database.GetChannel(ChannelName()));
-        user.Update();
+        // User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
+        // if(user.Subscribes == null) user.Subscribes = new List<MongoDatabase.ModelTG.Channel>();
+        // user.Subscribes.Add(Database.GetChannel(ChannelName(context.Update.CallbackQuery.From.Id)));
+        // user.Update();
         return base.Run(context, cancellationToken);
     }
 }
