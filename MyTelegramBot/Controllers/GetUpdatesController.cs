@@ -31,11 +31,12 @@ public class GetUpdatesController : ControllerBase
         try 
         {
             await handleUpdateService.HandleUpdateAsync(botClient: default, update, cancellationToken);
+            _logger.Log(LogLevel.Information, eventId: new EventId(137), message: "Update have handled succesfull");
         }
         catch(Exception ex)
         {
             await handleUpdateService.HandleErrorAsync(botClient: default, exception: ex, cancellationToken: cancellationToken);
-            // _logger.Log(LogLevel.Error, 1312, "Handling error", ex);
+            _logger.Log(LogLevel.Error, 1312, "Handling error", ex);
         }
         return Ok();  
     }
