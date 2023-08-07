@@ -40,7 +40,7 @@ public class PDFQuery : Query, IListener
     
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
-        Send.Document(context, "conspect.pdf", null, cancellationToken);
+        Send.Document(context, Environment.GetEnvironmentVariable("pathToMaterials")+"conspect.pdf", null, cancellationToken);
         return "Зачем вам этот PDF, когда надежнее пользоваться счетом древних РУСов";
     }
 }
