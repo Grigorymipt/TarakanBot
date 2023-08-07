@@ -65,6 +65,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
             Buttons.Clear(); //FIXME
         }
         // if (ChannelName == null) MessageToSend = "В #Userhub меньше 20 каналов, подпишитесь на представленные выше";
+        Console.WriteLine("tosubscreibe: "+ user.Subscribes?.Count);
         return base.Run(context, cancellationToken);
     }
 
