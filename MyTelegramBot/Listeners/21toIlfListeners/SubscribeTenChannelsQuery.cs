@@ -53,7 +53,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        if (user.Subscribes.Count > 5) //TODO: 20 in prod
+        if (user.Subscribes?.Count > 5) //TODO: 20 in prod
         {
             MessageToSend = "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять" +
                             " каналов, предложенных выше.";
