@@ -45,7 +45,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
         {
             { "🟢 Подписаться", "/subscribeListedChannel" }, // MakeLink
             { "🔴 Пропустить", "/skipListedChannel" },
-            { "🔴 Black List 🔴", "/blockListedChannel " + ChannelName },
+            { "🔴 Black List 🔴", "/blockListedChannel " + "ChannelName" },
             { "Подписался на 10 каналов", "/iSubscribed" }
         };
     }
