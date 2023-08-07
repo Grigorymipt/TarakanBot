@@ -32,7 +32,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
         var channel = Database.FindChannelToListAsync().Result.First();
         channel.dateTime = DateTime.Now;
         channel.Update();
-        return channel.dateTime.ToString();
+        return channel.Title.ToString();
     }
 
 
@@ -76,7 +76,6 @@ public class SubscribeTenChannelsQuery : Query, IListener
             { 
                 try
                 {
-                    Console.WriteLine("Url: " + ChannelName());
                     reply = InlineKeyboardButton
                         .WithUrl(category.Key, ChannelName());
                 }
