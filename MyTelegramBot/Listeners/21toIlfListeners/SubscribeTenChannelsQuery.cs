@@ -72,12 +72,13 @@ public class SubscribeTenChannelsQuery : Query, IListener
         foreach (var category in buttonsList)
         {
             InlineKeyboardButton reply;
-            if (category.Value == "/subscribeListedChannel" && ChannelName != null)
+            if (category.Value == "/subscribeListedChannel" && ChannelName() != null)
             { 
                 try
                 {
+                    Console.WriteLine("Url: " + ChannelName());
                     reply = InlineKeyboardButton
-                    .WithUrl(category.Key, ChannelName());
+                        .WithUrl(category.Key, ChannelName());
                 }
                 catch(Exception ex)
                 {
