@@ -14,7 +14,7 @@ namespace MyTelegramBot.Listeners {
                    "/help - opens this message \n" +
                    "/me - user profile \n" +
                    "/catalog - каталог категорий \n" +
-                   "/promo - user profile \n\n" +
+                   "/promo - ghjvj \n\n" +
                    "Bot calculates message number for each user in each chat.";
         }
     }
