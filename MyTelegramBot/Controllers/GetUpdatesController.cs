@@ -35,8 +35,8 @@ public class GetUpdatesController : ControllerBase
         }
         catch(Exception ex)
         {
-            await handleUpdateService.HandleErrorAsync(botClient: default, exception: ex, cancellationToken: cancellationToken);
-            _logger.Log(LogLevel.Error, 1312, "Handling error", ex);
+            var ErrorMessage = await handleUpdateService.HandleErrorAsync(botClient: default, exception: ex, cancellationToken: cancellationToken);
+            _logger.Log(LogLevel.Error, 1312, ErrorMessage);
         }
         return Ok();  
     }

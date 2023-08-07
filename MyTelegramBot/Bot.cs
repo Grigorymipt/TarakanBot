@@ -154,7 +154,7 @@ public class Bot {
             }
         }
     }
-    public Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+    public async Task<string> HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
         var ErrorMessage = exception switch
         {
@@ -162,7 +162,7 @@ public class Bot {
                 => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
             _ => exception.ToString(),
         };
-        return Task.CompletedTask;
+        return ErrorMessage;
     }
 
     private static IEnumerable<Type> GetTypesImplementedBy<T>(Assembly assembly)
