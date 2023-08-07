@@ -77,7 +77,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
                 try
                 {
                     reply = InlineKeyboardButton
-                        .WithUrl(category.Key, ChannelName());
+                        .WithUrl(category.Key, "https://t.me/" + ChannelName());
                 }
                 catch(Exception ex)
                 {

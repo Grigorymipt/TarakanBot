@@ -130,7 +130,7 @@ public static class Database
     public static void CreateChannel(string Title)
     {
         var collection = new ChannelRepository();
-        
+        Title.Remove('@');
         var channel = new Channel()
         {
             Id = new Guid(),
