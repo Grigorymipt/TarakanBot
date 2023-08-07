@@ -74,8 +74,9 @@ public class SubscribeTenChannelsQuery : Query, IListener
             InlineKeyboardButton reply;
             if (category.Value == "/subscribeListedChannel" )
             {
-                reply = InlineKeyboardButton
-                    .WithUrl(category.Key, ChannelName());
+                if (ChannelName != null)
+                    reply = InlineKeyboardButton
+                        .WithUrl(category.Key, ChannelName());
             }
             else
             {
