@@ -31,7 +31,12 @@ public abstract class InlineReply : Command
     public InlineReply(Bot bot) : base(bot)
     {
     }
-
+    public override async Task Handler(Context context, CancellationToken cancellationToken)
+    {
+        await base.Handler(context, cancellationToken);
+        var user = Database.GetUser(context.Update.Message.From.Id);
+        user.LastMessage = null;
+    }
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
     {
         if (context.Update.Type != UpdateType.Message)

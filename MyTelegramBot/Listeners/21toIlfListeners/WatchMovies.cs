@@ -61,6 +61,7 @@ public class GetKeyWord : Types.InlineReply, IListener
                             " ответы на все вопросы. Жми на 'пройти тест' 👇";
             Buttons.Clear();
             Buttons.Add("💡 Пройти тест.", "/startTest");
+            
         }
         else
         {
