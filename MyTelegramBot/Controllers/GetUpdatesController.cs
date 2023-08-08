@@ -3,6 +3,8 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Microsoft.Extensions.Logging.Configuration;
 using MyTelegramBot;
+using Serilog;
+
 namespace WebHookReceiver.Controllers;
 
 [ApiController]

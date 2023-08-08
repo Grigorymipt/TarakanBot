@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.Configuration.EnvironmentVariables;
 using Telegram.Bot.Types.Enums;
+using Serilog;
 
 namespace MyTelegramBot {
     public static class Config {
@@ -22,6 +23,6 @@ namespace MyTelegramBot {
                 .SetBasePath(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
-        }
+        }   
     }
 }
