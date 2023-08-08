@@ -78,19 +78,19 @@ public class SubscribeTenChannelsQuery : Query, IListener
         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
 
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
-        var channelName = ChannelName(context.Update.CallbackQuery.From.Id);
-        MessageToSend = channelName.Title + channelName.Describtion; 
+        var channeltosubs = ChannelName(context.Update.CallbackQuery.From.Id);
+        MessageToSend = channeltosubs.Title + channeltosubs.Describtion; 
         foreach (var category in buttonsList)
         {
             InlineKeyboardButton reply;
             
-            if (category.Value == "/subscribeListedChannel" && channelName != null)
+            if (category.Value == "/subscribeListedChannel" && channeltosubs != null)
             { 
                 try
                 {
                     // Console.WriteLine("");
                     reply = InlineKeyboardButton
-                        .WithUrl(category.Key, "https://t.me/" + channelName);
+                        .WithUrl(category.Key, "https://t.me/" + channeltosubs.Title);
                 }
                 catch(Exception ex)
                 {
