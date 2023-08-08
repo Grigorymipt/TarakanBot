@@ -56,13 +56,17 @@ public static class ChannelInfo
             try
             {
                 var resolved = await client.Contacts_ResolveUsername(channelName); // without the @
+                Console.WriteLine("resolved");
                 if (resolved.Chat is Channel channel)
                 {
                     await client.Channels_JoinChannel(channel);
+                    Console.WriteLine("Joined");
                     InputChannelBase inputChannelBase = new InputChannel(channelId, accessHash);
                     var list = await client.Channels_GetParticipants(inputChannelBase, filter: filter);
+                    Console.WriteLine("LiSt");
                     return list;
                 }
+                Console.WriteLine($"{channelName} not a ChaCnel");
                 throw new NullReferenceException("Channel not Exists");
             }
             catch
