@@ -45,7 +45,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
                     Channel channel = new Channel()
                     {
                         PersonID = user.Id,
-                        Title = newChannel.Remove(0, 1),
+                        Title = newChannel,
                     };
                     Database.CreateChannel(channel);
                 }
