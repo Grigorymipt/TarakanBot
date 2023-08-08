@@ -20,7 +20,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
                         "листинг в каталоге всего за 100$";
         MessageLabel = "GetAddressInline";
     }
-    protected override string Run(Context context, CancellationToken cancellationToken)
+    protected override async string Run(Context context, CancellationToken cancellationToken)
     {
         // Console.WriteLine(context.Update.Message.From.Id);
         var user = Database.GetUser(context.Update.Message.From.Id);
@@ -33,13 +33,17 @@ public class AlmostOnTargetQuery : InlineReply, IListener
             return "Некорректное имя канала!";
         }
         var newUser = user;
-        newUser.Channels.Add(newChannel.Remove(0, 1)); // FIXME: very strange behavior
-        Channel channel = new Channel()
+        newChannel = newChannel.Remove(0, 1);
+        if (ChannelInfo.IsAdmin(newChannel, context.Update.Message.From.Id).Result) 
         {
-            PersonID = user.Id,
-            Title = newChannel.Remove(0, 1),
-        };
-        Database.CreateChannel(channel);
+            newUser.Channels.Add(newChannel); // FIXME: very strange behavior
+            Channel channel = new Channel()
+            {
+                PersonID = user.Id,
+                Title = newChannel.Remove(0, 1),
+            };
+            Database.CreateChannel(channel);
+        }
         newUser.LastMessage = null;
         newUser.Update();
         return MessageToSend;

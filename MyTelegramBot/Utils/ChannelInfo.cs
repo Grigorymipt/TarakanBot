@@ -72,9 +72,7 @@ public static class ChannelInfo
         foreach (var participant in participants.participants) // This is the better way to enumerate the result
         {
             var user = participants.users[participant.UserId];
-            if(user.id == userId) return true;
-            // if (participant is ChannelParticipantCreator cpc) Console.WriteLine($"{user} is the owner '{cpc.rank}'");
-            // else if (participant is ChannelParticipantAdmin cpa) Console.WriteLine($"{user} is admin '{cpa.rank}'");
+            if (participant is ChannelParticipantCreator && user.id == userId) return true;
         }
         return false;
     }
