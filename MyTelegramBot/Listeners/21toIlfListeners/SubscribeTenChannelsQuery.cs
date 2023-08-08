@@ -27,17 +27,20 @@ public class SubscribeTenChannelsQuery : Query, IListener
     //     }
     // }
     // private string channelName;
-    protected string ChannelName(long userId)
+    protected MongoDatabase.ModelTG.Channel ChannelName(long userId)
     {
         //FIFO logics
         var channel = Database.FindChannelToListAsync().Result.First();
         var user = Database.GetUser(userId);
+        do
+        {
+            channel.dateTime = DateTime.Now;
+            channel.Update();
+        } while (user.Channels?.Contains(channel.Title) == true);    
         user.Subscribes??=new List<MongoDatabase.ModelTG.Channel>();
         user.Subscribes.Add(channel);
         user.Update();
-        channel.dateTime = DateTime.Now;
-        channel.Update();
-        return channel.Title.ToString();
+        return channel;
     }
 
 
@@ -65,7 +68,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
             Buttons.Clear(); //FIXME
         }
         // if (ChannelName == null) MessageToSend = "В #Userhub меньше 20 каналов, подпишитесь на представленные выше";
-        Console.WriteLine("tosubscreibe: "+ user.Subscribes?.Count);
+        
         return base.Run(context, cancellationToken);
     }
 
@@ -76,6 +79,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
 
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
         var channelName = ChannelName(context.Update.CallbackQuery.From.Id);
+        MessageToSend = channelName.Title + channelName.Describtion; 
         foreach (var category in buttonsList)
         {
             InlineKeyboardButton reply;

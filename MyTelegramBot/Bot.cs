@@ -89,7 +89,7 @@ public class Bot {
         using CancellationTokenSource cts = new CancellationTokenSource();
         //TODO: remove hardcode
         await _botClient.SetWebhookAsync(
-            url: "https://somegreentests.ru/GetUpdates",
+            url: Environment.GetEnvironmentVariable("WebHookURL"),
             // ipAddress: "62.113.98.40",
             maxConnections: default,
             allowedUpdates: default,
