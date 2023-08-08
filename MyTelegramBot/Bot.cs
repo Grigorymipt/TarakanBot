@@ -97,7 +97,7 @@ public class Bot {
             secretToken: null,
             cancellationToken: cts.Token
         );
-        ReceiverOptions receiverOptions = new ReceiverOptions
+        ReceiverOptions receiverOptions = new ReceiverOpti ons
         {
             AllowedUpdates = {},
         };
