@@ -70,10 +70,7 @@ public static class ChannelInfo
         
         var participants = await ListAllChannelUsers(channelName, new ChannelParticipantsAdmins());
         foreach (var participant in participants.participants) // This is the better way to enumerate the result
-        {
-            var user = participants.users[participant.UserId];
-            if (participant is ChannelParticipantCreator && user.id == userId) return true;
-        }
+            if (participant is ChannelParticipantCreator cpc && cpc.user_id == userId) return true;
         return false;
     }
 }
