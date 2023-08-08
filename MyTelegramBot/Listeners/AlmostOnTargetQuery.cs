@@ -49,6 +49,11 @@ public class AlmostOnTargetQuery : InlineReply, IListener
                     Database.CreateChannel(channel);
                 }
             }
+            else
+            {
+                MessageToSend = "Вы не являетесь создателем данного канала";
+                Buttons.Clear();
+            }
         }
         catch (Exception ex)
         {

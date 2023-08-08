@@ -53,15 +53,22 @@ public static class ChannelInfo
         }
         catch
         {
-            var resolved = await client.Contacts_ResolveUsername("channelname"); // without the @
-            if (resolved.Chat is Channel channel)
+            try
             {
-                await client.Channels_JoinChannel(channel);
-                InputChannelBase inputChannelBase = new InputChannel(channelId, accessHash);
-                var list = await client.Channels_GetParticipants(inputChannelBase, filter: filter);
-                return list;
+                var resolved = await client.Contacts_ResolveUsername(channelName); // without the @
+                if (resolved.Chat is Channel channel)
+                {
+                    await client.Channels_JoinChannel(channel);
+                    InputChannelBase inputChannelBase = new InputChannel(channelId, accessHash);
+                    var list = await client.Channels_GetParticipants(inputChannelBase, filter: filter);
+                    return list;
+                }
+                throw new NullReferenceException("Channel not Exists");
             }
-            throw new NullReferenceException("Channel not Exists");
+            catch
+            {
+                throw;
+            }
         }
         
     }
