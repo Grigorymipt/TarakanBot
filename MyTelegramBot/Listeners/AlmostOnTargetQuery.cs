@@ -38,8 +38,9 @@ public class AlmostOnTargetQuery : InlineReply, IListener
         {
             if (ChannelInfo.IsAdmin(newChannel, context.Update.Message.From.Id).Result) 
             {
-                if(newUser.Channels != null && newUser.Channels.Contains(newChannel))
+                if(newUser.Channels == null || newUser.Channels.Contains(newChannel) == false)
                 {
+                    newUser.Channels ??= new List<string>();
                     newUser.Channels.Add(newChannel); // FIXME: very strange behavior
                     Channel channel = new Channel()
                     {
