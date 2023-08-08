@@ -37,16 +37,20 @@ public static class ChannelInfo
         long accessHash = 0;
         var chats = await client.Messages_GetAllChats(); // chats = groups/channels (does not include users dialogs)
         Console.WriteLine("This user has joined the following:");
-        foreach (var (id, chat) in chats.chats)
-            switch (chat)
-            {
-                case Channel channel1 when channel1.IsChannel && channel1.username == channelName:
-                    channelId = id;
-                    accessHash = channel1.access_hash;
-                    break;
-            }
+        void InitAccessHash()
+        {
+            foreach (var (id, chat) in chats.chats)
+                switch (chat)
+                {
+                    case Channel channel1 when channel1.IsChannel && channel1.username == channelName:
+                        channelId = id;
+                        accessHash = channel1.access_hash;
+                        break;
+                }
+        }
         try
         {
+            InitAccessHash();
             InputChannelBase inputChannelBase = new InputChannel(channelId, accessHash);
             var list = await client.Channels_GetParticipants(inputChannelBase, filter: filter);
             return list;
@@ -61,6 +65,7 @@ public static class ChannelInfo
                 {
                     await client.Channels_JoinChannel(channel);
                     Console.WriteLine("Joined");
+                    InitAccessHash();
                     InputChannelBase inputChannelBase = new InputChannel(channelId, accessHash);
                     var list = await client.Channels_GetParticipants(inputChannelBase, filter: filter);
                     Console.WriteLine("LiSt");
@@ -92,10 +97,16 @@ public static class ChannelInfo
     }
     public static async Task<bool> IsAdmin(string channelName, long userId)
     {
-        
-        var participants = await ListAllChannelUsers(channelName, new ChannelParticipantsAdmins());
-        foreach (var participant in participants.participants) // This is the better way to enumerate the result
-            if (participant is ChannelParticipantCreator cpc && cpc.user_id == userId) {Console.WriteLine(cpc.user_id); return true;}
-        return false;
+        try
+        {
+            var participants = await ListAllChannelUsers(channelName, new ChannelParticipantsAdmins());
+            foreach (var participant in participants.participants) // This is the better way to enumerate the result
+                if (participant is ChannelParticipantCreator cpc && cpc.user_id == userId) {Console.WriteLine(cpc.user_id); return true;}
+            return false;
+        }
+        catch(Exception ex)
+        {
+            throw;
+        }
     }
 }
