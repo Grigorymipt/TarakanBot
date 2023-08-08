@@ -40,22 +40,22 @@ public class HandshakeStatsForQuery : Query, IListener
                     context.Update.CallbackQuery.Data).ArgumentsText)
         {
             case "All":
-                Database.ListChildrenFrom(user.UserName, DateTime.MinValue);
+                quantity = Database.ListChildrenFrom(user.UserName, DateTime.MinValue).Count();
                 break; 
             case "Year" :
-                Database.ListChildrenFrom(user.UserName, new DateTime(DateTime.Now.Year - 1, DateTime.Now.Month, DateTime.Now.Day));
+                quantity = Database.ListChildrenFrom(user.UserName, new DateTime(DateTime.Now.Year - 1, DateTime.Now.Month, DateTime.Now.Day)).Count();
                 break;
             case "Month" :
-                Database.ListChildrenFrom(user.UserName, new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day));
+                quantity = Database.ListChildrenFrom(user.UserName, new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day)).Count();
                 break;
             case "Quarter" :
-                Database.ListChildrenFrom(user.UserName, new DateTime(DateTime.Now.Year, DateTime.Now.Month - 3, DateTime.Now.Day));
+                quantity = Database.ListChildrenFrom(user.UserName, new DateTime(DateTime.Now.Year, DateTime.Now.Month - 3, DateTime.Now.Day)).Count();
                 break;
             case "Week" :
-                Database.ListChildrenFrom(user.UserName, new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 7));
+                quantity = Database.ListChildrenFrom(user.UserName, new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 7)).Count();
                 break;
             case "Day" :
-                Database.ListChildrenFrom(user.UserName, new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1));
+                quantity = Database.ListChildrenFrom(user.UserName, new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1)).Count();
                 break;         
             // TODO: Add All Periods
         }

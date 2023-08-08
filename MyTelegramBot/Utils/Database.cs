@@ -86,10 +86,10 @@ public static class Database
         collection.DeleteDocumentAsync(user);
     }
     
-     public static void ListChildrenFrom(string parent, DateTime dateTime)
+     public static List<User> ListChildrenFrom(string parent, DateTime dateTime)
     {
         var collection = new UserRepository();
-        collection.GetDocuments(parent, dateTime);
+        return collection.GetDocuments(parent, dateTime);
     }
 
 
