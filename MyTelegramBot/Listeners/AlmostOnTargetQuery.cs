@@ -34,15 +34,30 @@ public class AlmostOnTargetQuery : InlineReply, IListener
         }
         var newUser = user;
         newChannel = newChannel.Remove(0, 1);
-        if (ChannelInfo.IsAdmin(newChannel, context.Update.Message.From.Id).Result) 
+        try
         {
-            newUser.Channels.Add(newChannel); // FIXME: very strange behavior
-            Channel channel = new Channel()
+            if (ChannelInfo.IsAdmin(newChannel, context.Update.Message.From.Id).Result) 
             {
-                PersonID = user.Id,
-                Title = newChannel.Remove(0, 1),
-            };
-            Database.CreateChannel(channel);
+                if((newUser.Channels?.Contains(newChannel) == true)!)
+                {
+                    newUser.Channels.Add(newChannel); // FIXME: very strange behavior
+                    Channel channel = new Channel()
+                    {
+                        PersonID = user.Id,
+                        Title = newChannel.Remove(0, 1),
+                    };
+                    Database.CreateChannel(channel);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message == "Channel not Exists")
+            {
+                MessageToSend = "Такого канала не существует";
+                Buttons.Clear();
+                Buttons.Add("Попробовать еще раз", "/saveCategory");
+            }
         }
         newUser.LastMessage = null;
         newUser.Update();

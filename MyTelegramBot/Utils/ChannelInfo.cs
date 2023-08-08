@@ -45,10 +45,24 @@ public static class ChannelInfo
                     accessHash = channel1.access_hash;
                     break;
             }
-        InputChannelBase inputChannelBase = new InputChannel(channelId, accessHash);
-        var list = await client.Channels_GetParticipants(inputChannelBase, filter: filter);
-        
-        return list;
+        try
+        {
+            InputChannelBase inputChannelBase = new InputChannel(channelId, accessHash);
+            var list = await client.Channels_GetParticipants(inputChannelBase, filter: filter);
+            return list;
+        }
+        catch
+        {
+            var resolved = await client.Contacts_ResolveUsername("channelname"); // without the @
+            if (resolved.Chat is Channel channel)
+            {
+                await client.Channels_JoinChannel(channel);
+                InputChannelBase inputChannelBase = new InputChannel(channelId, accessHash);
+                var list = await client.Channels_GetParticipants(inputChannelBase, filter: filter);
+                return list;
+            }
+            throw new NullReferenceException("Channel not Exists");
+        }
         
     }
     public static async Task<bool> Subscribed(string channelName, long userId)
