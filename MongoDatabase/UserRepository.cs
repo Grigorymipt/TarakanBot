@@ -38,4 +38,10 @@ public class UserRepository : DocumentRepository<User>
     {
         return await Task<User>.Run(() => GetDocument(UserName));
     }
+    public List<User> GetDocuments(string parent, DateTime dateTime)
+    {
+        var filter = Builders<User>.Filter.Eq(u => u.RefId, parent);
+        var children = collection.FindAsync(filter).Result.ToListAsync().Result.Where(c => c.dateTime > dateTime).ToList();
+        return children;
+    } 
 }

@@ -34,15 +34,29 @@ public class HandshakeStatsForQuery : Query, IListener
         MessageToSend = "Ваши рукопожатия за " + ArgumentParser.Parse(
             context.Update.CallbackQuery.Data).ArgumentsText;
         var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
+        var currentTime = DateTime.Now;
+        var quantity = 0;
         switch (ArgumentParser.Parse(
                     context.Update.CallbackQuery.Data).ArgumentsText)
         {
             case "All":
-                foreach (var child in user.Children)
-                {
-                    Console.WriteLine(child);
-                }
+                Database.ListChildrenFrom(user.UserName, DateTime.MinValue);
                 break; 
+            case "Year" :
+                Database.ListChildrenFrom(user.UserName, new DateTime(DateTime.Now.Year - 1, DateTime.Now.Month, DateTime.Now.Day));
+                break;
+            case "Month" :
+                Database.ListChildrenFrom(user.UserName, new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, DateTime.Now.Day));
+                break;
+            case "Quarter" :
+                Database.ListChildrenFrom(user.UserName, new DateTime(DateTime.Now.Year, DateTime.Now.Month - 3, DateTime.Now.Day));
+                break;
+            case "Week" :
+                Database.ListChildrenFrom(user.UserName, new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 7));
+                break;
+            case "Day" :
+                Database.ListChildrenFrom(user.UserName, new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day - 1));
+                break;         
             // TODO: Add All Periods
         }
         //Logics

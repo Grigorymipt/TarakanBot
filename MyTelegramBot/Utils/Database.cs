@@ -86,7 +86,13 @@ public static class Database
         collection.DeleteDocumentAsync(user);
     }
     
-    
+     public static void ListChildrenFrom(string parent, DateTime dateTime)
+    {
+        var collection = new UserRepository();
+        collection.GetDocuments(parent, dateTime);
+    }
+
+
     public static void CreateCategory(Message message)
     {
         var messageArgs = ArgumentParser.Parse(message.Text).ArgumentsText;
@@ -169,4 +175,6 @@ public static class Database
         List<Channel> channels = await collection.GetOldestDocuments(20);
         return channels;
     }
+
+   
 }
