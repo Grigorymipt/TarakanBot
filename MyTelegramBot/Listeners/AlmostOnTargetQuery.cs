@@ -51,7 +51,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
                 }
                 else
                 {
-                    MessageToSend = "Вы не являетесь создателем данного канала";
+                    MessageToSend = "Вы уже добавляли данный канал";
                     Buttons.Clear();
                 }
             }

@@ -33,7 +33,7 @@ public class GetVipStatusFotChannelQuery : Query, IListener
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
         var channel = Database.GetChannel(
-            ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText);
+            ArgumentParser.Parse(context.Update.CallbackQuery.Message.Text).ArgumentsText);
         DateOnly today = DateOnly.FromDateTime(DateTime.Now);
         if (channel != null)
         {
