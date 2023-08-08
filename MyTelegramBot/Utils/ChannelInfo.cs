@@ -64,9 +64,10 @@ public static class ChannelInfo
                 if (resolved.Chat is Channel channel)
                 {
                     await client.Channels_JoinChannel(channel);
-                    Console.WriteLine("Joined");
+                    Console.WriteLine($"Joined: {channel.Title}");
                     InitAccessHash();
                     InputChannelBase inputChannelBase = new InputChannel(channelId, accessHash);
+                    new CancellationTokenSource().CancelAfter(30);
                     var list = await client.Channels_GetParticipants(inputChannelBase, filter: filter);
                     Console.WriteLine("LiSt");
                     return list;
@@ -74,8 +75,9 @@ public static class ChannelInfo
                 Console.WriteLine($"{channelName} not a ChaCnel");
                 throw new NullReferenceException("Channel not Exists");
             }
-            catch
+            catch(Exception ex)
             {
+                // if(ex is TimeoutException) 
                 throw;
             }
         }
