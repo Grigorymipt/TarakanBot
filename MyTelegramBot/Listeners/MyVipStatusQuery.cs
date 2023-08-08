@@ -34,6 +34,7 @@ public class GetVipStatusFotChannelQuery : Query, IListener
     {
         Console.WriteLine(context.Update.CallbackQuery.Message);
         Console.WriteLine(context.Update.CallbackQuery.Message.Text);
+        Console.WriteLine(context.Update.CallbackQuery.Data);
         var channel = Database.GetChannel(
             ArgumentParser.Parse(context.Update.CallbackQuery.Message.Text).ArgumentsText);
         DateOnly today = DateOnly.FromDateTime(DateTime.Now);
