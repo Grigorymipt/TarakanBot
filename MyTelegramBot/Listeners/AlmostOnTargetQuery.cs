@@ -38,7 +38,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
         {
             if (ChannelInfo.IsAdmin(newChannel, context.Update.Message.From.Id).Result) 
             {
-                if((newUser.Channels?.Contains(newChannel) == true)!)
+                if(newUser.Channels != null && newUser.Channels.Contains(newChannel))
                 {
                     newUser.Channels.Add(newChannel); // FIXME: very strange behavior
                     Channel channel = new Channel()
@@ -47,6 +47,11 @@ public class AlmostOnTargetQuery : InlineReply, IListener
                         Title = newChannel.Remove(0, 1),
                     };
                     Database.CreateChannel(channel);
+                }
+                else
+                {
+                    MessageToSend = "Вы не являетесь создателем данного канала";
+                    Buttons.Clear();
                 }
             }
             else
