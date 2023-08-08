@@ -20,7 +20,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
                         "листинг в каталоге всего за 100$";
         MessageLabel = "GetAddressInline";
     }
-    protected override async string Run(Context context, CancellationToken cancellationToken)
+    protected override string Run(Context context, CancellationToken cancellationToken)
     {
         // Console.WriteLine(context.Update.Message.From.Id);
         var user = Database.GetUser(context.Update.Message.From.Id);
