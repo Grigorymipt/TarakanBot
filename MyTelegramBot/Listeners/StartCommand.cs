@@ -9,11 +9,12 @@ namespace MyTelegramBot.Listeners ;
 public class StartCommand : Command, IListener{
     public StartCommand(Bot bot): base(bot) {
         Names = new string[]{"/start", "/starting", "!start"};
+        HandleType = HandleType.Standard;
     }
 
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
-        Buttons= new Dictionary<string, string>()
+        Buttons = new Dictionary<string, string>()
         {
             {"Я адмэн", "/admin"},
             {"Каталог", "/catalog"}
