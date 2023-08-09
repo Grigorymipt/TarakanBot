@@ -33,7 +33,7 @@ public class User : Document
     public string? LastMessage { get; set; }
     public List<Guid>? Categories { get; set; }
     public List<Channel>? Subscribes { get; set; } 
-    public int SubscribesVip { get; set; } = 0;
+    public List<Channel>? SubscribesVip { get; set; } 
     public int Attempts { get; set; } = 0;
     
     public override void Update()
@@ -60,7 +60,6 @@ public class Channel : Document
         Channel oldDocument = channelRepository.GetDocument(this.Id);
         channelRepository.UpdateDocument(oldDocument, this);
     }
-
 }
 
 public class Category : Document

@@ -1,147 +1,196 @@
-// using MyTelegramBot.Types;
-// using Telegram.Bot;
-// using Telegram.Bot.Types;
-// using Telegram.Bot.Types.ReplyMarkups;
-// using User = MongoDatabase.ModelTG.User;
+using System.Threading.Channels;
+using MyTelegramBot.Types;
+using Telegram.Bot;
+using Telegram.Bot.Types.ReplyMarkups;
+using TL;
+using Channel = TL.Channel;
+using Message = Telegram.Bot.Types.Message;
+using User = MongoDatabase.ModelTG.User;
 
-// namespace MyTelegramBot.Listeners._21toIlfListeners;
+namespace MyTelegramBot.Listeners;
 
-// public class SubscribeTenVIPChannelsQuery : Query, IListener
-// {
-//     protected List<string> ChannelNames = new List<string>() { "google.com" };
-//     protected string ChannelName = "https://t.me/TestForTestingAndTestingForTest";
-//     public SubscribeTenVIPChannelsQuery(Bot bot) : base(bot)
-//     {
-//         MessageToSend = new[] {"Some @ - channel with short description, EX: " + ChannelName};
-//         Names = new[] { "/subscribeTenVIPChannels" };
-//         //Links = ...
-//     }
+public class SubscribeTenChannelsVipQuery : Query, IListener
+{
+    protected MongoDatabase.ModelTG.Channel ChannelName(long userId)
+    {
+        //FIFO logics
+        var channel = Database.FindChannelToListAsync().Result.First();
+        var user = Database.GetUser(userId);
+        do
+        {
+            channel.dateTime = DateTime.Now;
+            channel.Update();
+        } while (user.Channels?.Contains(channel.Title) == true);   
+         
+        user.SubscribesVip??=new List<MongoDatabase.ModelTG.Channel>();
+        user.SubscribesVip.Add(channel);
+        user.Update();
+        return channel;
+    }
 
-//     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
-//     {
-//         Buttons = new Dictionary<string, string>()
-//         {
-//             { "🟢 Подписаться", "/subscribeListedVIPChannel" }, // MakeLink
-//             { "🔴 Пропустить", "/skipListedVIPChannel" },
-//             // { "🔴 Black List 🔴", "/blockListedVIPChannel " + ChannelName },
-//             { "Подписался на 10 каналов", "/iSubscribedVIP" }
-//         };
-//         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-//         if (user.SubscribesVip > 5) //TODO: 20 in prod
-//         {
-//             MessageToSend = "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять" +
-//                             " каналов, предложенных выше.";
-//             Buttons.Clear(); //FIXME
-//         }
-//         return base.Run(context, cancellationToken);
-//     }
 
-//     public override async Task Handler(Context context, Dictionary<string, string> buttonsList, CancellationToken cancellationToken)
-//     {
-//         string response = await RunAsync(context, cancellationToken);
-//         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
+    public SubscribeTenChannelsVipQuery(Bot bot) : base(bot)
+    {
+        MessageToSend = new string[]{ 
+            "ShowChannel", 
+            "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять каналов, предложенных выше."
+            };
+        Names = new[] { "/subscribeTenVIPChannels" };
+        //Links = ...
+        
+    }
 
-//         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
-//         foreach (var category in buttonsList)
-//         {
-//             InlineKeyboardButton reply;
-//             if (category.Value == "/subscribeListedVIPChannel" )
-//             {
-//                 reply = InlineKeyboardButton
-//                     .WithUrl(category.Key, ChannelName);
-//             }
-//             else
-//             {
-//                  reply = InlineKeyboardButton
-//                     .WithCallbackData(category.Key, category.Value);
-//             }
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
+    {
+        Buttons = new Dictionary<string, string>()
+        {
+            { "🟢 Подписаться", "/subscribeListedChannelVip" }, // MakeLink
+            { "🔴 Пропустить", "/skipListedChannelVip" },
+            { "🔴 Black List 🔴", "/blockListedChannelVip " },
+            { "Подписался на 10 каналов", "/iSubscribedVip" }
+        };
+        User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
+        if (user.SubscribesVip?.Count > 5) //TODO: 20 in prod
+        {
+            Buttons.Clear(); //FIXME
+            return MessageToSend[1];   
+        }
+        return MessageToSend[0];
+        // if (ChannelName == null) MessageToSend = "В #Userhub меньше 20 каналов, подпишитесь на представленные выше";
+    }
 
-//             IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
-//             categoryList.Add(inlineKeyboardButton);
-//         }
+    public override async Task Handler(Context context, CancellationToken cancellationToken)
+    {
+        var buttons = new Dictionary<string, string>(){};
+        string response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
+        Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
+        List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
+        var channeltosubs = ChannelName(context.Update.CallbackQuery.From.Id);
+        response = response == MessageToSend[0] ? (channeltosubs.Title + channeltosubs.Describtion) : response; 
+        foreach (var category in buttons)
+        {
+            InlineKeyboardButton reply;
+            
+            if (category.Value == "/subscribeListedChannelVip" && channeltosubs != null)
+            { 
+                try
+                {
+                    // Console.WriteLine("");
+                    reply = InlineKeyboardButton
+                        .WithUrl(category.Key, "https://t.me/" + channeltosubs.Title);
+                }
+                catch(Exception ex)
+                {
+                    throw ex;
+                }
+            }
+            else
+            {
+                 reply = InlineKeyboardButton
+                    .WithCallbackData(category.Key, category.Value);
+            }
 
-//         IEnumerable<IEnumerable<InlineKeyboardButton>> enumerableList1 = categoryList;
-//         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(enumerableList1);
+            IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
+            categoryList.Add(inlineKeyboardButton);
+        }
 
-//         Message sentMessage = await context.BotClient.SendTextMessageAsync(
-//             chatId: chatId,
-//             text: response,
-//             parseMode: Config.ParseMode,
-//             replyMarkup: inlineKeyboardMarkup
-//         );
-//     }
-// }
+        IEnumerable<IEnumerable<InlineKeyboardButton>> enumerableList1 = categoryList;
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(enumerableList1);
 
-// public class SkipTenVIPChannelsQuery : SubscribeTenVIPChannelsQuery, IListener
-// {
-//     public SkipTenVIPChannelsQuery(Bot bot) : base(bot)
-//     {
-//         Names = new []{"/skipListedVIPChannel"};
-//     }
-//     protected override string Run(Context context, CancellationToken cancellationToken)
-//     {
-//         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-//         user.SubscribesVip += 1;
-//         user.Update();
-//         return base.Run(context, cancellationToken);
-//     }
-// }
+        Message sentMessage = await context.BotClient.SendTextMessageAsync(
+            chatId: chatId,
+            text: response,
+            parseMode: Config.ParseMode,
+            replyMarkup: inlineKeyboardMarkup
+        );
+    }
+}
 
-// public class BlockTenVIPChannelsQuery : SubscribeTenVIPChannelsQuery, IListener
-// {
-//     public BlockTenVIPChannelsQuery(Bot bot) : base(bot)
-//     {
-//         Names = new []{"/blockListedVIPChannel"};
-//         MessageToSend = "🤯 Благодарим! 🧐 Наша полиция нравов обязательно разберется с этим! \n\n" + MessageToSend;
-//     }
-//     protected override string Run(Context context, CancellationToken cancellationToken)
-//     {
-//         var channel = Database.GetChannel(context.Update.CallbackQuery.Message);
-//         if (channel != null)
-//         {
-//             channel.Reports += 1;
-//             channel.Update();
-//         }
-//         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-//         if (user.Subscribes.Count > 5) //TODO: 20 in prod
-//         {
-//             MessageToSend ="🤯 Благодарим! 🧐 Наша полиция нравов обязательно разберется с этим! \n\n" +
-//                            "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять" +
-//                             " каналов, предложенных выше.";
-//             Buttons.Clear(); //FIXME
-//         }
-//         return MessageToSend;
-//     }
-// }
+public class SkipTenChannelsVipQuery : SubscribeTenChannelsVipQuery
+{
+    public SkipTenChannelsVipQuery(Bot bot) : base(bot)
+    {
+        Names = new []{"/skipListedChannelVip"};
+    }
+    protected override string Run(Context context, CancellationToken cancellationToken)
+    {
+        return base.Run(context, cancellationToken);
+    }
+}
 
-// class CheckSubscriptionsVIP : Query, IListener
-// {
-//     private bool UserSubscribed = false;
+public class BlockTenChannelsVipQuery : SubscribeTenChannelsVipQuery
+{
+    public BlockTenChannelsVipQuery(Bot bot) : base(bot)
+    {
+        Names = new []{"/blockListedChannelVip"};
+        MessageToSend = new string[] {
+            "ShowChannel",
+            "🤯 Благодарим! 🧐 Наша полиция нравов обязательно разберется с этим! \n\n" + "ShowChannel", 
+            "🤯 Благодарим! 🧐 Наша полиция нравов обязательно разберется с этим! \n\n" +
+                           "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять" +
+                            " каналов, предложенных выше."};
+    }
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
+    {
+        base.Run(context, cancellationToken, out Buttons);
+        var channel = Database.GetChannel(context.Update.CallbackQuery.Message);
+        if (channel != null)
+        {
+            channel.Reports += 1;
+            channel.Update();
+        }
+        User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
+        if (user.SubscribesVip?.Count > 5) //TODO: 20 in prod
+        {
+            Buttons.Clear(); //FIXME
+            return MessageToSend[2];
+        }
+        return MessageToSend[1];
+    }
+}
 
-//     public CheckSubscriptionsVIP(Bot bot) : base(bot)
-//     {
-//         Names = new[] { "/iSubscribedVIP" };
-//         Buttons = new Dictionary<string, string>();
-//     }
+class CheckSubscriptionsVip : SubscribeTenChannelsVipQuery, IListener
+{
+    private bool UserSubscribed = false;
 
-//     protected override string Run(Context context, CancellationToken cancellationToken)
-//     {
-//         var userId = context.Update.CallbackQuery.From.Id;
-//         var userSubscribed = ChannelInfo.Subscribed(channelName: "TestForTestingAndTestingForTest", userId).Result;
-//         if (userSubscribed) UserSubscribed = true;
-//         if (UserSubscribed)
-//         {
-//             MessageToSend = "😉 Отлично, проверка прошла успешно! \n 🚨 ВАЖНО. \n Не отписывайся от этих каналов, " +
-//                             "иначе можно попасть в BlackList!";
-//             Buttons.Clear();
-//             Buttons.Add("Принято!", "/clear66step");
-//         }
-//         else
-//         {
-//             MessageToSend = "Тут подтягиваем логику проверки подписки и: вы не подписаны на n, каналов, не надо так(";
-//             //TODO: logics
-//         }
+    public CheckSubscriptionsVip(Bot bot) : base(bot)
+    {
+        Names = new[] { "/iSubscribedVip" };
+        MessageToSend[2] = "вы не подписаны на n, каналов, не надо так(";
+        MessageToSend[3] = "😉 Отлично, проверка прошла успешно! \n 🚨 ВАЖНО. \n Не отписывайся от этих каналов, " +
+                            "иначе можно попасть в BlackList!";
+    
+    }
 
-//         return base.Run(context, cancellationToken);
-//     }
-// }
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
+    {
+        Buttons = new Dictionary<string, string>();
+        var userId = context.Update.CallbackQuery.From.Id;
+        int totalAmount = 0;
+        User user = Database.GetUser(userId);
+        foreach (var channel in 
+            user.Subscribes ??= new List<MongoDatabase.ModelTG.Channel>())
+        {
+            var userSubscribed = ChannelInfo.Subscribed(channelName: channel.Title, userId).Result;
+            if (userSubscribed) UserSubscribed = true;
+            if (UserSubscribed)
+                totalAmount += 1;
+        }
+        if (totalAmount < 1) // TODO: prod - 10
+        {
+            return MessageToSend[2];
+        }
+        else
+        {
+            Buttons.Clear();
+            Buttons.Add("Принято!", "/clear66step");
+            return MessageToSend.Last();
+                
+        }
+    }
+    // public override async Task Handler(Context context, Dictionary<string, string> buttonsList, CancellationToken cancellationToken)
+    // {
+    //     base.Handler(context, buttonsList, cancellationToken);
+    // }
+}
+
