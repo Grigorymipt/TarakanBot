@@ -11,7 +11,7 @@ public abstract class InlineQuery : Query
     public string MessageLabel { get; set; }
     public InlineQuery(Bot bot) : base(bot){}
 
-    public override async Task<string> RunAsync(Context context, CancellationToken cancellationToken)
+    protected override string Run(Context context, CancellationToken cancellationToken)
     {
         // Console.WriteLine(context.Update.CallbackQuery.From.Id);
         var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
