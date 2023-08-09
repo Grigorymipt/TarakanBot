@@ -120,7 +120,7 @@ public abstract class Command : Listener
     {
         var buttons = new Dictionary<string, string>(){};
         string response;
-        if(this.HandleType == HandleType.Standard) response = Task.Run(() => RunAsync(context, cancellationToken)).Result;
+        if(this.HandleType == HandleType.Standard) response = Task.Run(() => Run(context, cancellationToken)).Result;
         else response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
         Int64 chatId = context.Update.Message.Chat.Id;
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
