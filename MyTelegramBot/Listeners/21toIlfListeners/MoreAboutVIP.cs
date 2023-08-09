@@ -98,12 +98,6 @@ public class ConfirmVipPayment : Listener, IListener // TODO: make abstract list
         //Todo: add node to DB
     }
 
-    public override async Task Handler(
-        Context context,
-        Dictionary<string, string> dictionary,
-        CancellationToken cancellationToken) 
-    {}
-
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
     {
         if (context.Update.Type != UpdateType.PreCheckoutQuery) return false;

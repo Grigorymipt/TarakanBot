@@ -97,20 +97,6 @@ public class ConfirmListingPayment : Listener, IListener // TODO: make abstract 
         //Todo: add node to DB
     }
 
-    public override async Task Handler(
-        Context context,
-        Dictionary<string, string> dictionary,
-        CancellationToken cancellationToken) 
-    {
-        var preCheckoutQueryId = context.Update.PreCheckoutQuery.Id;
-        await context.BotClient.AnswerPreCheckoutQueryAsync(
-            preCheckoutQueryId: preCheckoutQueryId,
-            cancellationToken: cancellationToken
-        );
-        
-        //Todo: add node to DB
-    }
-
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
     {
         if (context.Update.Type != UpdateType.PreCheckoutQuery) return false;

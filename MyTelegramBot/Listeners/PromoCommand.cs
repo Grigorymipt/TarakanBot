@@ -16,7 +16,12 @@ public class PromoCommand : Query, IListener
     public PromoCommand(Bot bot) : base(bot)
     {
         Names = new string[] { "/promo" };
-        Buttons = new Dictionary<string, string>()
+        
+    }
+
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
+    {
+        buttons = new Dictionary<string, string>()
         {
             { "PDF", "/pdf" },
             { "Креативы для Телеграм канала", "/creativesForChannel" },
@@ -24,10 +29,6 @@ public class PromoCommand : Query, IListener
             { "Stories фото", "/storiesPhoto" },
             { "Stories видео", "/storiesVideo" },
         };
-    }
-
-    protected override string Run(Context context, CancellationToken cancellationToken)
-    {
         return "Промо материалы";
     }
 }

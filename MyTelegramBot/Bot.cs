@@ -148,7 +148,7 @@ public class Bot {
             if (await listener.Validate(context, cancellationToken))
             {
                 if(listener.HandleType == HandleType.ButtonList)
-                    await listener.Handler(context, listener.Buttons, cancellationToken);
+                    await listener.Handler(context, cancellationToken);
                 else
                     await listener.Handler(context, cancellationToken);
             }

@@ -90,8 +90,8 @@ public abstract class Listener
     /// <summary>Handles the <c>Update</c> if it is successfully validated.</summary>
     public abstract Task Handler(Context context, CancellationToken cancellationToken);
 
-    public abstract Task Handler(Context context, Dictionary<string, string> buttonsList,
-        CancellationToken cancellationToken);
+    // public abstract Task Handler(Context context, Dictionary<string, string> buttonsList,
+    //     CancellationToken cancellationToken);
     
     /// <summary>Processes a command synchronously.</summary>
     /// <returns>Command result string.</returns>

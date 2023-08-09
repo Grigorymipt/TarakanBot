@@ -58,14 +58,15 @@ public class SubscribeTenChannelsQuery : Query, IListener
         // if (ChannelName == null) MessageToSend = "В #Userhub меньше 20 каналов, подпишитесь на представленные выше";
     }
 
-    public override async Task Handler(Context context, Dictionary<string, string> buttonsList, CancellationToken cancellationToken)
+    public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
-        string response = await RunAsync(context, cancellationToken);
+        var buttons = new Dictionary<string, string>(){};
+        string response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
         var channeltosubs = ChannelName(context.Update.CallbackQuery.From.Id);
         response = response == MessageToSend[0] ? (channeltosubs.Title + channeltosubs.Describtion) : response; 
-        foreach (var category in buttonsList)
+        foreach (var category in buttons)
         {
             InlineKeyboardButton reply;
             

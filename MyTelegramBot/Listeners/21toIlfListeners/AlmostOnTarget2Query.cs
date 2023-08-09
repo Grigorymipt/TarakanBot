@@ -21,7 +21,6 @@ public class CheckChannelExistence : InlineReply, IListener
     public CheckChannelExistence(Bot bot) : base(bot)
     {
         MessageLabel = "GetAddressInline2";
-        Buttons = new Dictionary<string, string>();
     }
     private bool ChannelExists(Context context, CancellationToken cancellationToken = default)
     {
@@ -29,8 +28,9 @@ public class CheckChannelExistence : InlineReply, IListener
         return true;
     }
 
-    protected override string Run(Context context, CancellationToken cancellationToken)
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
+        Buttons = new Dictionary<string, string>();
         string MessageToSend;
         if (ChannelExists(context, cancellationToken))
         {

@@ -25,11 +25,5 @@ namespace MyTelegramBot.Listeners {
                 user.Update(); 
             }
         }
-
-        public override async Task Handler(Context context, Dictionary<string, string> buttonList,
-            CancellationToken cancellationToken)
-        {
-            Handler(context, cancellationToken);
-        }
     }
 }
