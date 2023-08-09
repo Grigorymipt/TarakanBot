@@ -11,8 +11,9 @@ public abstract class InlineQuery : Query
     public string MessageLabel { get; set; }
     public InlineQuery(Bot bot) : base(bot){}
 
-    protected override string Run(Context context, CancellationToken cancellationToken)
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
+        buttons = new Dictionary<string, string>();
         // Console.WriteLine(context.Update.CallbackQuery.From.Id);
         var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
         Console.WriteLine(MessageLabel);

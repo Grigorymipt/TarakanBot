@@ -51,23 +51,23 @@ public class AlmostOnTargetQuery : InlineReply, IListener
                 }
                 else
                 {
-                    return "Вы уже добавляли данный канал";
                     Buttons.Clear();
+                    return "Вы уже добавляли данный канал";
                 }
             }
             else
             {
-                return "Вы не являетесь создателем данного канала";
                 Buttons.Clear();
+                return "Вы не являетесь создателем данного канала";
             }
         }
         catch (Exception ex)
         {
             if (ex.Message == "Channel not Exists")
             {
-                return "Такого канала не существует";
                 Buttons.Clear();
                 Buttons.Add("Попробовать еще раз", "/saveCategory");
+                return "Такого канала не существует";
             }
         }
         newUser.LastMessage = null;
