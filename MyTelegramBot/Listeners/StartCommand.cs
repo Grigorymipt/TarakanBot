@@ -9,15 +9,15 @@ namespace MyTelegramBot.Listeners ;
 public class StartCommand : Command, IListener{
     public StartCommand(Bot bot): base(bot) {
         Names = new string[]{"/start", "/starting", "!start"};
+    }
+
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
+    {
         Buttons= new Dictionary<string, string>()
         {
             {"Я адмэн", "/admin"},
             {"Каталог", "/catalog"}
         };
-    }
-
-    protected override string Run(Context context, CancellationToken cancellationToken)
-    {
         Console.WriteLine(context.Update.Message.From.Id);
         User user = Database.GetUser(context.Update.Message.From.Id); // TODO: Reduce DB calls
         
@@ -34,27 +34,6 @@ public class StartCommand : Command, IListener{
         Buttons.Clear();
         return "Этим ботом можно пользоваться, только перейдя в него " +
                "по реферальной ссылке от пользователя, который уже имеет доступ к боту."; 
-    }
-    
-    public override async Task Handler(Context context, CancellationToken cancellationToken)
-    {
-        Console.WriteLine(context.Update.Message.From.Id);
-        User user = Database.GetUser(context.Update.Message.From.Id); // TODO: Reduce DB calls
-        if (user == null) user = Database.CreateUser(context.Update.Message);
-        else if (user.RefId == null) user = Database.UpdateUser(context.Update.Message);
-        if (user.RefId != null) MessageToSend = "С помощью #UserHub ты сможешь быстро и удобно находить лучшие телеграмм " +
-                                       "каналы на любую интересную тебе тему. Я что-то вроде поисковика в телеграмм, " +
-                                       "где все каналы разбиты по категориям и рейтингу. " +
-                                       "Жми 'каталог' и я покажу тебе как здесь все устроено. " + 
-            "Если же ты владелец телеграм-канала, то жми 'Я админ' и добавляй свой канал в каталог #UserHub. " +
-            "Это позволить тебе получать подписчиков, действительно заинтересованных в твоем контенте.";
-        else 
-        {
-            Buttons.Clear();
-            MessageToSend = "Этим ботом можно пользоваться, только перейдя в него " +
-               "по реферальной ссылке от пользователя, который уже имеет доступ к боту."; 
-        }
-        await base.Handler(context: context, cancellationToken: cancellationToken);
     }
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
     {

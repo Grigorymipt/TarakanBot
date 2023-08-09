@@ -7,8 +7,11 @@ public class MenuCommand : Command, IListener
     public MenuCommand(Bot bot) : base(bot)
     {
         Names = new[] { "/menu" }; // TODO: Update validator
-        MessageToSend = "Меню:";
-        Buttons = new Dictionary<string, string>()
+        MessageToSend = new string[]{"Меню:"};
+    }
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
+    {
+        buttons = new Dictionary<string, string>()
         {
             { "🤝 Мои рукопожатия", "/myHandshakes" },
             { "Мои каналы", "/myChannels" },
@@ -18,5 +21,6 @@ public class MenuCommand : Command, IListener
             { "Промо материалы", "/promo" },
             { "Баланс", "/myBalance" },
         };
+        return MessageToSend[0];
     }
 }

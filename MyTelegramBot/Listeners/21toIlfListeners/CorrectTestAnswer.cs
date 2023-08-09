@@ -7,18 +7,20 @@ public class CorrectTestAnswer : Query, IListener
     public CorrectTestAnswer(Bot bot) : base(bot)
     {
         Names = new[] { "/hundredMillions" };
-        InitButtons();
-        MessageToSend = "🤑 Верно! Еще несколько простых действий и миллион подписчиков твой! + Выбери минимум 5 тем," +
-                        " которые тебя РЕАЛЬНО интересуют.";
+        MessageToSend = new[] {"🤑 Верно! Еще несколько простых действий и миллион подписчиков твой! + Выбери минимум 5 тем," +
+                        " которые тебя РЕАЛЬНО интересуют."};
+
+                        
     }
-    private async void InitButtons()
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
-        var categories = await Database.GetAllCategories();
-        Buttons = new Dictionary<string, string>();
+        var categories = Database.GetAllCategories().Result;
+        buttons = new Dictionary<string, string>();
         foreach (var category in categories)
         {
-            Buttons.Add(category.Title, "/saveCategoryToUser " + category.Id);
+            buttons.Add(category.Title, "/saveCategoryToUser " + category.Id);
         }
-        Buttons.Add("Продолжить", "/continueTo");
+        buttons.Add("Продолжить", "/continueTo");
+        return MessageToSend[0];
     }
 }

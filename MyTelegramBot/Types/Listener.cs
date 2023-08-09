@@ -10,6 +10,7 @@ using User = MongoDatabase.ModelTG.User;
 using MyTelegramBot.Types;
 using MyTelegramBot.Utils;
 using Telegram.Bot.Types.ReplyMarkups;
+using System.Collections.ObjectModel;
 
 
 namespace MyTelegramBot.Types ;
@@ -24,11 +25,11 @@ public abstract class Listener
 
 
     public HandleType HandleType { get; set; } = HandleType.Standard;
-    private Dictionary<string, string> buttons;
-    public Dictionary<string, string> Buttons
+    private ReadOnlyDictionary<string, string> buttons;
+    public ReadOnlyDictionary<string, string> Buttons
     {
         get => buttons;
-        set
+        init
         {
             buttons = value;
             HandleType = HandleType.ButtonList;
@@ -37,16 +38,16 @@ public abstract class Listener
 
     private string filePath;
     public bool fileToSend { get; set; } = false;
-    protected string MessageToSend { get; set; } = "This command is under development and not currently available.";
+    protected string[] MessageToSend { get; init; } = {"This command is under development and not currently available."};
 
     private bool withoutMessage = false;
     public bool WithoutMessage
     {
         get => withoutMessage;
-        set
+        init
         {
             if (value)
-                MessageToSend = "";
+                MessageToSend[0] = "";
             withoutMessage = value;
         }
     }
@@ -95,7 +96,11 @@ public abstract class Listener
     /// <summary>Processes a command synchronously.</summary>
     /// <returns>Command result string.</returns>
     protected virtual string Run(Context context, CancellationToken cancellationToken) {
-        return MessageToSend;
+        return MessageToSend[0];
+    }
+    protected virtual string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons) {
+        buttons = new Dictionary<string, string>();
+        return MessageToSend[0];
     }
     /// <summary>Processes a command asynchronously.</summary>
     /// <returns>Command result string.</returns>

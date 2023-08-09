@@ -17,7 +17,7 @@ public abstract class InlineQuery : Query
         var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
         user.LastMessage = MessageLabel;
         user.Update();
-        return MessageToSend;
+        return MessageToSend[0];
     }
     
 }

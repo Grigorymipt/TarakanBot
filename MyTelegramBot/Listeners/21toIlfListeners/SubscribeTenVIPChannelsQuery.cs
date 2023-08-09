@@ -12,7 +12,7 @@ public class SubscribeTenVIPChannelsQuery : Query, IListener
     protected string ChannelName = "https://t.me/TestForTestingAndTestingForTest";
     public SubscribeTenVIPChannelsQuery(Bot bot) : base(bot)
     {
-        MessageToSend = "Some @ - channel with short description, EX: " + ChannelName;
+        MessageToSend = new[] {"Some @ - channel with short description, EX: " + ChannelName};
         Names = new[] { "/subscribeTenVIPChannels" };
         //Links = ...
         Buttons = new Dictionary<string, string>()

@@ -2,6 +2,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using System.Collections.ObjectModel;
 
 namespace MyTelegramBot.Types;
 /// <summary>
@@ -63,7 +64,8 @@ public abstract class Query : Listener
     }
     public override async Task Handler(Context context, Dictionary<string, string> buttonsList, CancellationToken cancellationToken)
     {
-        string response = await RunAsync(context, cancellationToken);
+        var buttons = new Dictionary<string, string>(){};
+        string response = await RunAsync(context, cancellationToken, out buttons);
         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
 
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
@@ -96,5 +98,6 @@ public abstract class Query : Listener
     /// </summary>
     public Query(Bot bot) : base(bot) 
     {
+        
     }
 }

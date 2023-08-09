@@ -12,21 +12,16 @@ public class CatalogCommand : Query, IListener
 {
     public CatalogCommand(Bot bot): base(bot) {
         Names = new string[]{"/catalog"};
-        InitButtons();
     }
 
-    private async void InitButtons()
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
-        var categories = await Database.GetAllCategories();
+        var categories = Database.GetAllCategories().Result;
         Buttons = new Dictionary<string, string>();
         foreach (var category in categories)
         {
             Buttons.Add(category.Title, "/smth");
         }
-    }
-
-    protected override string Run(Context context, CancellationToken cancellationToken)
-    {
         return "Каталог категорий";
     }
 }

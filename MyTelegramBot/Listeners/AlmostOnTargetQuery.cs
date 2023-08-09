@@ -8,20 +8,21 @@ public class AlmostOnTargetQuery : InlineReply, IListener
 {
     public AlmostOnTargetQuery(Bot bot) : base(bot)
     {
+        
+        MessageToSend = new[] {"🎯 Мы почти у цели. Остался последний шаг!🤫 У меня к тебе деловое предложение. " +
+                        "Предлагаю опубликовать в твоем канале репост одного из моих постов, где я рекомендую " +
+                        "людям пользоваться каталогом #UserHub, а взамен я размещу твой канал в каталоге абсолютно" +
+                        " бесплатно и навсегда. Если же этот вариант не подходит, то ты можешь приобрести пожизненный " +
+                        "листинг в каталоге всего за 100$"};
+        MessageLabel = "GetAddressInline";
+    }
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
+    {
         Buttons = new Dictionary<string, string>()
         {
             {"🤝 Предложение принято", "/suggestionAccepted"},
             {"💳 Плачу за листинг", "/buyListingNow"}
         };
-        MessageToSend = "🎯 Мы почти у цели. Остался последний шаг!🤫 У меня к тебе деловое предложение. " +
-                        "Предлагаю опубликовать в твоем канале репост одного из моих постов, где я рекомендую " +
-                        "людям пользоваться каталогом #UserHub, а взамен я размещу твой канал в каталоге абсолютно" +
-                        " бесплатно и навсегда. Если же этот вариант не подходит, то ты можешь приобрести пожизненный " +
-                        "листинг в каталоге всего за 100$";
-        MessageLabel = "GetAddressInline";
-    }
-    protected override string Run(Context context, CancellationToken cancellationToken)
-    {
         // Console.WriteLine(context.Update.Message.From.Id);
         var user = Database.GetUser(context.Update.Message.From.Id);
         // Console.WriteLine(context.Update.Message.Text);
@@ -51,13 +52,13 @@ public class AlmostOnTargetQuery : InlineReply, IListener
                 }
                 else
                 {
-                    MessageToSend = "Вы уже добавляли данный канал";
+                    return "Вы уже добавляли данный канал";
                     Buttons.Clear();
                 }
             }
             else
             {
-                MessageToSend = "Вы не являетесь создателем данного канала";
+                return "Вы не являетесь создателем данного канала";
                 Buttons.Clear();
             }
         }
@@ -65,13 +66,13 @@ public class AlmostOnTargetQuery : InlineReply, IListener
         {
             if (ex.Message == "Channel not Exists")
             {
-                MessageToSend = "Такого канала не существует";
+                return "Такого канала не существует";
                 Buttons.Clear();
                 Buttons.Add("Попробовать еще раз", "/saveCategory");
             }
         }
         newUser.LastMessage = null;
         newUser.Update();
-        return MessageToSend;
+        return MessageToSend[0];
     }
 }

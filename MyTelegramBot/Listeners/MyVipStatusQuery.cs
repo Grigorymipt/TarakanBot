@@ -7,16 +7,17 @@ public class MyVipStatusQuery : Query, IListener
     public MyVipStatusQuery(Bot bot) : base(bot)
     {
         Names = new[] { "/myVipStatus" };
-        MessageToSend = "🏆 VIP статус\n" +
-                        "Выберите канал:";
-        Buttons = new Dictionary<string, string>();
+        MessageToSend = new string[]{"🏆 VIP статус\n" +
+                        "Выберите канал:"
+        };
     }
 
-    protected override string Run(Context context, CancellationToken cancellationToken)
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
+        buttons = new Dictionary<string, string>();
         foreach (var variableChannel in Database.GetUser(context.Update.CallbackQuery.From.Id).Channels)
         {
-            Buttons.Add(variableChannel, "/getVipStatusForChannel " + variableChannel);
+            buttons.Add(variableChannel, "/getVipStatusForChannel " + variableChannel);
         }
         return base.Run(context, cancellationToken);
     }
@@ -27,11 +28,13 @@ public class GetVipStatusFotChannelQuery : Query, IListener
     public GetVipStatusFotChannelQuery(Bot bot) : base(bot)
     {
         Names = new[] { "/getVipStatusForChannel" };
-        Buttons = new Dictionary<string, string>();
+        
     }
 
-    protected override string Run(Context context, CancellationToken cancellationToken)
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
+        Buttons = new Dictionary<string, string>();
+        var MessageToSend = base.MessageToSend[0];
         Console.WriteLine(context.Update.CallbackQuery.Data);
         Console.WriteLine(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText);
         var channel = Database.GetChannel(
@@ -53,6 +56,6 @@ public class GetVipStatusFotChannelQuery : Query, IListener
                                 "Если ни один канал не имеет статус VIP, то можно потерять партнерские начисления!\n";
             }
         }
-        return base.Run(context, cancellationToken);
+        return MessageToSend;
     }
 }

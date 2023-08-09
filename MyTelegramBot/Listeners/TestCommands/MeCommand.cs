@@ -14,7 +14,7 @@ namespace MyTelegramBot.Listeners {
         protected override async Task<string> RunAsync(Context context, CancellationToken cancellationToken)
         {
             var message = context.Update.Message;
-            
+            string MessageToSend = base.MessageToSend[0];
             User user;
             if (ArgumentParser.Validate(message.Text, 1))
             {

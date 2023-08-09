@@ -11,22 +11,6 @@ namespace MyTelegramBot.Listeners;
 
 public class SubscribeTenChannelsQuery : Query, IListener
 {
-    // protected List<string> ChannelNames = new List<string>() { "google.com" };
-
-    // private List<MongoDatabase.ModelTG.Channel> channels;
-    // protected List<MongoDatabase.ModelTG.Channel> Channels
-    // { 
-    //     get
-    //     {
-    //         channels ??= Database.FindChannelToListAsync().Result;
-    //         return channels;
-    //     }
-    //     set 
-    //     {
-    //         channels = value;
-    //     }
-    // }
-    // private string channelName;
     protected MongoDatabase.ModelTG.Channel ChannelName(long userId)
     {
         //FIFO logics
@@ -46,9 +30,17 @@ public class SubscribeTenChannelsQuery : Query, IListener
 
     public SubscribeTenChannelsQuery(Bot bot) : base(bot)
     {
-        MessageToSend = "Some @ - channel with short description, EX: " + "Channel Name"; //uncomme
+        MessageToSend = new string[]{ 
+            "ShowChannel", 
+            "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять каналов, предложенных выше."
+            };
         Names = new[] { "/subscribeTenChannels" };
         //Links = ...
+        
+    }
+
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
+    {
         Buttons = new Dictionary<string, string>()
         {
             { "🟢 Подписаться", "/subscribeListedChannel" }, // MakeLink
@@ -56,30 +48,23 @@ public class SubscribeTenChannelsQuery : Query, IListener
             { "🔴 Black List 🔴", "/blockListedChannel " },
             { "Подписался на 10 каналов", "/iSubscribed" }
         };
-    }
-
-    protected override string Run(Context context, CancellationToken cancellationToken)
-    {
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
         if (user.Subscribes?.Count > 5) //TODO: 20 in prod
         {
-            MessageToSend = "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять" +
-                            " каналов, предложенных выше.";
             Buttons.Clear(); //FIXME
+            return MessageToSend[1];   
         }
+        return MessageToSend[0];
         // if (ChannelName == null) MessageToSend = "В #Userhub меньше 20 каналов, подпишитесь на представленные выше";
-        
-        return base.Run(context, cancellationToken);
     }
 
     public override async Task Handler(Context context, Dictionary<string, string> buttonsList, CancellationToken cancellationToken)
     {
         string response = await RunAsync(context, cancellationToken);
         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
-
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
         var channeltosubs = ChannelName(context.Update.CallbackQuery.From.Id);
-        MessageToSend = channeltosubs.Title + channeltosubs.Describtion; 
+        response = response == MessageToSend[0] ? (channeltosubs.Title + channeltosubs.Describtion) : response; 
         foreach (var category in buttonsList)
         {
             InlineKeyboardButton reply;
@@ -140,10 +125,16 @@ public class BlockTenChannelsQuery : SubscribeTenChannelsQuery
     public BlockTenChannelsQuery(Bot bot) : base(bot)
     {
         Names = new []{"/blockListedChannel"};
-        MessageToSend = "🤯 Благодарим! 🧐 Наша полиция нравов обязательно разберется с этим! \n\n" + MessageToSend;
+        MessageToSend = new string[] {
+            "ShowChannel",
+            "🤯 Благодарим! 🧐 Наша полиция нравов обязательно разберется с этим! \n\n" + "ShowChannel", 
+            "🤯 Благодарим! 🧐 Наша полиция нравов обязательно разберется с этим! \n\n" +
+                           "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять" +
+                            " каналов, предложенных выше."};
     }
-    protected override string Run(Context context, CancellationToken cancellationToken)
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
+        base.Run(context, cancellationToken, out Buttons);
         var channel = Database.GetChannel(context.Update.CallbackQuery.Message);
         if (channel != null)
         {
@@ -153,12 +144,10 @@ public class BlockTenChannelsQuery : SubscribeTenChannelsQuery
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
         if (user.Subscribes?.Count > 5) //TODO: 20 in prod
         {
-            MessageToSend ="🤯 Благодарим! 🧐 Наша полиция нравов обязательно разберется с этим! \n\n" +
-                           "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять" +
-                            " каналов, предложенных выше.";
             Buttons.Clear(); //FIXME
+            return MessageToSend[2];
         }
-        return MessageToSend;
+        return MessageToSend[1];
     }
 }
 
@@ -169,11 +158,18 @@ class CheckSubscriptions : SubscribeTenChannelsQuery, IListener
     public CheckSubscriptions(Bot bot) : base(bot)
     {
         Names = new[] { "/iSubscribed" };
-        Buttons = new Dictionary<string, string>();
+        MessageToSend = base.MessageToSend
+        .Append("вы не подписаны на n, каналов, не надо так(")
+        .Append("🎯 Отлично, теперь необходимо подписаться на 10 каналов VIP блоггеров. При нажатии на " +
+                                "кнопку пропустить канал будет заменен на другой, исходя из указанных интересов. " +
+                                "Нажать 'пропустить' можно не более 20 раз. 🚨🚔 Если канал нарушает правила пользования " +
+                                "#UserHub, то жми «пропустить» а затем «Black List» и наши специалисты разберутся с этим.").ToArray();
+    
     }
 
-    protected override string Run(Context context, CancellationToken cancellationToken)
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
+        Buttons = new Dictionary<string, string>();
         var userId = context.Update.CallbackQuery.From.Id;
         int totalAmount = 0;
         User user = Database.GetUser(userId);
@@ -187,19 +183,15 @@ class CheckSubscriptions : SubscribeTenChannelsQuery, IListener
         }
         if (totalAmount < 1) // TODO: prod - 10
         {
-            MessageToSend = "вы не подписаны на n, каналов, не надо так(";
+            return MessageToSend[-2];
         }
         else
         {
-            MessageToSend = "🎯 Отлично, теперь необходимо подписаться на 10 каналов VIP блоггеров. При нажатии на " +
-                                "кнопку пропустить канал будет заменен на другой, исходя из указанных интересов. " +
-                                "Нажать 'пропустить' можно не более 20 раз. 🚨🚔 Если канал нарушает правила пользования " +
-                                "#UserHub, то жми «пропустить» а затем «Black List» и наши специалисты разберутся с этим.";
-                Buttons.Clear();
-                Buttons.Add("Принято!", "/subscribeTenVIPChannels");
+            Buttons.Clear();
+            Buttons.Add("Принято!", "/subscribeTenVIPChannels");
+            return MessageToSend.Last();
+                
         }
-
-        return base.Run(context, cancellationToken);
     }
     // public override async Task Handler(Context context, Dictionary<string, string> buttonsList, CancellationToken cancellationToken)
     // {
