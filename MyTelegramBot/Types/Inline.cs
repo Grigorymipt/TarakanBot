@@ -38,6 +38,7 @@ public abstract class InlineReply : Command
         await base.Handler(context, cancellationToken);
         var user = Database.GetUser(context.Update.Message.From.Id);
         user.LastMessage = null;
+        user.Update();
     }
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
     {
