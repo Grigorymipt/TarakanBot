@@ -65,7 +65,7 @@ public abstract class Query : Listener
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
         var buttons = new Dictionary<string, string>(){};
-        string response = Task.Run(() => RunAsync(context, cancellationToken)).Result;
+        string response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
 
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
