@@ -1,10 +1,4 @@
-using System.Reflection;
-using System.Text.Json;
-using System.Net.Http;
-using static System.Net.Http.HttpClient;
 using System.Net.Http.Json;
-using System.Reflection.PortableExecutable;
-using System.Threading.Tasks;
 
 namespace Crypto;
 
@@ -48,7 +42,8 @@ public static class WalletInfo
         string externalId,
         int timeoutSeconds,
         int customerTelegramUserId,
-        string WpayStoreApiKey
+        string? WpayStoreApiKey,
+        CancellationToken cancellationToken = default(CancellationToken)
         )
     {
         JsonApplication jsonApplication = new JsonApplication()
