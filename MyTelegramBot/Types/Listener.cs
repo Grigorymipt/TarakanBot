@@ -96,7 +96,8 @@ public abstract class Listener
     /// <summary>Processes a command synchronously.</summary>
     /// <returns>Command result string.</returns>
     protected virtual string Run(Context context, CancellationToken cancellationToken) {
-        return MessageToSend[0];
+        var buttons = new Dictionary<string, string>();
+        return Run(context, cancellationToken, out buttons);
     }
     protected virtual string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons) {
         buttons = new Dictionary<string, string>();
