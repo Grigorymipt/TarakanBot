@@ -28,17 +28,18 @@ public class GetUpdatesController : ControllerBase
         };
         Console.WriteLine($"TelegramAPIWebhookReceived: {text}");
         _logger.Log(LogLevel.Information, eventId: new EventId(), message: update.Type.ToString());
+        Task.Run(() => {
         try 
         {
-            await handleUpdateService.HandleUpdateAsync(botClient: default, update, cancellationToken);
+            handleUpdateService.HandleUpdateAsync(botClient: default, update, cancellationToken).Wait();
             _logger.Log(LogLevel.Information, eventId: new EventId(137), message: "Update have handled succesfull");
         }
         catch(Exception ex)
         {
-            var ErrorMessage = await handleUpdateService.HandleErrorAsync(botClient: default, exception: ex, cancellationToken: cancellationToken);
+            var ErrorMessage = handleUpdateService.HandleErrorAsync(botClient: default, exception: ex, cancellationToken: cancellationToken).Result;
             _logger.Log(LogLevel.Error, 1312, ErrorMessage);
-        }
-        return Ok();  
+        }});
+        return Ok();
     }
 
     [HttpGet]
