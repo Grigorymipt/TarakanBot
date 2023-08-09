@@ -96,6 +96,8 @@ public class BlockTenVIPChannelsQuery : SubscribeTenVIPChannelsQuery, IListener
     }
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "admin.jpg", cancellationToken);
+        
         var channel = Database.GetChannel(context.Update.CallbackQuery.Message);
         if (channel != null)
         {
@@ -126,6 +128,8 @@ class CheckSubscriptionsVIP : Query, IListener
 
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "unsub.jpg", cancellationToken);
+        
         var userId = context.Update.CallbackQuery.From.Id;
         var userSubscribed = ChannelInfo.Subscribed(channelName: "TestForTestingAndTestingForTest", userId).Result;
         if (userSubscribed) UserSubscribed = true;

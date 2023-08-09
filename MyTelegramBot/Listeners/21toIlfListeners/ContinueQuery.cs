@@ -10,12 +10,6 @@ public class ContinueQuery : Query, IListener
         Names = new[] { "/continueTo" };
     }
 
-    protected override string Run(Context context, CancellationToken cancellationToken)
-    {
-        CheckFiveCategories(context);
-        return base.Run(context, cancellationToken);
-    }
-
     private void CheckFiveCategories(Context context)
     {
         var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
@@ -32,5 +26,12 @@ public class ContinueQuery : Query, IListener
                 Buttons.Add("Начать подписываться", "/subscribeTenChannels");
         }
     }
-    
+
+    protected override string Run(Context context, CancellationToken cancellationToken)
+    {
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "subscriptions.jpg", cancellationToken);
+        CheckFiveCategories(context);
+        return base.Run(context, cancellationToken);
+    }
+
 }

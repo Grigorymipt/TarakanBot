@@ -122,5 +122,9 @@
     </ItemGroup>
     <ItemGroup>
       <None Remove="LoggingConfigurator.cs" />
+      <None Remove="Materials\" />
+    </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Materials\" />
     </ItemGroup>
 </Project>

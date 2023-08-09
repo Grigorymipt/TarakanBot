@@ -28,6 +28,12 @@ public class MoreAboutVIP : Query, IListener
             {"Приобрести статус VIP 🏆", "/buyVIPNow"}
         };
     }
+
+    protected override string Run(Context context, CancellationToken cancellationToken)
+    {
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "cat.jpg", cancellationToken);
+        return base.Run(context, cancellationToken);
+    }
 }
 
 public class BuyVIPLater : Query, IListener

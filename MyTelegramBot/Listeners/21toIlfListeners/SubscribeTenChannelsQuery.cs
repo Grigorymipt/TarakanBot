@@ -97,8 +97,11 @@ public class BlockTenChannelsQuery : SubscribeTenChannelsQuery
         Names = new []{"/blockListedChannel"};
         MessageToSend = "🤯 Благодарим! 🧐 Наша полиция нравов обязательно разберется с этим! \n\n" + MessageToSend;
     }
+
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "goodbuy.jpeg", cancellationToken);
+        
         var channel = Database.GetChannel(context.Update.CallbackQuery.Message);
         if (channel != null)
         {

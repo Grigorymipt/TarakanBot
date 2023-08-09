@@ -72,6 +72,14 @@ public class ConfirmListingPayment : Listener, IListener // TODO: make abstract 
             { "Смотреть фильмы", "/watchMovies" },
             { "Читать книги", "/readBooks" }
         };
+
+    }
+
+
+    protected override string Run(Context context, CancellationToken cancellationToken)
+    {
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "userhub.jpg", cancellationToken);
+        return base.Run(context, cancellationToken);
     }
 
     public override async Task Handler(Context context, CancellationToken cancellationToken)

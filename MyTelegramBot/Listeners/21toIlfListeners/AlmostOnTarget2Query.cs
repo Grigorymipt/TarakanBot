@@ -82,4 +82,10 @@ public class ContinueFreeQuery : Query, IListener
                         "первому 1.000.000 подписчиков! Ссылка на чат комьюнити блоггеров! \n" +
                         "------------------ссылка-------------------";
     }
+
+    protected override string Run(Context context, CancellationToken cancellationToken)
+    {
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "cat.jpg", cancellationToken);
+        return base.Run(context, cancellationToken);
+    }
 }
