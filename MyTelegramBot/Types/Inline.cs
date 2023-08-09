@@ -15,6 +15,7 @@ public abstract class InlineQuery : Query
     {
         // Console.WriteLine(context.Update.CallbackQuery.From.Id);
         var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
+        Console.WriteLine(MessageLabel);
         user.LastMessage = MessageLabel;
         user.Update();
         return MessageToSend[0];
@@ -33,6 +34,7 @@ public abstract class InlineReply : Command
     }
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
+        Console.WriteLine(MessageLabel);
         await base.Handler(context, cancellationToken);
         var user = Database.GetUser(context.Update.Message.From.Id);
         user.LastMessage = null;
