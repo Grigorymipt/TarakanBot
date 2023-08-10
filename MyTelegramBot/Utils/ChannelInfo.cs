@@ -132,7 +132,8 @@ public static class ChannelInfo
         InputChannelBase inputChannelBase = new InputChannel(RegData.ChannelId, RegData.AccessHash);
         // InputMessageID inputMessage = new InputMessageID();
         // inputMessage.id = postId;
-        var messages = await client.Channels_GetMessages(inputChannelBase, postId);
+        var messages = await client.Channels_GetMessages(inputChannelBase);
+        Console.WriteLine("----------------"+ messages.Count + messages.Messages.Count());
         foreach (var msgBase in messages.Messages)
         {  
             if (msgBase is Message message)
