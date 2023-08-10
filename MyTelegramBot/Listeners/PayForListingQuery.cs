@@ -84,6 +84,8 @@ public class ConfirmListingPayment : Listener, IListener // TODO: make abstract 
             { "Смотреть фильмы", "/watchMovies" },
             { "Читать книги", "/readBooks" }
         };
+
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "userhub.jpg", cancellationToken);
         return MessageToSend[0];
     }
 

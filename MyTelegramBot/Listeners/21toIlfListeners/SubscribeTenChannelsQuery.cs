@@ -133,8 +133,10 @@ public class BlockTenChannelsQuery : SubscribeTenChannelsQuery
                            "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять" +
                             " каналов, предложенных выше."};
     }
+
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "goodbuy.jpeg", cancellationToken);
         base.Run(context, cancellationToken, out Buttons);
         var channel = Database.GetChannel(context.Update.CallbackQuery.Message);
         if (channel != null)

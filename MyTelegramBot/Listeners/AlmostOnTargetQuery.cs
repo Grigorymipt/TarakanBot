@@ -23,6 +23,9 @@ public class AlmostOnTargetQuery : InlineReply, IListener
             {"💳 Плачу за листинг", "/buyListingNow"}
         };
         // Console.WriteLine(context.Update.Message.From.Id);
+        
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "repost.jpg", cancellationToken);
+       
         var user = Database.GetUser(context.Update.Message.From.Id);
         // Console.WriteLine(context.Update.Message.Text);
         string newChannel = context.Update.Message.Text;

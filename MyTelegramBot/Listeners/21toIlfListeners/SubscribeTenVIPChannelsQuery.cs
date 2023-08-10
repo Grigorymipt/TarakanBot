@@ -132,6 +132,7 @@ public class BlockTenChannelsVipQuery : SubscribeTenChannelsVipQuery
     }
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "admin.jpg", cancellationToken);
         base.Run(context, cancellationToken, out Buttons);
         var channel = Database.GetChannel(context.Update.CallbackQuery.Message);
         if (channel != null)
@@ -164,7 +165,9 @@ class CheckSubscriptionsVip : SubscribeTenChannelsVipQuery, IListener
 
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "unsub.jpg", cancellationToken);
         Buttons = new Dictionary<string, string>();
+
         var userId = context.Update.CallbackQuery.From.Id;
         int totalAmount = 0;
         User user = Database.GetUser(userId);

@@ -1,5 +1,12 @@
 ﻿using System;
 using Telegram.Bot;
+using Serilog;
+using Bridge;
+using Serilog.Events;
+using Serilog.Sinks.File;
+using Serilog.Formatting.Json;
+using Serilog.Sinks.Elasticsearch;
+
 
 namespace MyTelegramBot
 {
@@ -7,6 +14,13 @@ namespace MyTelegramBot
     {
         public static async Task Main(string[] args)
         {
+            var elkConfiguration = EnvironmentBinder.Bind<ELKConfiguration>();
+            var logger =
+                LoggingConfigurator.ElasticLogger("Название лога",
+                    elkConfiguration.Username, //todo: завести новое api 
+                    elkConfiguration.Password,
+                    elkConfiguration.Host);
+
             Console.WriteLine(Config.BotToken);
             TelegramBotClient botClient = new TelegramBotClient(Config.BotToken);
             Bot bot = new Bot(botClient: botClient, logger: new Logger<Bot>(new LoggerFactory()))

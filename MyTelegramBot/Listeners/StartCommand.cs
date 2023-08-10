@@ -19,6 +19,9 @@ public class StartCommand : Command, IListener{
             {"Я адмэн", "/admin"},
             {"Каталог", "/catalog"}
         };
+    protected override string Run(Context context, CancellationToken cancellationToken)
+    {
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "2.2", cancellationToken);
         Console.WriteLine(context.Update.Message.From.Id);
         User user = Database.GetUser(context.Update.Message.From.Id); // TODO: Reduce DB calls
         
@@ -36,6 +39,7 @@ public class StartCommand : Command, IListener{
         return "Этим ботом можно пользоваться, только перейдя в него " +
                "по реферальной ссылке от пользователя, который уже имеет доступ к боту."; 
     }
+
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
     {
         if (context.Update.Type != UpdateType.Message)
