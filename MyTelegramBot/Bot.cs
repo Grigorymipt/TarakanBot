@@ -36,6 +36,7 @@ public class Bot {
         var users = new UserRepository();
         var su = new MongoDatabase.ModelTG.User()
         {
+            Id = 0,
             UserName = "SuperUser"
         };
         Console.WriteLine("DATABASES" + users.GetClient().ListDatabaseNames());
@@ -81,7 +82,7 @@ public class Bot {
             var category = collection.GetDocument(variableCategory);
             if (category == null)
             {
-                category = new Category(){Title = variableCategory, Id = new long()};
+                category = new Category(){Title = variableCategory};
                 collection.CreateDocument(category); // TODO: Use Mytelegram API
             }
         }        

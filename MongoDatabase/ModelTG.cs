@@ -15,7 +15,7 @@ public abstract class Document
             id = value;
         } 
     }
-    public long id { get; set; }
+    private long id { get; set; }
     public readonly string Name;
     public DateTime dateTime;
 

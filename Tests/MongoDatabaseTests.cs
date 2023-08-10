@@ -63,7 +63,7 @@ public class DatabaseTests
         // FIXME: uncomment!!!!
         collec.DeleteCollection("User");
         User user = new User();
-        user.Id = new long();
+        user.Id = 0;
         user.UserName = "SuperUser";
         database.CreateDocument(user);
         Console.WriteLine(database.GetDocumentAsync(user.Id).Result.UserName);
