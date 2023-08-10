@@ -137,7 +137,11 @@ public static class ChannelInfo
         foreach (var msgBase in messages.Messages)
         {  
             if (msgBase is Message message)
-                if (message.fwd_from.channel_post == postId) return true;
+            {
+                Console.WriteLine(message.fwd_from.post_author);
+                Console.WriteLine(client.User.username);
+                if (message.fwd_from.post_author == client.User.username) return true;
+            }
         }
         return false;
     }
