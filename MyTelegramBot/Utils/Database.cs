@@ -21,7 +21,7 @@ public class Database
         
         var user = new User()
         {
-            DocumentId = message.From.Id,
+            TelegramId = message.From.Id,
             UserName = message.From.Username,
             Channels = new List<string>(),
             Categories = new List<long>(),
@@ -86,7 +86,7 @@ public class Database
     {
         var category = new Category()
         {
-            DocumentId = new long(),
+            TelegramId = new long(),
             Title = Title
         };
         _categoryRepository.CreateDocument(category);   
@@ -119,7 +119,7 @@ public class Database
     {
         var channel = new Channel()
         {
-            DocumentId = new long(),
+            TelegramId = new long(),
             Title = Title
         };
         _channelRepository.CreateDocument(channel);

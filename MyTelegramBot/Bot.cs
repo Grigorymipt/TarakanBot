@@ -36,10 +36,10 @@ public class Bot {
         var users = new UserRepository();
         var su = new MongoDatabase.ModelTG.User()
         {
-            DocumentId = 0,
+            TelegramId = 0,
             UserName = "SuperUser"
         };
-        Console.WriteLine("DATABASES" + users.GetClient().ListDatabaseNames());
+        Console.WriteLine("DATABASES" + users.GetClient().ListDatabaseNames().Current.ToList().ToString());
         users.CreateDocument(su);
 
         List<string> CheckCategories = new List<string>()

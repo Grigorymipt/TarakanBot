@@ -63,13 +63,13 @@ public class DatabaseTests
         // FIXME: uncomment!!!!
         collec.DeleteCollection("User");
         User user = new User();
-        user.DocumentId = 0;
+        user.TelegramId = 0;
         user.UserName = "SuperUser";
         database.CreateDocument(user);
-        Console.WriteLine(database.GetDocumentAsync(user.DocumentId).Result.UserName);
+        Console.WriteLine(database.GetDocumentAsync(user.TelegramId).Result.UserName);
         
         User confirmUser = new User();
-        confirmUser.DocumentId = -11;
+        confirmUser.TelegramId = -11;
         //vercode:
         long verificationCode = 22895;
         confirmUser.LastMessage = verificationCode.ToString();
