@@ -35,7 +35,7 @@ public class DatabaseTests
     //     var cString = Environment.GetEnvironmentVariable("connectionString");
     //     var database = new UserRepository(cString);
     //     User user = new User();
-    //     user.Id = new Guid();
+    //     user.Id = new long();
     //     database.CreateDocument(user);
     //     var recieved = database.GetDocument(user.Id, "User");
     //     Assert.True(recieved.Id == user.Id, "Errors");
@@ -63,17 +63,17 @@ public class DatabaseTests
         // FIXME: uncomment!!!!
         collec.DeleteCollection("User");
         User user = new User();
-        user.Id = new Guid();
+        user.Id = new long();
         user.UserName = "SuperUser";
         database.CreateDocument(user);
         Console.WriteLine(database.GetDocumentAsync(user.Id).Result.UserName);
         
         User confirmUser = new User();
-        confirmUser.Id = IdConvertor.ToGuid(-11);
+        confirmUser.Id = -11;
         //vercode:
         long verificationCode = 22895;
         confirmUser.LastMessage = verificationCode.ToString();
-        database.DeleteDocument(IdConvertor.ToGuid(-11));
+        database.DeleteDocument(-11);
         // database.CreateDocument(confirmUser);
     }
 

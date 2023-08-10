@@ -18,14 +18,14 @@ public class UserRepository : DocumentRepository<User>
         collection.InsertOne(document);
     }
 
-    public override User GetDocument(Guid Id)
+    public override User GetDocument(long Id)
     {
         var filter = Builders<User>.Filter.Eq(u => u.Id, Id);
         var user = new User();
         user = collection.Find(filter).FirstOrDefault();
         return user;
     }
-    public override async Task<User> GetDocumentAsync(Guid Id)
+    public override async Task<User> GetDocumentAsync(long Id)
     { 
         return await Task<User>.Run(() => GetDocument(Id));
     }

@@ -101,7 +101,7 @@ public abstract class Listener
     }
     protected virtual string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons) {
         buttons = new Dictionary<string, string>();
-        return MessageToSend[0];
+        return Run(context, cancellationToken);
     }
     /// <summary>Processes a command asynchronously.</summary>
     /// <returns>Command result string.</returns>

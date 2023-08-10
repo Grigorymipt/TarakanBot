@@ -5,7 +5,17 @@ namespace MongoDatabase.ModelTG;
 
 public abstract class Document
 {
-    public Guid Id { get; set; }
+    public long Id { 
+        get
+        {
+            return id;
+        } 
+        set
+        {
+            id = value;
+        } 
+    }
+    public long id { get; set; }
     public readonly string Name;
     public DateTime dateTime;
 
@@ -22,7 +32,7 @@ public class User : Document
     public User() : base("User")
     {
         Channels = new List<string>();
-        Categories = new List<Guid>();
+        Categories = new List<long>();
     }
     public string UserName { get; set; }
     public string RefId { get; set; }
@@ -31,7 +41,7 @@ public class User : Document
     public int? Messages { get; set; } = 0;
 
     public string? LastMessage { get; set; }
-    public List<Guid>? Categories { get; set; }
+    public List<long>? Categories { get; set; }
     public List<Channel>? Subscribes { get; set; } 
     public List<Channel>? SubscribesVip { get; set; } 
     public int Attempts { get; set; } = 0;
@@ -48,12 +58,13 @@ public abstract class MongoDocument{}
 public class Channel : Document
 {
     public Channel() : base("Channel"){}
-    public Guid PersonID { get; set; }
+    public long PersonID { get; set; }
     public string Title { get; set; }
     public string Describtion { get; set; }
     public int CategoryID { get; set; }
     public DateOnly Vip { get; set; } = DateOnly.MinValue;
     public int Reports { get; set; } = 0;
+    public long AccessHash { get; set; } = 0;
     public override void Update()
     {
         ChannelRepository channelRepository = new ChannelRepository();

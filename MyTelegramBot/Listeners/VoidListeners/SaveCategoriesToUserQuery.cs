@@ -1,6 +1,7 @@
 using MongoDatabase.ModelTG;
 using MyTelegramBot.Convertors;
 using MyTelegramBot.Types;
+using System.Globalization;
 
 namespace MyTelegramBot.Listeners;
 
@@ -16,7 +17,10 @@ public class SaveCategoriesToUserQuery : Query, IListener
     {
         var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
         var newUser = user;
-        newUser.Categories.Add(new Guid(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText));
+        long id;
+        long.TryParse(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText, out id);
+        Database.GetCategoryAsync(id);
+        newUser.Categories.Add(id);
         Console.WriteLine(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText);
         newUser.Update();
         return base.Run(context, cancellationToken);

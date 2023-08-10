@@ -23,7 +23,7 @@ public abstract class DocumentRepository<T> : Repository
         var filter = Builders<Document>.Filter.Eq(u => u.Id, document.Id);
         this.documentCollection.DeleteOne(filter);
     }
-    public void DeleteDocument(Guid documentId)
+    public void DeleteDocument(long documentId)
     {
         var filter = Builders<Document>.Filter.Eq(u => u.Id, documentId);
         this.documentCollection.DeleteOne(filter);
@@ -34,12 +34,12 @@ public abstract class DocumentRepository<T> : Repository
     }
     
     // FIXME:
-    // public void DeleteDocument(Guid documentId)
+    // public void DeleteDocument(long documentId)
     // {
     //     var filter = Builders<Document>.Filter.Eq(u => u.Id, documentId);
     //     this.documentCollection.DeleteOne(filter);
     // }
-    // public async Task DeleteDocumentAsync(Guid documentId)
+    // public async Task DeleteDocumentAsync(long documentId)
     // {
     //     await Task.Run(() => DeleteDocument(documentId));
     // }
@@ -50,9 +50,9 @@ public abstract class DocumentRepository<T> : Repository
         DeleteDocument(oldDocument);
         CreateDocument(newDocument);
     }
-    public abstract Document GetDocument(Guid Id);
+    public abstract Document GetDocument(long Id);
     public abstract Document GetDocument(string UserName);
-    public abstract Task<T> GetDocumentAsync(Guid Id);
+    public abstract Task<T> GetDocumentAsync(long Id);
     public abstract Task<T> GetDocumentAsync(string UserName);
 
     // public async void Update<T>(Document document)

@@ -6,22 +6,24 @@ using Telegram.Bot.Types;
 using User = MongoDatabase.ModelTG.User;
 namespace MyTelegramBot.Types;
 
-public static class Database
+public class Database
 {
-    static CommandParser ArgumentParser = new CommandParser();
+    static readonly CommandParser ArgumentParser = new();
+    readonly static UserRepository _userRepository = new();
+    readonly static CategoryRepository _categoryRepository = new();
+    readonly static ChannelRepository _channelRepository = new();
 
     public static User CreateUser(Message message)
     {
-        var collection = new UserRepository();
-        var parent = collection.GetDocument(
+        var parent = _userRepository.GetDocument(
             ArgumentParser.Parse(message.Text).ArgumentsText);
         
         var user = new User()
         {
-            Id = IdConvertor.ToGuid(message.From.Id),
+            Id = message.From.Id,
             UserName = message.From.Username,
             Channels = new List<string>(),
-            Categories = new List<Guid>(),
+            Categories = new List<long>(),
             Children = new List<string>(),
         };
         if (parent != null)
@@ -36,33 +38,18 @@ public static class Database
             parent.Update();
         }
         else user.RefId = null;
-        collection.CreateDocument(user);
+        _userRepository.CreateDocument(user);
         return user;
     }
     /// <returns>The session of the sender of a given <c>Message</c> object.</returns>
-    public static async Task<User> GetUserAsync(long Id)
-    {
-        var collection = new UserRepository();
-        User user = await collection.GetDocumentAsync(IdConvertor.ToGuid(Id));
-        return user;
-    }
-    public static User GetUser(long Id)
-    {
-        var collection = new UserRepository();
-        var user = collection.GetDocument(IdConvertor.ToGuid(Id));
-        return user;
-    }
-    public static User GetUser(string username)
-    {
-        var collection = new UserRepository();
-        var user = collection.GetDocument(username);
-        return user;
+    public static async Task<User> GetUserAsync(long Id) { return await _userRepository.GetDocumentAsync(Id);}
+
+    public static User GetUser(long Id) { return _userRepository.GetDocument(Id);}
+    public static User GetUser(string username){ return _userRepository.GetDocument(username);
     }
     public static User UpdateUser(Message message)
     {
-        var collection = new UserRepository();
-        Console.WriteLine(message.Text);
-        var parent = collection.GetDocument(ArgumentParser.Parse(message.Text).ArgumentsText);
+        var parent = _userRepository.GetDocument(ArgumentParser.Parse(message.Text).ArgumentsText);
         var user = GetUser(message.From.Id);
         if (parent != null)
         {
@@ -76,20 +63,16 @@ public static class Database
 
     public static void DeleteUser(long Id)
     {
-        var collection = new UserRepository();
-        var user = GetUser(Id);
-        collection.DeleteDocumentAsync(user);
+        DeleteUser(GetUser(Id));
     }
     public static void DeleteUser(User user)
     {
-        var collection = new UserRepository();
-        collection.DeleteDocumentAsync(user);
+        _userRepository.DeleteDocumentAsync(user);
     }
     
      public static List<User> ListChildrenFrom(string parent, DateTime dateTime)
     {
-        var collection = new UserRepository();
-        return collection.GetDocuments(parent, dateTime);
+        return _userRepository.GetDocuments(parent, dateTime);
     }
 
 
@@ -100,79 +83,67 @@ public static class Database
     }
     private static void CreateCategory(string Title)
     {
-        var collection = new CategoryRepository();
-        
         var category = new Category()
         {
-            Id = new Guid(),
+            Id = new long(),
             Title = Title
         };
-        collection.CreateDocument(category);   
+        _categoryRepository.CreateDocument(category);   
     }
-    public static async Task<Category> GetCategoryAsync(Guid Id)
+    public static async Task<Category> GetCategoryAsync(object identifier)
     {
-        var collection = new CategoryRepository();
-        var category = await collection.GetDocumentAsync(Id);
+        var collectionId = identifier.ToString();
+        var category = await _categoryRepository.GetDocumentAsync(collectionId);
         if (category == null) CreateCategory("This category is in progress of creation.");
         return category;
     }
+    public static async Task<Category> GetCategoryAsync(long Id)
+    {
+        return await GetCategoryAsync(Id);
+    }
     public static async Task<Category> GetCategoryAsync(Message message)
     {
-        var Id = ArgumentParser.Parse(message.Text).ArgumentsText;
-        var category = await GetCategoryAsync(new Guid(Id));
-        return category;
+        return await GetCategoryAsync(ArgumentParser.Parse(message.Text).ArgumentsText);
     }
     public static async Task<List<Category>> GetAllCategories()
     {
-        var collection = new CategoryRepository();
-        return await collection.GetAllDocumentsAsync();
+        return await _categoryRepository.GetAllDocumentsAsync();
     }
 
     public static void CreateChannel(Channel channel)
     {
-        var collection = new ChannelRepository();
-        collection.CreateDocument(channel);
+        _channelRepository.CreateDocument(channel);
     }
     public static void CreateChannel(string Title)
     {
-        var collection = new ChannelRepository();
         var channel = new Channel()
         {
-            Id = new Guid(),
+            Id = new long(),
             Title = Title
         };
-        collection.CreateDocument(channel);
+        _channelRepository.CreateDocument(channel);
     }
     
     public static Channel GetChannel(Message message)
     {
-        var collection = new ChannelRepository();
-        var channel = collection.GetDocument(ArgumentParser.Parse(message.Text).ArgumentsText);
+        var channel = _channelRepository.GetDocument(ArgumentParser.Parse(message.Text).ArgumentsText);
         return channel;
     }
     public static Channel GetChannel(string name)
     {
-        var collection = new ChannelRepository();
-        var channel = collection.GetDocument(name);
+        var channel = _channelRepository.GetDocument(name);
         return channel;
     }
-    public static async Task<Channel> GetChannelAsync(Guid Id)
+    public static async Task<Channel> GetChannelAsync(long Id)
     {
-        var collection = new ChannelRepository();
-        var channel = await collection.GetDocumentAsync(Id);
-        if (channel == null) CreateCategory("This channel is in progress of creation.");
+        var channel = await _channelRepository.GetDocumentAsync(Id);
+        // if (channel == null) 
         return channel;
     }
-    public static async Task<Channel> GetChannelAsync(Message message)
-    {
-        var Id = ArgumentParser.Parse(message.Text).ArgumentsText;
-        var channel = await GetChannelAsync(new Guid(Id));
-        return channel;
-    }
+
     public static async Task<List<Channel>> FindChannelToListAsync()
     {   
-        var collection = new ChannelRepository();
-        List<Channel> channels = await collection.GetOldestDocuments(20);
+        List<Channel> channels = await _channelRepository.GetOldestDocuments(20);
         return channels;
     }
 

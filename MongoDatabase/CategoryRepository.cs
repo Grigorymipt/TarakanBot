@@ -16,12 +16,12 @@ public class CategoryRepository : DocumentRepository<Category>
     {
         collection.InsertOne(document);
     }
-    public override Category GetDocument(Guid Id)
+    public override Category GetDocument(long Id)
     {
         var filter = Builders<Category>.Filter.Eq(u => u.Id, Id);
         return collection.Find(filter).FirstOrDefault();
     }
-    public override async Task<Category> GetDocumentAsync(Guid Id)
+    public override async Task<Category> GetDocumentAsync(long Id)
     { 
         return await Task<Category>.Run(() => GetDocument(Id));
     }

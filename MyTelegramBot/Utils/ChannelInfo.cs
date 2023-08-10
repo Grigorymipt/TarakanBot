@@ -1,4 +1,5 @@
 using System.Text;
+using Telegram.Bot.Types.InlineQueryResults;
 using TL;
 using TL.Methods;
 
@@ -27,31 +28,52 @@ public static class ChannelInfo
         using var client = new WTelegram.Client(Config);
         await client.LoginUserIfNeeded();
     }
-    private static async Task<Channels_ChannelParticipants> ListAllChannelUsers(string channelName, ChannelParticipantsFilter filter = null)//
+    private static async Task SaveChannelRegInfo(string channelName)
     {
-        
+        using var client = new WTelegram.Client(Config);
+        await client.LoginUserIfNeeded();
+
+        var resolved = await client.Contacts_ResolveUsername(channelName);
+        if (resolved.Chat is Channel channel)
+        {
+            await client.Channels_JoinChannel(channel);
+            //Save to db to have acceshash:
+            var RegData = GetChannels(channelName).Result;
+            var channelDB = Database.GetChannel(RegData.ChannelTitle);
+            if (channelDB != null)
+            {
+                channelDB.AccessHash = RegData.AccessHash;
+            } 
+        }
+        Console.WriteLine($"{channelName} not a ChaCnel");
+        throw new NullReferenceException("Channel not Exists");
+    }
+    private record RegData(long ChannelId = 0, long AccessHash = 0, string ChannelTitle = "");
+    private static async Task<RegData> GetChannels(string channelName)
+    {
         using var client = new WTelegram.Client(Config);
         await client.LoginUserIfNeeded();
         
-        long channelId = 0;
-        long accessHash = 0;
         var chats = await client.Messages_GetAllChats(); // chats = groups/channels (does not include users dialogs)
         Console.WriteLine("This user has joined the following:");
-        void InitAccessHash()
-        {
-            foreach (var (id, chat) in chats.chats)
-                switch (chat)
-                {
-                    case Channel channel1 when channel1.IsChannel && channel1.username == channelName:
-                        channelId = id;
-                        accessHash = channel1.access_hash;
-                        break;
-                }
-        }
+
+        foreach (var (id, chat) in chats.chats)
+            switch (chat)
+            {
+                case Channel channel1 when channel1.IsChannel && channel1.username == channelName:
+                    return new RegData(id, channel1.access_hash, channel1.title);
+            }
+        return new RegData();
+    }
+    
+    private static async Task<Channels_ChannelParticipants> ListAllChannelUsers(string channelName, ChannelParticipantsFilter filter = null)//
+    {
+        using var client = new WTelegram.Client(Config);
+        await client.LoginUserIfNeeded();
+        var RegData = await GetChannels(channelName);
         try
         {
-            InitAccessHash();
-            InputChannelBase inputChannelBase = new InputChannel(channelId, accessHash);
+            InputChannelBase inputChannelBase = new InputChannel(RegData.ChannelId, RegData.AccessHash);
             var list = await client.Channels_GetParticipants(inputChannelBase, filter: filter);
             return list;
         }
@@ -59,21 +81,11 @@ public static class ChannelInfo
         {
             try
             {
-                var resolved = await client.Contacts_ResolveUsername(channelName); // without the @
-                Console.WriteLine("resolved");
-                if (resolved.Chat is Channel channel)
-                {
-                    await client.Channels_JoinChannel(channel);
-                    Console.WriteLine($"Joined: {channel.Title}");
-                    InitAccessHash();
-                    InputChannelBase inputChannelBase = new InputChannel(channelId, accessHash);
-                    new CancellationTokenSource().CancelAfter(30);
-                    var list = await client.Channels_GetParticipants(inputChannelBase, filter: filter);
-                    Console.WriteLine("LiSt");
-                    return list;
-                }
-                Console.WriteLine($"{channelName} not a ChaCnel");
-                throw new NullReferenceException("Channel not Exists");
+                new CancellationTokenSource().CancelAfter(30);
+                SaveChannelRegInfo(channelName).Wait();
+                InputChannelBase inputChannelBase = new InputChannel(RegData.ChannelId, RegData.AccessHash);
+                var list = await client.Channels_GetParticipants(inputChannelBase, filter: filter);
+                return list;
             }
             catch(Exception ex)
             {
@@ -110,5 +122,22 @@ public static class ChannelInfo
         {
             throw;
         }
+    }
+    public static async Task<bool> CheckMessageAutor(int postId, string channelName)
+    {
+        using var client = new WTelegram.Client(Config);
+        await client.LoginUserIfNeeded();
+        
+        var RegData = await GetChannels(channelName);
+        InputChannelBase inputChannelBase = new InputChannel(RegData.ChannelId, RegData.AccessHash);
+        // InputMessageID inputMessage = new InputMessageID();
+        // inputMessage.id = postId;
+        var messages = await client.Channels_GetMessages(inputChannelBase, postId);
+        foreach (var msgBase in messages.Messages)
+        {  
+            if (msgBase is Message message)
+                if (message.fwd_from.channel_post == postId) return true;
+        }
+        return false;
     }
 }

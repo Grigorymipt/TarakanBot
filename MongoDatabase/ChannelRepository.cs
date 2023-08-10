@@ -17,12 +17,12 @@ public class ChannelRepository : DocumentRepository<Channel>
     {
         collection.InsertOne(document);
     }
-    public override Channel GetDocument(Guid Id)
+    public override Channel GetDocument(long Id)
     {
         var filter = Builders<Channel>.Filter.Eq(u => u.Id, Id);
         return collection.Find(filter).FirstOrDefault();
     }
-    public override async Task<Channel> GetDocumentAsync(Guid Id)
+    public override async Task<Channel> GetDocumentAsync(long Id)
     { 
         var filter = Builders<Channel>.Filter.Eq(u => u.Id, Id);
         return await collection.Find(filter).FirstOrDefaultAsync<Channel>();

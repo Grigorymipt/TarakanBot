@@ -21,8 +21,7 @@ namespace MyTelegramBot.Listeners {
                 long userId;
                 string args = ArgumentParser.Parse(message.Text).ArgumentsText;
                 long.TryParse(args, out userId);
-                var collection = new UserRepository();
-                user = collection.GetDocumentAsync(IdConvertor.ToGuid(message.From.Id)).Result; 
+                user = Database.GetUserAsync(message.From.Id).Result; 
                 if(user == null)
                 {
                     return "User not found";

@@ -81,7 +81,7 @@ public class Bot {
             var category = collection.GetDocument(variableCategory);
             if (category == null)
             {
-                category = new Category(){Title = variableCategory, Id = new Guid()};
+                category = new Category(){Title = variableCategory, Id = new long()};
                 collection.CreateDocument(category); // TODO: Use Mytelegram API
             }
         }        
