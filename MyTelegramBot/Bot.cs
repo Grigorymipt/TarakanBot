@@ -39,7 +39,6 @@ public class Bot {
             TelegramId = 0,
             UserName = "SuperUser"
         };
-        Console.WriteLine("DATABASES" + users.GetClient().ListDatabaseNames().Current.ToList().ToString());
         users.CreateDocument(su);
 
         List<string> CheckCategories = new List<string>()
