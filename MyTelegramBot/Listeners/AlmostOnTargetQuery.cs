@@ -8,20 +8,20 @@ public class AlmostOnTargetQuery : InlineReply, IListener
 {
     public AlmostOnTargetQuery(Bot bot) : base(bot)
     {
+        MessageToSend = new[] {"🎯 Мы почти у цели. Остался последний шаг!🤫 У меня к тебе деловое предложение. " +
+                        "Предлагаю опубликовать в твоем канале репост одного из моих постов, где я рекомендую " +
+                        "людям пользоваться каталогом #UserHub, а взамен я размещу твой канал в каталоге абсолютно" +
+                        " бесплатно и навсегда. Если же этот вариант не подходит, то ты можешь приобрести пожизненный " +
+                        "листинг в каталоге всего за 100$"};
+        MessageLabel = "GetAddressInline";
+    }
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
+    {
         Buttons = new Dictionary<string, string>()
         {
             {"🤝 Предложение принято", "/suggestionAccepted"},
             {"💳 Плачу за листинг", "/buyListingNow"}
         };
-        MessageToSend = "🎯 Мы почти у цели. Остался последний шаг!🤫 У меня к тебе деловое предложение. " +
-                        "Предлагаю опубликовать в твоем канале репост одного из моих постов, где я рекомендую " +
-                        "людям пользоваться каталогом #UserHub, а взамен я размещу твой канал в каталоге абсолютно" +
-                        " бесплатно и навсегда. Если же этот вариант не подходит, то ты можешь приобрести пожизненный " +
-                        "листинг в каталоге всего за 100$";
-        MessageLabel = "GetAddressInline";
-    }
-    protected override string Run(Context context, CancellationToken cancellationToken)
-    {
         // Console.WriteLine(context.Update.Message.From.Id);
         
         Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "repost.jpg", cancellationToken);
@@ -29,16 +29,52 @@ public class AlmostOnTargetQuery : InlineReply, IListener
         var user = Database.GetUser(context.Update.Message.From.Id);
         // Console.WriteLine(context.Update.Message.Text);
         string newChannel = context.Update.Message.Text;
-        var newUser = user;
-        newUser.Channels.Add(newChannel); // FIXME: very strange behavior
-        Channel channel = new Channel()
+        if (newChannel.First() != '@')
         {
-            PersonID = user.Id,
-            Title = newChannel,
-        };
-        Database.CreateChannel(channel);
+            Buttons.Clear();
+            Buttons.Add("Ввести имя канала заново","/saveCategory");
+            return "Некорректное имя канала!";
+        }
+        var newUser = user;
+        newChannel = newChannel.Remove(0, 1);
+        try
+        {
+            if (ChannelInfo.IsAdmin(newChannel, context.Update.Message.From.Id).Result) 
+            {
+                if(newUser.Channels == null || newUser.Channels.Contains(newChannel) == false)
+                {
+                    newUser.Channels ??= new List<string>();
+                    newUser.Channels.Add(newChannel); // FIXME: very strange behavior
+                    Channel channel = new Channel()
+                    {
+                        PersonID = user.TelegramId,
+                        Title = newChannel,
+                    };
+                    Database.CreateChannel(channel);
+                }
+                else
+                {
+                    Buttons.Clear();
+                    return "Вы уже добавляли данный канал";
+                }
+            }
+            else
+            {
+                Buttons.Clear();
+                return "Вы не являетесь создателем данного канала";
+            }
+        }
+        catch (Exception ex)
+        {
+            if (ex.Message == "Channel not Exists")
+            {
+                Buttons.Clear();
+                Buttons.Add("Попробовать еще раз", "/saveCategory");
+                return "Такого канала не существует";
+            }
+        }
         newUser.LastMessage = null;
         newUser.Update();
-        return MessageToSend;
+        return MessageToSend[0];
     }
 }

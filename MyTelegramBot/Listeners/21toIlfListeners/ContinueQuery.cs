@@ -6,14 +6,20 @@ public class ContinueQuery : Query, IListener
 {
     public ContinueQuery(Bot bot) : base(bot)
     {
-        Buttons = new Dictionary<string, string>();
         Names = new[] { "/continueTo" };
     }
 
-    private void CheckFiveCategories(Context context)
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
+        var result = CheckFiveCategories(context, out buttons);
+        return result;
+    }
+
+    private string CheckFiveCategories(Context context, out Dictionary<string, string> buttons)
+    {
+        buttons = new Dictionary<string, string>();
         var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        MessageToSend = "🤷 Необходимо выбрать еще " + (5 - user.Categories.Count) + " категорий и нажать «продолжить»!";
+        var MessageToSend = "🤷 Необходимо выбрать еще " + (5 - user.Categories.Count) + " категорий и нажать «продолжить»!";
         if (user is { Categories.Count: >= 5 })
         {
             MessageToSend = "😍 Хороший вкус! Теперь необходимо подписаться на 10 каналов! Это те самые 10 каналов, " +
@@ -22,9 +28,11 @@ public class ContinueQuery : Query, IListener
                             " Не более 20 раз можно нажать «пропустить». 🚨🚔 Если канал нарушает правила пользования " +
                             "(кликабельно) #UserHub, то жми «пропустить», а затем «Black List» и наши специалисты разберутся с этим.";
             if(user is {Categories.Count: >= 5})
-                Buttons.Clear();
-                Buttons.Add("Начать подписываться", "/subscribeTenChannels");
+                buttons.Clear();
+                buttons.Add("Начать подписываться", "/subscribeTenChannels");
         }
+        
+        return MessageToSend;
     }
 
     protected override string Run(Context context, CancellationToken cancellationToken)

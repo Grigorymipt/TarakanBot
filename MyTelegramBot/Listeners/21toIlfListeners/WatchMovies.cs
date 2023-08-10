@@ -11,9 +11,12 @@ public class WatchMovies : Command, IListener // TODO: Query, IListener
     public WatchMovies(Bot bot) : base(bot)
     {
         Names = new[] { "/watchmovies", "/watchMovies" };
-        MessageToSend = "😉 Отлично, тогда лови короткое видео обо мне. Смотри внимательно, в видео спрятано кодовое" +
-                        " слово! Нужно будет отправить его мне, чтобы перейти к следующему шагу.";
-        Buttons = new Dictionary<string, string>( ){ { "Посмотрел, отправить кодовое слово", "/sendKeyWord" } };
+        MessageToSend = new string[] {
+            "😉 Отлично, тогда лови короткое видео обо мне. Смотри внимательно, в видео спрятано кодовое" +
+                        " слово! Нужно будет отправить его мне, чтобы перейти к следующему шагу."
+                        };
+
+
     }
 
     // public override async Task Handler(Context context, CancellationToken cancellationToken)
@@ -28,10 +31,10 @@ public class WatchMovies : Command, IListener // TODO: Query, IListener
     //     //     video: video
     //     // );
     // }
-    protected override string Run(Context context, CancellationToken cancellationToken)
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
-        MessageToSend += "https://www.youtube.com/watch?v=A0_Abt4dzAA";
-        return base.Run(context, cancellationToken);
+        Buttons = new Dictionary<string, string>( ){ { "Посмотрел, отправить кодовое слово", "/sendKeyWord" } };
+        return MessageToSend + " https://www.youtube.com/watch?v=A0_Abt4dzAA";
     }
 }
 
@@ -40,7 +43,7 @@ public class SendKeyWord : Types.InlineQuery, IListener
     public SendKeyWord(Bot bot) : base(bot)
     {
         Names = new[] { "/sendKeyWord" };
-        MessageToSend = "Кодовое слово из видео:";
+        MessageToSend = new string[] {"Кодовое слово из видео:"};
         MessageLabel = "KeyWord";
     }
 }
@@ -49,18 +52,26 @@ public class GetKeyWord : Types.InlineReply, IListener
 {
     public GetKeyWord(Bot bot) : base(bot)
     {
+        MessageToSend = new string[]{
+            "🥳 Правильно! Ты почти у цели. Дополнительно лови PDF презентацию! Здесь ты найдешь" +
+                " ответы на все вопросы. Жми на 'пройти тест' 👇",
+            "😎 Соберись, всего несколько шагов отделяет тебя от первого 1.000.000 подписчиков. " +
+                "Еще раз посмотри внимательно видео! (подсказка, с 00:00 сек до 00:00 сек)",
+            "😳 Возможно, книги ты любишь больше! Тогда лови PDF презентацию. Только, читай" +
+                " внимательно, необходимо будет ответить на пару вопросов."
+
+        };
         MessageLabel = "KeyWord";
-        Buttons = new Dictionary<string, string>();
     }
 
-    protected override string Run(Context context, CancellationToken cancellationToken)
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
+        Buttons = new Dictionary<string, string>();
         if (context.Update.Message.Text.Equals("Миллион") || context.Update.Message.Text.Equals("миллион"))
         {
-            MessageToSend = "🥳 Правильно! Ты почти у цели. Дополнительно лови PDF презентацию! Здесь ты найдешь" +
-                            " ответы на все вопросы. Жми на 'пройти тест' 👇";
             Buttons.Clear();
             Buttons.Add("💡 Пройти тест.", "/startTest");
+            return MessageToSend[0];
         }
         else
         {
@@ -69,21 +80,18 @@ public class GetKeyWord : Types.InlineReply, IListener
             user.Update();
             if (user.Attempts < 2)
             {
-                MessageToSend = "😎 Соберись, всего несколько шагов отделяет тебя от первого 1.000.000 подписчиков. " +
-                                "Еще раз посмотри внимательно видео! (подсказка, с 00:00 сек до 00:00 сек)";
                 Buttons.Clear();
                 Buttons.Add("Попробовать еще раз", "/sendKeyWord");
+                return MessageToSend[1];
             }
             else
             {
-                MessageToSend = "😳 Возможно, книги ты любишь больше! Тогда лови PDF презентацию. Только, читай" +
-                                " внимательно, необходимо будет ответить на пару вопросов.";
                 Buttons.Clear();
                 Buttons.Add("💡 Пройти тест.", "/startTest");
                 ChatId chatId = context.Update.Message.Chat.Id;
                 Send.Document(context, Environment.GetEnvironmentVariable("pathToMaterials")+"conspect.pdf", cancellationToken);
+                return MessageToSend[2];
             }
         }
-        return base.Run(context, cancellationToken);
     }
 }

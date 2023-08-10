@@ -2,6 +2,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using System.Collections.ObjectModel;
 
 namespace MyTelegramBot.Types;
 /// <summary>
@@ -47,27 +48,28 @@ public abstract class Query : Listener
         }
         return false;
     }
+    // public override async Task Handler(Context context, CancellationToken cancellationToken)
+    // {
+    //     string response = await RunAsync(context, cancellationToken);
+    //     Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
+
+    //     if (response.Length == 0)
+    //         return;
+
+    //     Message sentMessage = await context.BotClient.SendTextMessageAsync(
+    //         chatId: chatId,
+    //         text: response,
+    //         parseMode: Config.ParseMode
+    //     );
+    // }
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
-        string response = await RunAsync(context, cancellationToken);
-        Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
-
-        if (response.Length == 0)
-            return;
-
-        Message sentMessage = await context.BotClient.SendTextMessageAsync(
-            chatId: chatId,
-            text: response,
-            parseMode: Config.ParseMode
-        );
-    }
-    public override async Task Handler(Context context, Dictionary<string, string> buttonsList, CancellationToken cancellationToken)
-    {
-        string response = await RunAsync(context, cancellationToken);
+        var buttons = new Dictionary<string, string>(){};
+        string response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
 
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
-        foreach (var category in buttonsList)
+        foreach (var category in buttons)
         {
             InlineKeyboardButton reply = InlineKeyboardButton
                 .WithCallbackData(category.Key, category.Value);
@@ -96,5 +98,6 @@ public abstract class Query : Listener
     /// </summary>
     public Query(Bot bot) : base(bot) 
     {
+        
     }
 }

@@ -8,7 +8,7 @@ namespace MyTelegramBot;
 
 public static class WebHook
 {
-    public static async Task UpdateReceive(string[] args)
+    public static void UpdateReceive(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -30,13 +30,10 @@ public static class WebHook
                     TelegramBotClientOptions options = new(Config.BotToken);
                     return new TelegramBotClient(options, httpClient);
                 });
-        builder.WebHost.ConfigureKestrel(serverOptions =>
+        builder.WebHost.ConfigureKestrel(async serverOptions =>
         {
+            // this supports http only, NOT https currently 
             serverOptions.Listen(IPAddress.Any, 8080, options =>
-            {
-                options.Protocols = HttpProtocols.Http1AndHttp2;
-            });
-            serverOptions.Listen(IPAddress.Any, 80, options =>
             {
                 options.Protocols = HttpProtocols.Http1AndHttp2;
             });

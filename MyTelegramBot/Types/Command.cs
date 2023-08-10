@@ -93,22 +93,22 @@ public abstract class Command : Listener
         return false;
     }
     /// <summary>Handles the <c>Command</c> if it is successfully validated.</summary>
-    public override async Task Handler(Context context, CancellationToken cancellationToken)
-    {
-        // var thread = new Thread(new ThreadStart(this.Run));
-        string response = await RunAsync(context, cancellationToken);
-        Int64 chatId = context.Update.Message.Chat.Id;
+    // public override async Task Handler(Context context, CancellationToken cancellationToken)
+    // {
+    //     // var thread = new Thread(new ThreadStart(this.Run));
+    //     string response = await RunAsync(context, cancellationToken);
+    //     Int64 chatId = context.Update.Message.Chat.Id;
         
-        if (response.Length == 0)
-        {
-            return;
-        }
-        Message sentMessage = await context.BotClient.SendTextMessageAsync(
-            chatId: chatId,
-            text: response,
-            parseMode: Config.ParseMode
-        );
-    }
+    //     if (response.Length == 0)
+    //     {
+    //         return;
+    //     }
+    //     Message sentMessage = await context.BotClient.SendTextMessageAsync(
+    //         chatId: chatId,
+    //         text: response,
+    //         parseMode: Config.ParseMode
+    //     );
+    // }
 
     /// <summary>
     /// Handles the <c>Command</c> using <param name="buttonsList"></param>if it is successfully validated 
@@ -116,12 +116,14 @@ public abstract class Command : Listener
     /// <param name="context"></param>
     /// <param name="buttonsList"></param>
     /// <param name="cancellationToken"></param>
-    public override async Task Handler(Context context, Dictionary<string, string> buttonsList, CancellationToken cancellationToken)
+    public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
-        string response = Run(context, cancellationToken);
+        var buttons = new Dictionary<string, string>(){};
+        string response;
+        response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
         Int64 chatId = context.Update.Message.Chat.Id;
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
-        foreach (var category in buttonsList)
+        foreach (var category in buttons)
         {
             InlineKeyboardButton reply = InlineKeyboardButton
                 .WithCallbackData(category.Key, category.Value);

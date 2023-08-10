@@ -32,6 +32,15 @@ public class Bot {
     public async Task Init() 
     {
         Console.WriteLine("Initializing bot...");
+        
+        var users = new UserRepository();
+        var su = new MongoDatabase.ModelTG.User()
+        {
+            TelegramId = 0,
+            UserName = "SuperUser"
+        };
+        users.CreateDocument(su);
+
         List<string> CheckCategories = new List<string>()
         {
             "Новости и медиа" , 
@@ -69,20 +78,15 @@ public class Bot {
         var collection = new CategoryRepository();
         foreach (var variableCategory in CheckCategories)
         {
-            var category = collection.GetDocument(variableCategory);
+            var category = await Database.GetCategory(variableCategory);
             if (category == null)
-            {
-                category = new Category(){Title = variableCategory, Id = new Guid()};
-                collection.CreateDocument(category); // TODO: Use Mytelegram API
-            }
-        }
-        
-        
+                Database.CreateCategory(variableCategory);
+        }        
         
         using CancellationTokenSource cts = new CancellationTokenSource();
         //TODO: remove hardcode
-        _botClient.SetWebhookAsync(
-            url: "https://somegreentests.ru/GetUpdates",
+        await _botClient.SetWebhookAsync(
+            url: Environment.GetEnvironmentVariable("WebHookURL"),
             // ipAddress: "62.113.98.40",
             maxConnections: default,
             allowedUpdates: default,
@@ -111,6 +115,9 @@ public class Bot {
             listCommands.AsEnumerable()
             );
         
+        //Login Telegram API account:
+        await ChannelInfo.Login();
+
         Console.WriteLine("Starting bot...");
         // _botClient.StartReceiving(
         //     HandleUpdateAsync,
@@ -138,13 +145,13 @@ public class Bot {
             if (await listener.Validate(context, cancellationToken))
             {
                 if(listener.HandleType == HandleType.ButtonList)
-                    await listener.Handler(context, listener.Buttons, cancellationToken);
+                    await listener.Handler(context, cancellationToken);
                 else
                     await listener.Handler(context, cancellationToken);
             }
         }
     }
-    Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+    public async Task<string> HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
         var ErrorMessage = exception switch
         {
@@ -152,7 +159,7 @@ public class Bot {
                 => $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
             _ => exception.ToString(),
         };
-        return Task.CompletedTask;
+        return ErrorMessage;
     }
 
     private static IEnumerable<Type> GetTypesImplementedBy<T>(Assembly assembly)

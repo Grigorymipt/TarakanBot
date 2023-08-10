@@ -7,13 +7,18 @@ public class MyHandshakesQuery : Query, IListener
     public MyHandshakesQuery(Bot bot) : base(bot)
     {
         Names = new[] { "/myHandshakes" };
-        MessageToSend = "🤝 Мои рукопожатия";
-        Buttons = new Dictionary<string, string>()
+        MessageToSend = new string[]{"🤝 Мои рукопожатия"
+        };
+    }
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
+    {
+        buttons = new Dictionary<string, string>()
         {
             {"🔍 Все рукопожатия", "/allHandshakes"},
             {"1-й уровень", "/firstLevelHandshakes"},
             {"Статистика", "/handshakeStats"},
         };
+        return MessageToSend[0];
     }
 }
 
@@ -27,7 +32,7 @@ public class AllHandshakesQuery : Query, IListener
 
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
-        MessageToSend = "🕹 Уровень | Рукопожатий | VIP\n";
+        var MessageToSend = "🕹 Уровень | Рукопожатий | VIP\n";
         Dictionary<int, int> handshakes = new Dictionary<int, int>();
         // итеративный листинг дерева
         Queue<string> queue = new Queue<string>();
@@ -84,7 +89,7 @@ public class FirstLevelHandshakesQuery : Query, IListener
     }
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
-        MessageToSend = "🧑‍💻 Ник | Всего Рукопожатий | VIP";
+        var MessageToSend = "🧑‍💻 Ник | Всего Рукопожатий | VIP";
         var user = Database.GetUser(
             context.Update.CallbackQuery.From.Id
         );
