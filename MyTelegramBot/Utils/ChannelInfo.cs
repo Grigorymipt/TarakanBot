@@ -123,7 +123,7 @@ public static class ChannelInfo
             throw;
         }
     }
-    public static async Task<bool> CheckMessageAutor(int postId, string channelName)
+    public static async Task<bool> CheckMessageAutor(string channelName)
     {
         using var client = new WTelegram.Client(Config);
         await client.LoginUserIfNeeded();
@@ -132,11 +132,16 @@ public static class ChannelInfo
         InputChannelBase inputChannelBase = new InputChannel(RegData.ChannelId, RegData.AccessHash);
         // InputMessageID inputMessage = new InputMessageID();
         // inputMessage.id = postId;
-        var messages = await client.Channels_GetMessages(inputChannelBase, postId);
+        var messages = await client.Channels_GetMessages(inputChannelBase);
+        Console.WriteLine("----------------"+ messages.Count + messages.Messages.Count());
         foreach (var msgBase in messages.Messages)
         {  
             if (msgBase is Message message)
-                if (message.fwd_from.channel_post == postId) return true;
+            {
+                Console.WriteLine(message.fwd_from.post_author);
+                Console.WriteLine(client.User.username);
+                if (message.fwd_from.post_author == client.User.username) return true;
+            }
         }
         return false;
     }
