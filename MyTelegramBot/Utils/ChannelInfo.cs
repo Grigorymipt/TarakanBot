@@ -123,7 +123,7 @@ public static class ChannelInfo
             throw;
         }
     }
-    public static async Task<bool> CheckMessageAutor(int postId, string channelName)
+    public static async Task<bool> CheckMessageAutor(string channelName)
     {
         using var client = new WTelegram.Client(Config);
         await client.LoginUserIfNeeded();

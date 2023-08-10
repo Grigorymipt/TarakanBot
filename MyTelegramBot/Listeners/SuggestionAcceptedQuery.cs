@@ -19,9 +19,10 @@ public class SuggestionAcceptedQuery : Query, IListener
             MessageToSend[0] += "\n" + creative;
         }
     }
-    protected override string Run(Context context, CancellationToken cancellationToken)
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
-        ChannelInfo.CheckMessageAutor("https://t.me/vokyj/4", "TestForTestingAndTestingForTest");
+        buttons = new Dictionary<string, string>();
+        if(ChannelInfo.CheckMessageAutor("TestForTestingAndTestingForTest").Result) buttons.Add("да ты хорош", "/whatLike");
         return MessageToSend[0];
     }
 }
