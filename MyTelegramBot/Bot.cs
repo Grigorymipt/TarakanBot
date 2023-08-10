@@ -79,12 +79,9 @@ public class Bot {
         var collection = new CategoryRepository();
         foreach (var variableCategory in CheckCategories)
         {
-            var category = collection.GetDocument(variableCategory);
+            var category = await Database.GetCategoryAsync(variableCategory);
             if (category == null)
-            {
-                category = new Category(){Title = variableCategory};
-                collection.CreateDocument(category); // TODO: Use Mytelegram API
-            }
+                Database.CreateCategory(variableCategory);
         }        
         
         using CancellationTokenSource cts = new CancellationTokenSource();

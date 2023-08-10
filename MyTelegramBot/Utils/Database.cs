@@ -81,7 +81,7 @@ public class Database
         var messageArgs = ArgumentParser.Parse(message.Text).ArgumentsText;
         CreateCategory(messageArgs);
     }
-    private static void CreateCategory(string Title)
+    public static void CreateCategory(string Title)
     {
         var category = new Category()
         {
