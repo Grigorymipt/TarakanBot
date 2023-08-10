@@ -91,20 +91,20 @@ public class Database
         };
         _categoryRepository.CreateDocument(category);   
     }
-    public static async Task<Category> GetCategoryAsync(object identifier)
+    public static async Task<Category> GetCategory(object identifier)
     {
         var collectionId = identifier.ToString();
         var category = await _categoryRepository.GetDocumentAsync(collectionId);
-        if (category == null) CreateCategory("This category is in progress of creation.");
+        if (category == null) return null;
         return category;
     }
     public static async Task<Category> GetCategoryAsync(long Id)
     {
-        return await GetCategoryAsync(Id);
+        return await GetCategory(Id);
     }
     public static async Task<Category> GetCategoryAsync(Message message)
     {
-        return await GetCategoryAsync(ArgumentParser.Parse(message.Text).ArgumentsText);
+        return await GetCategory(ArgumentParser.Parse(message.Text).ArgumentsText);
     }
     public static async Task<List<Category>> GetAllCategories()
     {
