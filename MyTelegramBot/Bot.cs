@@ -78,7 +78,7 @@ public class Bot {
         var collection = new CategoryRepository();
         foreach (var variableCategory in CheckCategories)
         {
-            var category = await Database.GetCategoryAsync(variableCategory);
+            var category = await Database.GetCategory(variableCategory);
             if (category == null)
                 Database.CreateCategory(variableCategory);
         }        
