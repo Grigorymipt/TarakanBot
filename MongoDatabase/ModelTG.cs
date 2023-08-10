@@ -5,17 +5,17 @@ namespace MongoDatabase.ModelTG;
 
 public abstract class Document
 {
-    public long Id { 
-        get
-        {
-            return id;
-        } 
-        set
-        {
-            id = value;
-        } 
-    }
-    private long id { get; set; }
+    // public long Id { 
+    //     get
+    //     {
+    //         return id;
+    //     } 
+    //     set
+    //     {
+    //         id = value;
+    //     } 
+    // }
+    public long Id { get; set; }
     public readonly string Name;
     public DateTime dateTime;
 
