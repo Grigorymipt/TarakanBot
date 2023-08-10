@@ -20,7 +20,7 @@ public class UserRepository : DocumentRepository<User>
 
     public override User GetDocument(long Id)
     {
-        var filter = Builders<User>.Filter.Eq(u => u.Id, Id);
+        var filter = Builders<User>.Filter.Eq(u => u.DocumentId, Id);
         var user = new User();
         user = collection.Find(filter).FirstOrDefault();
         return user;

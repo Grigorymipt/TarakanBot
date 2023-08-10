@@ -18,7 +18,7 @@ public class CorrectTestAnswer : Query, IListener
         buttons = new Dictionary<string, string>();
         foreach (var category in categories)
         {
-            buttons.Add(category.Title, "/saveCategoryToUser " + category.Id);
+            buttons.Add(category.Title, "/saveCategoryToUser " + category.DocumentId);
         }
         buttons.Add("Продолжить", "/continueTo");
         return MessageToSend[0];

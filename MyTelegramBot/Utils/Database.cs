@@ -20,7 +20,7 @@ public class Database
         
         var user = new User()
         {
-            Id = message.From.Id,
+            DocumentId = message.From.Id,
             UserName = message.From.Username,
             Channels = new List<string>(),
             Categories = new List<long>(),
@@ -85,7 +85,7 @@ public class Database
     {
         var category = new Category()
         {
-            Id = new long(),
+            DocumentId = new long(),
             Title = Title
         };
         _categoryRepository.CreateDocument(category);   
@@ -118,7 +118,7 @@ public class Database
     {
         var channel = new Channel()
         {
-            Id = new long(),
+            DocumentId = new long(),
             Title = Title
         };
         _channelRepository.CreateDocument(channel);

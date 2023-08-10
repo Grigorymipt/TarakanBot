@@ -33,7 +33,7 @@ namespace MyTelegramBot.Listeners {
             }
 
             MessageToSend = "<b>MyTestBot profile</b> \n\n" +
-                            $"TG-ID: {user.Id} \n" +
+                            $"TG-ID: {user.DocumentId} \n" +
                             $"Channels: \n";
             foreach (var channel in user.Channels)
             {

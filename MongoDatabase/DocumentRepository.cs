@@ -20,12 +20,12 @@ public abstract class DocumentRepository<T> : Repository
     }
     public void DeleteDocument(Document document)
     {
-        var filter = Builders<Document>.Filter.Eq(u => u.Id, document.Id);
+        var filter = Builders<Document>.Filter.Eq(u => u.DocumentId, document.DocumentId);
         this.documentCollection.DeleteOne(filter);
     }
     public void DeleteDocument(long documentId)
     {
-        var filter = Builders<Document>.Filter.Eq(u => u.Id, documentId);
+        var filter = Builders<Document>.Filter.Eq(u => u.DocumentId, documentId);
         this.documentCollection.DeleteOne(filter);
     }
     public async Task DeleteDocumentAsync(Document document)
@@ -46,7 +46,7 @@ public abstract class DocumentRepository<T> : Repository
 
     public void UpdateDocument(Document oldDocument, Document newDocument)
     {
-        newDocument.Id = oldDocument.Id;
+        newDocument.DocumentId = oldDocument.DocumentId;
         DeleteDocument(oldDocument);
         CreateDocument(newDocument);
     }

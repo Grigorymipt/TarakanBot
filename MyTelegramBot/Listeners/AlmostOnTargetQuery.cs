@@ -44,7 +44,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
                     newUser.Channels.Add(newChannel); // FIXME: very strange behavior
                     Channel channel = new Channel()
                     {
-                        PersonID = user.Id,
+                        PersonID = user.DocumentId,
                         Title = newChannel,
                     };
                     Database.CreateChannel(channel);

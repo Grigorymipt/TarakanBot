@@ -15,7 +15,7 @@ public abstract class Document
     //         id = value;
     //     } 
     // }
-    public long Id { get; set; }
+    public long DocumentId { get; set; }
     public readonly string Name;
     public DateTime dateTime;
 
@@ -49,7 +49,7 @@ public class User : Document
     public override void Update()
     {
         UserRepository userRepository = new UserRepository();
-        User oldDocument = userRepository.GetDocument(this.Id);
+        User oldDocument = userRepository.GetDocument(this.DocumentId);
         userRepository.UpdateDocument(oldDocument, this);
     }
 
@@ -68,7 +68,7 @@ public class Channel : Document
     public override void Update()
     {
         ChannelRepository channelRepository = new ChannelRepository();
-        Channel oldDocument = channelRepository.GetDocument(this.Id);
+        Channel oldDocument = channelRepository.GetDocument(this.DocumentId);
         channelRepository.UpdateDocument(oldDocument, this);
     }
 }
@@ -82,7 +82,7 @@ public class Category : Document
     public override void Update()
     {
         CategoryRepository categoryRepository = new CategoryRepository();
-        Category oldDocument = categoryRepository.GetDocument(this.Id);
+        Category oldDocument = categoryRepository.GetDocument(this.DocumentId);
         categoryRepository.UpdateDocument(oldDocument, this);
     }
 

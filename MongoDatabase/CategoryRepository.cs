@@ -18,7 +18,7 @@ public class CategoryRepository : DocumentRepository<Category>
     }
     public override Category GetDocument(long Id)
     {
-        var filter = Builders<Category>.Filter.Eq(u => u.Id, Id);
+        var filter = Builders<Category>.Filter.Eq(u => u.DocumentId, Id);
         return collection.Find(filter).FirstOrDefault();
     }
     public override async Task<Category> GetDocumentAsync(long Id)

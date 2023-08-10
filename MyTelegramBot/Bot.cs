@@ -36,7 +36,7 @@ public class Bot {
         var users = new UserRepository();
         var su = new MongoDatabase.ModelTG.User()
         {
-            Id = 0,
+            DocumentId = 0,
             UserName = "SuperUser"
         };
         Console.WriteLine("DATABASES" + users.GetClient().ListDatabaseNames());
