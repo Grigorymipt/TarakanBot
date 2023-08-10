@@ -38,7 +38,6 @@ public class ContinueQuery : Query, IListener
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
         Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "subscriptions.jpg", cancellationToken);
-        CheckFiveCategories(context);
         return base.Run(context, cancellationToken);
     }
 

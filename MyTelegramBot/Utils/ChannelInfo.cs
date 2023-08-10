@@ -28,7 +28,7 @@ public static class ChannelInfo
         using var client = new WTelegram.Client(Config);
         await client.LoginUserIfNeeded();
     }
-    private static async Task SaveChannelRegInfo(string channelName)
+    private static async Task SaveChannelRegInfo(string channelName) // TODO: FIXME dont call client before close
     {
         using var client = new WTelegram.Client(Config);
         await client.LoginUserIfNeeded();
@@ -68,9 +68,9 @@ public static class ChannelInfo
     
     private static async Task<Channels_ChannelParticipants> ListAllChannelUsers(string channelName, ChannelParticipantsFilter filter = null)//
     {
+        var RegData = await GetChannels(channelName);
         using var client = new WTelegram.Client(Config);
         await client.LoginUserIfNeeded();
-        var RegData = await GetChannels(channelName);
         try
         {
             InputChannelBase inputChannelBase = new InputChannel(RegData.ChannelId, RegData.AccessHash);
@@ -124,11 +124,10 @@ public static class ChannelInfo
         }
     }
     public static async Task<bool> CheckMessageAutor(string channelName)
-    {
+    {        
+        var RegData = await GetChannels(channelName);
         using var client = new WTelegram.Client(Config);
         await client.LoginUserIfNeeded();
-        
-        var RegData = await GetChannels(channelName);
         InputChannelBase inputChannelBase = new InputChannel(RegData.ChannelId, RegData.AccessHash);
         // InputMessageID inputMessage = new InputMessageID();
         // inputMessage.id = postId;

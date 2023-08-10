@@ -11,17 +11,11 @@ public class StartCommand : Command, IListener{
         Names = new string[]{"/start", "/starting", "!start"};
         HandleType = HandleType.Standard;
     }
-
+    
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
-        Buttons = new Dictionary<string, string>()
-        {
-            {"Я адмэн", "/admin"},
-            {"Каталог", "/catalog"}
-        };
-    protected override string Run(Context context, CancellationToken cancellationToken)
-    {
         Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "2.2", cancellationToken);
+        Buttons = new Dictionary<string, string>();
         Console.WriteLine(context.Update.Message.From.Id);
         User user = Database.GetUser(context.Update.Message.From.Id); // TODO: Reduce DB calls
         
@@ -29,13 +23,17 @@ public class StartCommand : Command, IListener{
         
         else if (user.RefId == null) user = Database.UpdateUser(context.Update.Message);
         
-        if (user.RefId != null) return "С помощью #UserHub ты сможешь быстро и удобно находить лучшие телеграмм " +
+        if (user.RefId != null) 
+        {
+            Buttons.Add("Я адмэн", "/admin");
+            Buttons.Add("Каталог", "/catalog");
+            return "С помощью #UserHub ты сможешь быстро и удобно находить лучшие телеграмм " +
                                        "каналы на любую интересную тебе тему. Я что-то вроде поисковика в телеграмм, " +
                                        "где все каналы разбиты по категориям и рейтингу. " +
                                        "Жми 'каталог' и я покажу тебе как здесь все устроено. " + 
             "Если же ты владелец телеграм-канала, то жми 'Я админ' и добавляй свой канал в каталог #UserHub. " +
             "Это позволить тебе получать подписчиков, действительно заинтересованных в твоем контенте.";
-        Buttons.Clear();
+        }
         return "Этим ботом можно пользоваться, только перейдя в него " +
                "по реферальной ссылке от пользователя, который уже имеет доступ к боту."; 
     }

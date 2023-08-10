@@ -16,11 +16,12 @@ namespace MyTelegramBot
         {
             var elkConfiguration = EnvironmentBinder.Bind<ELKConfiguration>();
             var logger =
-                LoggingConfigurator.ElasticLogger("Название лога",
+                LoggingConfigurator.ElasticLogger("logs",
                     elkConfiguration.Username, //todo: завести новое api 
                     elkConfiguration.Password,
                     elkConfiguration.Host);
-
+            Log.Logger = logger;
+            Log.Information("helloELKFromGrigorymipt");
             Console.WriteLine(Config.BotToken);
             TelegramBotClient botClient = new TelegramBotClient(Config.BotToken);
             Bot bot = new Bot(botClient: botClient, logger: new Logger<Bot>(new LoggerFactory()))
