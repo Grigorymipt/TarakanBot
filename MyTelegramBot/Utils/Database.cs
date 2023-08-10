@@ -15,6 +15,7 @@ public class Database
 
     public static User CreateUser(Message message)
     {
+        var _userRepository = new UserRepository();
         var parent = _userRepository.GetDocument(
             ArgumentParser.Parse(message.Text).ArgumentsText);
         
