@@ -119,12 +119,12 @@ public class Bot {
         await ChannelInfo.Login();
 
         Console.WriteLine("Starting bot...");
-        // _botClient.StartReceiving(
-        //     HandleUpdateAsync,
-        //     HandleErrorAsync,
-        //     receiverOptions,
-        //     cancellationToken: cts.Token
-        // );
+        _botClient.StartReceiving(
+            HandleUpdateAsync,
+            HandleErrorAsync,
+            receiverOptions,
+            cancellationToken: cts.Token
+        );
 
         // Me = await botClient.GetMeAsync();
         

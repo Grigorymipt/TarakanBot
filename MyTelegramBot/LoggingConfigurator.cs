@@ -10,7 +10,7 @@ namespace Bridge
     public static class LoggingConfigurator
     {
         public static ILogger ElasticLogger(string indexFormat, string httpUser, string httpPassword,
-            string url = "http://localhost:9200")
+            string url)
         {
             if (indexFormat == null) throw new ArgumentNullException(nameof(indexFormat));
             if (httpUser == null) throw new ArgumentNullException(nameof(httpUser));
@@ -31,7 +31,7 @@ namespace Bridge
         }
 
         public static LoggerConfiguration ElasticConfiguration(string indexFormat, string apiUser, string apiKey,
-            string url = "http://localhost:9200")
+            string url)
         {
             Serilog.Debugging.SelfLog.Enable(Console.WriteLine);
 
