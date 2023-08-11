@@ -49,7 +49,6 @@ public class BuyListingNow : Query, IListener
             prices: prices,
             cancellationToken: cancellationToken
             );
-        
         // return base.Handler(context, cancellationToken);
     }
 }

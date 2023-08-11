@@ -76,11 +76,19 @@ public class Bot {
         };
 
         var collection = new CategoryRepository();
+        var i = collection.GetAllDocumentsAsync().Result.Count;
         foreach (var variableCategory in CheckCategories)
         {
             var category = await Database.GetCategory(variableCategory);
-            if (category == null)
-                Database.CreateCategory(variableCategory);
+            if (category == null){
+                Category newCategory = new Category()
+                {
+                    TelegramId = i,
+                    Title = variableCategory
+                };
+                i+=1;
+                collection.CreateDocument(newCategory);
+            }
         }        
         
         using CancellationTokenSource cts = new CancellationTokenSource();
@@ -157,7 +165,6 @@ public class Bot {
         Context context = new Context(update, botClient);
         Console.WriteLine("context updated");
         foreach (Listener listener in Listeners) {
-            Console.WriteLine("Trying to validate " + listener.ToString());
             if (await listener.Validate(context, cancellationToken))
             {
                 Console.WriteLine("Start Handling With" + listener.ToString());

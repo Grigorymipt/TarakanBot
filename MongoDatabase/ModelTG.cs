@@ -5,8 +5,8 @@ namespace MongoDatabase.ModelTG;
 
 public abstract class Document
 {
-    public Guid Id { get; set; }
-    public long TelegramId { get; set; }
+    public Guid Id { get; set; } // not to use
+    public long TelegramId { get; set; } = 0;
     public readonly string Name;
     public DateTime dateTime;
 
