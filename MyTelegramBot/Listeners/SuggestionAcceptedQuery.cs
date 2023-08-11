@@ -22,7 +22,7 @@ public class SuggestionAcceptedQuery : Query, IListener
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
         buttons = new Dictionary<string, string>();
-        if(ChannelInfo.CheckMessageAutor("TestForTestingAndTestingForTest").Result) buttons.Add("да ты хорош", "/whatLike");
+        if(ChannelInfo.CheckMessageAutor("TestForTestingAndTestingForTest", 4).Result) buttons.Add("да ты хорош", "/whatLike");
         return MessageToSend[0];
     }
 }
