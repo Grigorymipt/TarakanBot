@@ -137,13 +137,13 @@ public static class ChannelInfo
         {  
             if (msgBase is TL.Message message)
             {
-                Console.WriteLine(message.fwd_from.post_author);
+                Console.WriteLine(message.fwd_from.from_name);
                 Console.WriteLine(client.User.username);
-                if (message.fwd_from.post_author == client.User.username) return true;
+                if (message.fwd_from.from_name == client.User.username) return true;
             }
             else
             {
-                Console.WriteLine(msgBase.ToString());
+                Console.WriteLine("Not a message: " + msgBase.ToString());
             }
         }
         return false;
