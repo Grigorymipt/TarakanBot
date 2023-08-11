@@ -28,11 +28,11 @@ public class User : Document
     public string UserName { get; set; }
     public string RefId { get; set; }
     public List<string>? Children { get; set; } = new();
-    public List<string>? Channels { get; set; }
+    public List<string>? Channels { get; set; } = new();
     public int? Messages { get; set; } = 0;
 
     public string? LastMessage { get; set; }
-    public List<long>? Categories { get; set; }
+    public List<long> Categories { get; set; } = new();
     public List<Channel>? Subscribes { get; set; } 
     public List<Channel>? SubscribesVip { get; set; } 
     public int Attempts { get; set; } = 0;

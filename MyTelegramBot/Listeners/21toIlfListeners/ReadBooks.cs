@@ -2,7 +2,7 @@ using MongoDB.Driver;
 using MyTelegramBot;
 using MyTelegramBot.Types;
 
-public class ReadBooks : Command, IListener // TODO: Query, IListener
+public class ReadBooks : Query, IListener // TODO: Query, IListener
 {
     public ReadBooks(Bot bot) : base(bot)
     {
