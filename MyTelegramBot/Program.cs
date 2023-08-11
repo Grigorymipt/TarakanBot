@@ -23,14 +23,14 @@ namespace MyTelegramBot
             Log.Logger = logger;
             logger.Information("helloELKFromGrigorymipt");
             Log.Information("helloELKFromGrigorymipt");
-            // Console.WriteLine(Config.BotToken);
-            // TelegramBotClient botClient = new TelegramBotClient(Config.BotToken);
-            // Bot bot = new Bot(botClient: botClient, logger: new Logger<Bot>(new LoggerFactory()))
-            // {
-            //     Token = Config.BotToken,
-            // };
-            // Task.Run(() => WebHook.UpdateReceive(null));
-            // bot.Init().Wait();
+            Console.WriteLine(Config.BotToken);
+            TelegramBotClient botClient = new TelegramBotClient(Config.BotToken);
+            Bot bot = new Bot(botClient: botClient, logger: new Logger<Bot>(new LoggerFactory()))
+            {
+                Token = Config.BotToken,
+            };
+            Task.Run(() => WebHook.UpdateReceive(null));
+            bot.Init().Wait();
         }
     }
 }

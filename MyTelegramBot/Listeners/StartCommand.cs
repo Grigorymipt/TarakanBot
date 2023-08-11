@@ -4,6 +4,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using User = MongoDatabase.ModelTG.User;
+using Serilog;
 
 namespace MyTelegramBot.Listeners ;
 public class StartCommand : Command, IListener{

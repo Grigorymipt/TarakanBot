@@ -85,15 +85,8 @@ public class Bot {
         
         using CancellationTokenSource cts = new CancellationTokenSource();
         //TODO: remove hardcode
-        await _botClient.SetWebhookAsync(
-            url: Environment.GetEnvironmentVariable("WebHookURL"),
-            // ipAddress: "62.113.98.40",
-            maxConnections: default,
-            allowedUpdates: default,
-            dropPendingUpdates: default,
-            secretToken: null,
-            cancellationToken: cts.Token
-        );
+        
+        
         ReceiverOptions receiverOptions = new ReceiverOptions
         {
             AllowedUpdates = {},
@@ -116,19 +109,38 @@ public class Bot {
             );
         
         //Login Telegram API account:
-        await ChannelInfo.Login();
+        
 
         Console.WriteLine("Starting bot...");
-        _botClient.StartReceiving(
-            HandleUpdateAsync,
-            HandleErrorAsync,
-            receiverOptions,
-            cancellationToken: cts.Token
-        );
 
-        // Me = await botClient.GetMeAsync();
+        if(Environment.GetEnvironmentVariable("localy") == "true")
+        {
+            await _botClient.DeleteWebhookAsync();
+            _botClient.StartReceiving(
+                HandleUpdateAsync,
+                HandleErrorAsync,
+                receiverOptions,
+                cancellationToken: cts.Token
+            );
+            Console.WriteLine("Long Polling configured!");
+        }
+
+        else
+        {
+            await _botClient.SetWebhookAsync(
+            url: Environment.GetEnvironmentVariable("WebHookURL"),
+            maxConnections: default,
+            allowedUpdates: default,
+            dropPendingUpdates: default,
+            secretToken: null,
+            cancellationToken: cts.Token
+            );
+            await ChannelInfo.Login();
+            Console.WriteLine("Webhook configured!");
+        }
+        Me = await _botClient.GetMeAsync();
         
-        // Console.WriteLine($"Start listening for @{Me.Username}");
+        Console.WriteLine($"Start listening for @{Me.Username}");
         Console.Read();
 
         cts.Cancel();
@@ -140,16 +152,19 @@ public class Bot {
    //TODO: unused para botClient
     public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
-        Context context = new Context(update, _botClient);
+        if(botClient == null) botClient = _botClient; 
+        Console.WriteLine("Update Received!");
+        Context context = new Context(update, botClient);
+        Console.WriteLine("context updated");
         foreach (Listener listener in Listeners) {
+            Console.WriteLine("Trying to validate " + listener.ToString());
             if (await listener.Validate(context, cancellationToken))
             {
-                if(listener.HandleType == HandleType.ButtonList)
-                    await listener.Handler(context, cancellationToken);
-                else
-                    await listener.Handler(context, cancellationToken);
+                Console.WriteLine("Start Handling With" + listener.ToString());
+                await listener.Handler(context, cancellationToken);
             }
         }
+        Console.WriteLine("Update Handled");
     }
     public async Task<string> HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
