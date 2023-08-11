@@ -97,7 +97,6 @@ public abstract class Query : Listener
     ///  Creates a <c>Command</c> for the specified <c>Bot</c>.
     /// </summary>
     public Query(Bot bot) : base(bot) 
-    {
-        
+    {   
     }
 }
