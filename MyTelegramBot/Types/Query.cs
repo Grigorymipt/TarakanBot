@@ -41,6 +41,7 @@ public abstract class Query : Listener
         
         string messageText = context.Update.CallbackQuery.Data;
         //Console.WriteLine(messageText);
+        if(Names == null) throw new ArgumentNullException("Listener " + this.GetType().ToString() + " havs no Names");
         foreach(string name in Names) {
             if (messageText.StartsWith($"{name} ") || messageText.Equals(name)) {
                 return true;
