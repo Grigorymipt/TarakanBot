@@ -80,7 +80,7 @@ public class ConfirmListingPayment : Query, IListener // TODO: make abstract lis
     }
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
-        if(ChannelInfo.CheckMessageAutor("TestForTestingAndTestingForTest", 4, 4).Result) 
+        if(ChannelInfo.CheckMessageAutor("TestForTestingAndTestingForTest", 5, 5).Result) 
         {
             buttons = new Dictionary<string, string>()
             {
