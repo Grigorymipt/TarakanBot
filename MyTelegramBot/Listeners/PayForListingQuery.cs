@@ -80,7 +80,7 @@ public class ConfirmListingPayment : Query, IListener // TODO: make abstract lis
     }
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
-        if(ChannelInfo.CheckMessageAutor("TestForTestingAndTestingForTest", 5, 5).Result) 
+        if(ChannelInfo.CheckMessageAutor("TestForTestingAndTestingForTest", 5, 6).Result) 
         {
             buttons = new Dictionary<string, string>()
             {
@@ -93,12 +93,5 @@ public class ConfirmListingPayment : Query, IListener // TODO: make abstract lis
         buttons = new Dictionary<string, string>();
         buttons.Add("Продолжить1", "/whatLike");
         return MessageToSend[1];
-    }
-
-    public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
-    {
-        if (context.Update.Type != UpdateType.PreCheckoutQuery) return false;
-        if (context.Update.PreCheckoutQuery.InvoicePayload == "ListingPayload") return true;
-        return false;
     }
 }
