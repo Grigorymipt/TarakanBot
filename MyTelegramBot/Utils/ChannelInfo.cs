@@ -1,4 +1,5 @@
 using System.Text;
+using Serilog;
 using Telegram.Bot.Types.InlineQueryResults;
 using TL;
 using TL.Methods;
@@ -17,6 +18,7 @@ public static class ChannelInfo
                 case "phone_number": return Environment.GetEnvironmentVariable("phone_number");
                 case "verification_code": 
                     Console.WriteLine("You have 30 seconds to login. Please enter verification code.");
+                    Log.Information("You have 30 seconds to login. Please enter verification code.");
                     Thread.Sleep(30*1000);
                     if (Environment.GetEnvironmentVariable("VerificationCode") == null) throw new ArgumentNullException("You haven`t send verification code.");
                     return Environment.GetEnvironmentVariable("VerificationCode");
@@ -46,6 +48,7 @@ public static class ChannelInfo
             } 
         }
         Console.WriteLine($"{channelName} not a ChaCnel");
+        Log.Information($"{channelName} not a ChaCnel"); 
         throw new NullReferenceException("Channel not Exists");
     }
     private record RegData(long ChannelId = 0, long AccessHash = 0, string ChannelTitle = "");
@@ -56,6 +59,7 @@ public static class ChannelInfo
         
         var chats = await client.Messages_GetAllChats(); // chats = groups/channels (does not include users dialogs)
         Console.WriteLine("This user has joined the following:");
+        Log.Information("This user has joined the following:");
 
         foreach (var (id, chat) in chats.chats)
             switch (chat)
@@ -114,8 +118,13 @@ public static class ChannelInfo
         try
         {
             var participants = await ListAllChannelUsers(channelName, new ChannelParticipantsAdmins());
-            foreach (var participant in participants.participants) // This is the better way to enumerate the result
-                if (participant is ChannelParticipantCreator cpc && cpc.user_id == userId) {Console.WriteLine(cpc.user_id); return true;}
+            foreach (var participant in participants.participants)
+            // This is the better way to enumerate the result
+                if (participant is ChannelParticipantCreator cpc && cpc.user_id == userId) {
+                    Console.WriteLine(cpc.user_id);
+                    Log.Information(cpc.user_id.ToString());
+                    return true;}
+                
             return false;
         }
         catch(Exception ex)
@@ -134,12 +143,15 @@ public static class ChannelInfo
         // inputMessage.id = postId;
         var messages = await client.Channels_GetMessages(inputChannelBase);
         Console.WriteLine("----------------"+ messages.Count + messages.Messages.Count());
+        Log.Information("----------------" + messages.Count + messages.Messages.Count());
         foreach (var msgBase in messages.Messages)
         {  
             if (msgBase is Message message)
             {
                 Console.WriteLine(message.fwd_from.post_author);
+                Log.Information(message.fwd_from.post_author);
                 Console.WriteLine(client.User.username);
+                Log.Information(client.User.username);
                 if (message.fwd_from.post_author == client.User.username) return true;
             }
         }

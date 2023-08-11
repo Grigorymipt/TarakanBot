@@ -7,6 +7,7 @@ using MongoDatabase.ModelTG;
 using MyTelegramBot.Convertors;
 using MyTelegramBot.Types;
 using Telegram.Bot.Requests.Abstractions;
+using Serilog;
 
 namespace Tests;
 
@@ -67,7 +68,8 @@ public class DatabaseTests
         user.UserName = "SuperUser";
         database.CreateDocument(user);
         Console.WriteLine(database.GetDocumentAsync(user.TelegramId).Result.UserName);
-        
+        Log.Information(database.GetDocumentAsync(user.TelegramId).Result.UserName);
+
         User confirmUser = new User();
         confirmUser.TelegramId = -11;
         //vercode:
@@ -101,13 +103,16 @@ public class DatabaseTests
         var user = new User();
         string newChannel = "smth";
         Console.WriteLine(user.Channels);
+        Log.Information(user.Channels.ToString());
         user.Channels.Add(newChannel);
     }
 
     [Fact]
     public void EnumTest()
     {
-        Console.WriteLine(Period.Day.ToString());   
+        var period_day = Period.Day.ToString();
+        Console.WriteLine(period_day);
+        Log.Information(period_day);
     }
     public enum Period 
     {

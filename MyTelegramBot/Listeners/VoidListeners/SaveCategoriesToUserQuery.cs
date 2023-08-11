@@ -2,6 +2,7 @@ using MongoDatabase.ModelTG;
 using MyTelegramBot.Convertors;
 using MyTelegramBot.Types;
 using System.Globalization;
+using Serilog;
 
 namespace MyTelegramBot.Listeners;
 
@@ -22,6 +23,7 @@ public class SaveCategoriesToUserQuery : Query, IListener
         Database.GetCategoryAsync(id);
         newUser.Categories.Add(id);
         Console.WriteLine(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText);
+        Log.Information(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText);
         newUser.Update();
         return base.Run(context, cancellationToken);
     }

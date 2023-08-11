@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http.Json;
+using Serilog;
 
 namespace Crypto;
 
@@ -39,6 +40,7 @@ public static class GetOrderList
             responseMessage.EnsureSuccessStatusCode();
             var jsonResponse = await responseMessage.Content.ReadAsStringAsync();
             Console.WriteLine(responseMessage.EnsureSuccessStatusCode());
+            Log.Error(responseMessage.EnsureSuccessStatusCode().ToString());
         }
 
     }

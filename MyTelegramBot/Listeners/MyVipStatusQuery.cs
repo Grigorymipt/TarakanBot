@@ -1,4 +1,5 @@
 using MyTelegramBot.Types;
+using Serilog;
 
 namespace MyTelegramBot.Listeners;
 
@@ -35,8 +36,12 @@ public class GetVipStatusFotChannelQuery : Query, IListener
     {
         Buttons = new Dictionary<string, string>();
         var MessageToSend = base.MessageToSend[0];
-        Console.WriteLine(context.Update.CallbackQuery.Data);
-        Console.WriteLine(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText);
+
+        var contextupdate = context.Update.CallbackQuery.Data;
+        Console.WriteLine(contextupdate);
+        Log.Information(contextupdate);
+        Console.WriteLine(ArgumentParser.Parse(contextupdate).ArgumentsText);
+        Log.Information(ArgumentParser.Parse(contextupdate).ArgumentsText);
         var channel = Database.GetChannel(
             ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText);
         DateOnly today = DateOnly.FromDateTime(DateTime.Now);

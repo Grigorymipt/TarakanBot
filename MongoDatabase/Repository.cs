@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using Serilog;
 
 namespace MongoDatabase;
 
@@ -50,6 +51,7 @@ public class Repository
         {
             status = StatusDatabase.ConnectionFailed;
             Console.WriteLine(exception);
+            Log.Error(exception.ToString());
         }
         return client;
     }

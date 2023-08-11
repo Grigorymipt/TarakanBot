@@ -73,6 +73,7 @@ namespace Bridge
         private static void FailureCallback(LogEvent e)
         {
             Console.WriteLine("Unable to submit event " + e.MessageTemplate);
+            Log.Information("Unable to submit event " + e.MessageTemplate);
             // Assert.Fail();
             throw (e.Exception);
         }

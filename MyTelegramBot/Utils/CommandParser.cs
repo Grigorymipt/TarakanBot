@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Serilog;
 
 namespace MyTelegramBot.Utils
 {
@@ -120,6 +121,7 @@ namespace MyTelegramBot.Utils
             catch(Exception e)
             {
                 Console.WriteLine(e);
+                Log.Error(e.ToString());
                 parsedCommand.ArgumentsText = null;
             }
             finally

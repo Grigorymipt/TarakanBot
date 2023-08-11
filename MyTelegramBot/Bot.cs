@@ -2,6 +2,7 @@ using System.Reflection;
 using MongoDatabase;
 using MongoDatabase.ModelTG;
 using MyTelegramBot.Types;
+using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
@@ -27,6 +28,7 @@ public class Bot {
             Listeners.Add(instance);
         }
         Console.WriteLine("Total Listeners: " + Listeners.Count);
+        Log.Information("Total Listeners: " + Listeners.Count);
     }
     
     public async Task Init() 
@@ -119,6 +121,7 @@ public class Bot {
         await ChannelInfo.Login();
 
         Console.WriteLine("Starting bot...");
+        Log.Information("Starting bot...");
         // _botClient.StartReceiving(
         //     HandleUpdateAsync,
         //     HandleErrorAsync,
@@ -127,7 +130,7 @@ public class Bot {
         // );
 
         // Me = await botClient.GetMeAsync();
-        
+
         // Console.WriteLine($"Start listening for @{Me.Username}");
         Console.Read();
 

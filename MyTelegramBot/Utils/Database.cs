@@ -2,6 +2,7 @@ using MongoDatabase;
 using MongoDatabase.ModelTG;
 using MyTelegramBot.Convertors;
 using MyTelegramBot.Utils;
+using Serilog;
 using Telegram.Bot.Types;
 using User = MongoDatabase.ModelTG.User;
 namespace MyTelegramBot.Types;
@@ -30,6 +31,7 @@ public class Database
         if (parent != null)
         {
             Console.WriteLine(parent.UserName);
+            Log.Information(parent.UserName);
             string parentUserName = parent.UserName;
             user.RefId = parentUserName;
             if (parent.Children == null) 

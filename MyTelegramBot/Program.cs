@@ -8,27 +8,28 @@ using Serilog.Formatting.Json;
 using Serilog.Sinks.Elasticsearch;
 
 
-namespace MyTelegramBot
-{
+namespace MyTelegramBot;
+
     public static class Program
     {
-        public static async Task Main(string[] args)
-        {
-            var elkConfiguration = EnvironmentBinder.Bind<ELKConfiguration>();
-            var logger =
-                LoggingConfigurator.ElasticLogger("Название лога",
-                    elkConfiguration.Username, //todo: завести новое api 
-                    elkConfiguration.Password,
-                    elkConfiguration.Host);
+    public static async Task Main(string[] args)
+    {
+        var elkConfiguration = EnvironmentBinder.Bind<ELKConfiguration>();
+        var logger =
+            LoggingConfigurator.ElasticLogger("Название лога",
+                elkConfiguration.Username, //todo: завести новое api 
+                elkConfiguration.Password,
+                elkConfiguration.Host);
 
-            Console.WriteLine(Config.BotToken);
-            TelegramBotClient botClient = new TelegramBotClient(Config.BotToken);
-            Bot bot = new Bot(botClient: botClient, logger: new Logger<Bot>(new LoggerFactory()))
-            {
-                Token = Config.BotToken,
-            };
-            Task.Run(() => WebHook.UpdateReceive(null));
-            bot.Init().Wait();
-        }
+        Console.WriteLine(Config.BotToken);
+        Log.Information(Config.BotToken);
+        TelegramBotClient botClient = new TelegramBotClient(Config.BotToken);
+        Bot bot = new Bot(botClient: botClient, logger: new Logger<Bot>(new LoggerFactory()))
+        {
+            Token = Config.BotToken,
+        };
+        Task.Run(() => WebHook.UpdateReceive(null));
+        bot.Init().Wait();
     }
 }
+

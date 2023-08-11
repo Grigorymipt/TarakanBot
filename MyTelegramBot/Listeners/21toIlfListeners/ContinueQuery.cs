@@ -27,18 +27,17 @@ public class ContinueQuery : Query, IListener
                             "кнопку 'пропустить' канал будет заменен на другой, в соответствии указанными интересами." +
                             " Не более 20 раз можно нажать «пропустить». 🚨🚔 Если канал нарушает правила пользования " +
                             "(кликабельно) #UserHub, то жми «пропустить», а затем «Black List» и наши специалисты разберутся с этим.";
-            if(user is {Categories.Count: >= 5})
+            if (user is { Categories.Count: >= 5 })
                 buttons.Clear();
-                buttons.Add("Начать подписываться", "/subscribeTenChannels");
+            buttons.Add("Начать подписываться", "/subscribeTenChannels");
         }
-        
+
         return MessageToSend;
     }
 
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
         Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "subscriptions.jpg", cancellationToken);
-        CheckFiveCategories(context);
         return base.Run(context, cancellationToken);
     }
 
