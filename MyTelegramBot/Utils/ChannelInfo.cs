@@ -124,7 +124,8 @@ public static class ChannelInfo
             throw;
         }
     }
-    public static async Task<bool> CheckMessageAutor(string channelName, int postId)
+
+    public static async Task<bool> CheckMessageAutor(string channelName, int postId, int repostId)
     {        
         var RegData = await GetChannels(channelName);
         using var client = new WTelegram.Client(Config);
@@ -137,7 +138,7 @@ public static class ChannelInfo
         {  
             if (msgBase is TL.Message message)
             {
-                Console.WriteLine(message.fwd_from.from_name);
+                Console.WriteLine(message.fwd_from.channel_post);
                 Console.WriteLine(client.User.username);
                 if (message.fwd_from.from_name == client.User.username) return true;
             }
