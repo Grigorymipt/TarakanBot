@@ -138,7 +138,7 @@ public static class ChannelInfo
         {  
             if (msgBase is TL.Message message)
             {
-                Console.WriteLine(message.fwd_from.post_author);
+                Console.WriteLine(message.fwd_from);
                 Console.WriteLine(client.User.username);
                 if (message.fwd_from.post_author == client.User.username) return true;
             }
