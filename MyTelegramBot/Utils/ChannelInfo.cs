@@ -1,4 +1,5 @@
 using System.Text;
+using Telegram.Bot.Types;
 using Telegram.Bot.Types.InlineQueryResults;
 using TL;
 using TL.Methods;
@@ -131,14 +132,18 @@ public static class ChannelInfo
         InputChannelBase inputChannelBase = new InputChannel(RegData.ChannelId, RegData.AccessHash);
         
         var messages = await client.Channels_GetMessages(inputChannelBase, postId);
-        Console.WriteLine("----------------"+ messages.Count + messages.Messages.Count());
+        Console.WriteLine("----------------"+ messages.Count);
         foreach (var msgBase in messages.Messages)
         {  
-            if (msgBase is Message message)
+            if (msgBase is TL.Message message)
             {
                 Console.WriteLine(message.fwd_from.post_author);
                 Console.WriteLine(client.User.username);
                 if (message.fwd_from.post_author == client.User.username) return true;
+            }
+            else
+            {
+                Console.WriteLine(msgBase.ToString());
             }
         }
         return false;
