@@ -131,7 +131,8 @@ public static class ChannelInfo
         using var client = new WTelegram.Client(Config);
         await client.LoginUserIfNeeded();
         InputChannelBase inputChannelBase = new InputChannel(RegData.ChannelId, RegData.AccessHash);
-        
+        var channels = await client.Channels_GetChannels(inputChannelBase);
+        var channel = channels.chats.FirstOrDefault();
         var messages = await client.Channels_GetMessages(inputChannelBase, postId);
         foreach (var msgBase in messages.Messages)
         {  

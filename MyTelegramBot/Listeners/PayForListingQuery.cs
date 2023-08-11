@@ -53,10 +53,11 @@ public class BuyListingNow : Query, IListener
     }
 }
 
-public class ConfirmListingPayment : Listener, IListener // TODO: make abstract listener for payments
+public class ConfirmListingPayment : Query, IListener // TODO: make abstract listener for payments
 {
     public ConfirmListingPayment(Bot bot) : base(bot)
     {
+        Names = new[] {"/whatLike"};
         MessageToSend = new string[] {
                         "👋😎 Поздравляю, канал @jhvuy успешно добавлен в каталог! Добро пожаловать в комьюнити " +
                         "блогеров Telegram. С помощью #UserHub ты сможешь: \n- многократно увеличить количество " +
@@ -72,30 +73,26 @@ public class ConfirmListingPayment : Listener, IListener // TODO: make abstract 
                         "🕹 Пользоваться сервисом можно абсолютно бесплатно, но для этого тебе необходимо " +
                         "пройти небольшой квест. Обещаю, уже на следующем шаге я раскрою секрет как получить " +
                         "первый 1.000.000 подписчиков на свой Telegram-канал не вложив ни рубля. \n" +
-                        "🧐 Кстати, что тебе нравится больше, смотреть фильмы или читать книги?"
+                        "🧐 Кстати, что тебе нравится больше, смотреть фильмы или читать книги?",
+                        "Ты не репостнул запись, или проверка еще не прошла",
         };
         
     }
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
-        buttons = new Dictionary<string, string>()
+        if(ChannelInfo.CheckMessageAutor("TestForTestingAndTestingForTest", 4, 4).Result) 
         {
-            { "Смотреть фильмы", "/watchMovies" },
-            { "Читать книги", "/readBooks" }
-        };
-
-        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "userhub.jpg", cancellationToken);
-        return MessageToSend[0];
-    }
-
-    public override async Task Handler(Context context, CancellationToken cancellationToken)
-    {
-        var preCheckoutQueryId = context.Update.PreCheckoutQuery.Id;
-        context.BotClient.AnswerPreCheckoutQueryAsync(
-            preCheckoutQueryId: preCheckoutQueryId,
-            cancellationToken: cancellationToken
-        );
-        //Todo: add node to DB
+            buttons = new Dictionary<string, string>()
+            {
+                { "Смотреть фильмы", "/watchMovies" },
+                { "Читать книги", "/readBooks" }
+            };
+            Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "userhub.jpg", cancellationToken);
+            return MessageToSend[0];
+        }
+        buttons = new Dictionary<string, string>();
+        buttons.Add("Продолжить1", "/whatLike");
+        return MessageToSend[1];
     }
 
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
