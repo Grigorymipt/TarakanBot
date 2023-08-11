@@ -57,6 +57,7 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
 {
     public ContinueToRW(Bot bot) : base(bot)
     {
+        Names = new[] {"/whatLike"};
         MessageToSend = new string[] {
                         "👋😎 Поздравляю, канал @jhvuy успешно добавлен в каталог! Добро пожаловать в комьюнити " +
                         "блогеров Telegram. С помощью #UserHub ты сможешь: \n- многократно увеличить количество " +
