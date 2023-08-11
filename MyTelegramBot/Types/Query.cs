@@ -48,45 +48,7 @@ public abstract class Query : Listener
         }
         return false;
     }
-    // public override async Task Handler(Context context, CancellationToken cancellationToken)
-    // {
-    //     string response = await RunAsync(context, cancellationToken);
-    //     Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
-
-    //     if (response.Length == 0)
-    //         return;
-
-    //     Message sentMessage = await context.BotClient.SendTextMessageAsync(
-    //         chatId: chatId,
-    //         text: response,
-    //         parseMode: Config.ParseMode
-    //     );
-    // }
-    public override async Task Handler(Context context, CancellationToken cancellationToken)
-    {
-        var buttons = new Dictionary<string, string>(){};
-        string response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
-        Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
-
-        List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
-        foreach (var category in buttons)
-        {
-            InlineKeyboardButton reply = InlineKeyboardButton
-                .WithCallbackData(category.Key, category.Value);
-            IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
-            categoryList.Add(inlineKeyboardButton);
-        }
-
-        IEnumerable<IEnumerable<InlineKeyboardButton>> enumerableList1 = categoryList;
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(enumerableList1);
-
-        Message sentMessage = await context.BotClient.SendTextMessageAsync(
-            chatId: chatId,
-            text: response,
-            parseMode: Config.ParseMode,
-            replyMarkup: inlineKeyboardMarkup
-        );
-    }
+    
     /// <summary>Processes a command asynchronously.</summary>
     /// <returns>Command result string.</returns>
     public virtual async Task<string> RunAsync(Context context, CancellationToken cancellationToken) {

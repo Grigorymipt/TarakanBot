@@ -3,7 +3,7 @@ using MyTelegramBot.Types;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 
-public class PayloadReply : Query
+public class PayloadReply : Listener
 {
     public string Payload { get;set; } = "";
     public PayloadReply(Bot bot) : base(bot) { 
@@ -16,6 +16,7 @@ public class PayloadReply : Query
                 preCheckoutQueryId: preCheckoutQueryId,
                 cancellationToken: cancellationToken
             );   
+        Int64 chantId = context.Update.PreCheckoutQuery.From.Id;
         await base.Handler(context, cancellationToken);
     }
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
