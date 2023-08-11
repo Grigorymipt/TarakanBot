@@ -11,12 +11,12 @@ public class PayloadReply : Query
     }
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
-        base.Handler(context, cancellationToken);
         var preCheckoutQueryId = context.Update.PreCheckoutQuery.Id;
-        context.BotClient.AnswerPreCheckoutQueryAsync(
+        await context.BotClient.AnswerPreCheckoutQueryAsync(
                 preCheckoutQueryId: preCheckoutQueryId,
                 cancellationToken: cancellationToken
-            );  
+            );   
+        await base.Handler(context, cancellationToken);
     }
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
     {
