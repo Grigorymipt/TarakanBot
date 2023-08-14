@@ -7,6 +7,7 @@ using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
+
 using User = Telegram.Bot.Types.User;
 
 namespace MyTelegramBot ;
@@ -123,19 +124,6 @@ public class Bot {
         
 
         Console.WriteLine("Starting bot...");
-<<<<<<< HEAD
-        Log.Information("Starting bot...");
-        // _botClient.StartReceiving(
-        //     HandleUpdateAsync,
-        //     HandleErrorAsync,
-        //     receiverOptions,
-        //     cancellationToken: cts.Token
-        // );
-
-        // Me = await botClient.GetMeAsync();
-
-        // Console.WriteLine($"Start listening for @{Me.Username}");
-=======
 
         if(Environment.GetEnvironmentVariable("localy") == "true")
         {
@@ -165,7 +153,6 @@ public class Bot {
         Me = await _botClient.GetMeAsync();
         
         Console.WriteLine($"Start listening for @{Me.Username}");
->>>>>>> main
         Console.Read();
 
         cts.Cancel();

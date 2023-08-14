@@ -1,9 +1,6 @@
 using System.Text;
-<<<<<<< HEAD
 using Serilog;
-=======
 using Telegram.Bot.Types;
->>>>>>> main
 using Telegram.Bot.Types.InlineQueryResults;
 using TL;
 using TL.Methods;
@@ -143,27 +140,20 @@ public static class ChannelInfo
         using var client = new WTelegram.Client(Config);
         await client.LoginUserIfNeeded();
         InputChannelBase inputChannelBase = new InputChannel(RegData.ChannelId, RegData.AccessHash);
-<<<<<<< HEAD
-        // InputMessageID inputMessage = new InputMessageID();
-        // inputMessage.id = postId;
-        var messages = await client.Channels_GetMessages(inputChannelBase);
+
         Console.WriteLine("----------------"+ messages.Count + messages.Messages.Count());
         Log.Information("----------------" + messages.Count + messages.Messages.Count());
-=======
         var channels = await client.Channels_GetChannels(inputChannelBase);
         var channel = channels.chats.FirstOrDefault();
         var messages = await client.Channels_GetMessages(inputChannelBase, postId);
->>>>>>> main
+
         foreach (var msgBase in messages.Messages)
         {  
             if (msgBase is TL.Message message)
             {
-<<<<<<< HEAD
                 Console.WriteLine(message.fwd_from.post_author);
                 Log.Information(message.fwd_from.post_author);
-=======
                 Console.WriteLine(message.fwd_from);
->>>>>>> main
                 Console.WriteLine(client.User.username);
                 Log.Information(client.User.username);
                 if (message.fwd_from.post_author == client.User.username) return true;

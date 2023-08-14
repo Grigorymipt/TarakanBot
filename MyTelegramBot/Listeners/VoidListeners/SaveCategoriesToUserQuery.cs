@@ -26,12 +26,12 @@ public class SaveCategoriesToUserQuery : Query, IListener
         if(category == null) throw new NullReferenceException("Category not found in DB");
         user.Categories.Add(category.TelegramId);
         Console.WriteLine(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText);
-<<<<<<< HEAD
+
         Log.Information(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText);
-        newUser.Update();
-=======
+
+
         user.Update();
->>>>>>> main
+
         return base.Run(context, cancellationToken);
     }
 }

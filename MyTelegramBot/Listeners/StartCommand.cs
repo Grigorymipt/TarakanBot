@@ -12,15 +12,11 @@ public class StartCommand : Command, IListener{
         Names = new string[]{"/start", "/starting", "!start"};
         HandleType = HandleType.Standard;
     }
-<<<<<<< HEAD
-    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
-    { 
-=======
     
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
         Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "2.2", cancellationToken);
->>>>>>> main
+
         Buttons = new Dictionary<string, string>();
         Console.WriteLine(context.Update.Message.From.Id);
         Log.Information(context.Update.Message.From.Id.ToString());
@@ -29,13 +25,10 @@ public class StartCommand : Command, IListener{
         if (user == null) user = Database.CreateUser(context.Update.Message);
 
         else if (user.RefId == null) user = Database.UpdateUser(context.Update.Message);
-<<<<<<< HEAD
 
-        if (user.RefId != null)
-=======
+
         
         if (user.RefId != null) 
->>>>>>> main
         {
             Buttons.Add("Я адмэн", "/admin");
             Buttons.Add("Каталог", "/catalog");
