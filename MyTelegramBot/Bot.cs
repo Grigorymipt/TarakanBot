@@ -7,8 +7,10 @@ using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
-
+using TL;
 using User = Telegram.Bot.Types.User;
+using Update = Telegram.Bot.Types.Update;
+using BotCommand = Telegram.Bot.Types.BotCommand;
 
 namespace MyTelegramBot ;
 public class Bot {
@@ -187,6 +189,12 @@ public class Bot {
         };
         return ErrorMessage;
     }
+    public async Task SuccessPayment(string Id, CancellationToken cancellationToken)
+    {
+        var user = Database.GetUserByTrnId(Id);
+        if (user == null) throw new NullReferenceException("User not found!");
+
+    }   
 
     private static IEnumerable<Type> GetTypesImplementedBy<T>(Assembly assembly)
     {

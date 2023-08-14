@@ -50,6 +50,11 @@ public class Database
     public static User GetUser(long Id) { return _userRepository.GetDocument(Id);}
     public static User GetUser(string username){ return _userRepository.GetDocument(username);
     }
+    public static User GetUserByTrnId(string Id)
+    {
+        var user = _userRepository.GetDocumentByTrn(Id);
+        return user;
+    }
     public static User UpdateUser(Message message)
     {
         var parent = _userRepository.GetDocument(ArgumentParser.Parse(message.Text).ArgumentsText);
