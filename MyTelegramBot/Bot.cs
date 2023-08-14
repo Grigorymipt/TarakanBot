@@ -11,6 +11,7 @@ using TL;
 using User = Telegram.Bot.Types.User;
 using Update = Telegram.Bot.Types.Update;
 using BotCommand = Telegram.Bot.Types.BotCommand;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace MyTelegramBot ;
 public class Bot {
@@ -189,11 +190,30 @@ public class Bot {
         };
         return ErrorMessage;
     }
-    public async Task SuccessPayment(string Id, CancellationToken cancellationToken)
+    public async Task SuccessPayment(string chatId, string paymentId, CancellationToken cancellationToken)
     {
-        var user = Database.GetUserByTrnId(Id);
-        if (user == null) throw new NullReferenceException("User not found!");
-
+        List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
+        InlineKeyboardButton reply = InlineKeyboardButton
+                .WithCallbackData("Продолжить", "");
+        IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
+        categoryList.Add(inlineKeyboardButton);
+        IEnumerable<IEnumerable<InlineKeyboardButton>> enumerableList1 = categoryList;
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(enumerableList1);
+        try
+        {
+            _botClient.end(
+            chatId: chatId,
+            text: response,
+            parseMode: Config.ParseMode,
+            replyMarkup: inlineKeyboardMarkup,
+            cancellationToken: cancellationToken
+        );
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }   
 
     private static IEnumerable<Type> GetTypesImplementedBy<T>(Assembly assembly)

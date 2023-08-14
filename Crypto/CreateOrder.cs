@@ -87,13 +87,9 @@ public static class CreateOrder
 
            
             var jsonResponse = await responseMessage.Content.ReadAsStringAsync();
-<<<<<<< HEAD:Crypto/WalletInfo.cs
-            Console.WriteLine(responseMessage.EnsureSuccessStatusCode());
-            Log.Error(responseMessage.EnsureSuccessStatusCode().ToString());
-=======
+
             ResponseCreate? responseCreate =
                 JsonSerializer.Deserialize<ResponseCreate>(jsonResponse);
->>>>>>> aaf6526e1df2d5c142c8c3dfe2c996b45956aeb8:Crypto/CreateOrder.cs
         }
     }
 

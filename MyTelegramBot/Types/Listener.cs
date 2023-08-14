@@ -89,6 +89,9 @@ public abstract class Listener
     public abstract Task<bool> Validate(Context context, CancellationToken cancellationToken);
     /// <summary>Handles the <c>Update</c> if it is successfully validated.</summary>
     
+    public virtual async Task Handler(string chantId, TelegramBotClient botClient, CancellationToken cancellationToken)
+    {
+    }
     public virtual async Task Handler(Context context, CancellationToken cancellationToken)
     {
         var buttons = new Dictionary<string, string>(){};
