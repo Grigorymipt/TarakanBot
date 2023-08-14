@@ -35,7 +35,7 @@ public static class CreateOrder
     //"client_ref=4E89", "ORD-5023-4E89",
     //1800, 0, Key API
 
-    static async Task PostAsync(
+    public static async Task PostAsync(
         string currencyCode,
         string amount,
         string description,
@@ -95,6 +95,7 @@ public static class CreateOrder
                 JsonSerializer.Deserialize<ResponseCreate>(jsonResponse);
         }
     }
+    //ResponseCreate for CreateOrder
     public class Data
     {
         public string id { get; set; }
@@ -113,5 +114,33 @@ public static class CreateOrder
         public string status { get; set; }
         public string? message { get; set; }
         public Data data { get; set; }
+    }
+    //ResponseWebHook for CryptoController
+    public class PaymentOption
+    {
+        public Amount amount { get; set; }
+        public Amount amountFee { get; set; }
+        public Amount amountNet { get; set; }
+        public string exchangeRate { get; set; }
+    }
+
+    public class Payload
+    {
+        public int id { get; set; }
+        public string number { get; set; }
+        public string externalId { get; set; }
+        public string? status { get; set; }
+        public string? customData { get; set; }
+        public Amount orderAmount { get; set; }
+        public PaymentOption? selectedPaymentOption { get; set; }
+        public string orderCompletedDateTime { get; set; }       
+    }
+
+    public class ResponseWebHook
+    {
+        public string eventDateTime { get; set; }
+        public int eventId { get; set; }
+        public string type { get; set; }
+        public Payload payload { get; set; }
     }
 }

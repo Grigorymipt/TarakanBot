@@ -39,17 +39,26 @@ public class BuyListingNow : Query, IListener
 
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
-        var invoiceAsync = await context.BotClient.SendInvoiceAsync(
-            chatId: context.Update.CallbackQuery.Message.Chat.Id,
-            title: "Листинг",
-            description: "Оплатить листинг канала",
-            payload: "ListingPayload",
-            providerToken: Environment.GetEnvironmentVariable("providerToken"),
-            currency: "RUB",
-            prices: prices,
-            cancellationToken: cancellationToken
-            );
-        // return base.Handler(context, cancellationToken);
+        Crypto.CreateOrder.PostAsync(
+            "USD",
+            100,
+            "some description",
+            customData: context.Update.CallbackQuery.From.Id + "ListingPayload",
+            externalId: 0, //TODO REMOVE!!!
+            timeoutSeconds: 120,
+            customerTelegramUserId: context.Update.CallbackQuery.From.Username,
+            WpayStoreApiKey: Environment.GetEnvironmentVariable("WpayStoreApiKey")
+        );
+        // var invoiceAsync = await context.BotClient.SendInvoiceAsync(
+        //     chatId: context.Update.CallbackQuery.Message.Chat.Id,
+        //     title: "Листинг",
+        //     description: "Оплатить листинг канала",
+        //     payload: "ListingPayload",
+        //     providerToken: Environment.GetEnvironmentVariable("providerToken"),
+        //     currency: "RUB",
+        //     prices: prices,
+        //     cancellationToken: cancellationToken
+        //     );
     }
 }
 
