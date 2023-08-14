@@ -36,7 +36,8 @@ public class User : Document
     public List<Channel>? Subscribes { get; set; } 
     public List<Channel>? SubscribesVip { get; set; } 
     public int Attempts { get; set; } = 0;
-    
+    public string CurrentPaymentId { get; set; } = "";
+
     public override void Update()
     {
         UserRepository userRepository = new UserRepository();
