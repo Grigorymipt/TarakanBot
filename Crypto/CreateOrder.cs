@@ -66,14 +66,14 @@ public static class CreateOrder
             customerTelegramUserId = customerTelegramUserId,
         };
         
-        Log.Information("creating JsonContent");
+        // Log.Information("creating JsonContent");
         JsonContent content = JsonContent.Create(jsonApplication);
         Log.Information("init request");
         using var request = new HttpRequestMessage(HttpMethod.Post, "https://pay.wallet.tg/wpay/store-api/v1/order");
         
-        Log.Information("filling request");
+        // Log.Information("filling request");
         request.Content = content;
-
+        Log.Information("adding headers");
         request.Headers.Add("Wpay-Store-Api-Key", WpayStoreApiKey);
         request.Headers.Add("Content-Type", "application/json");
         request.Headers.Add("Accept", "application/json");
