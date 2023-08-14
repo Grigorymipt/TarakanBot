@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Localization;
 using MyTelegramBot.Types;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -36,7 +37,10 @@ public class BuyListingNow : Query, IListener
             new LabeledPrice("Listing", 10000)
         };
     }
-
+    protected override string Run(Context context, CancellationToken cancellationToken)
+    {
+        return MessageToSend[0];
+    }
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
         var amount = 0.01;
