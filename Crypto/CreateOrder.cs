@@ -49,6 +49,7 @@ public static class CreateOrder
         CancellationToken cancellationToken = default(CancellationToken)
         )
     {
+        Log.Information("Start PostAsync");
         JsonApplication jsonApplication = new JsonApplication()
         {
             amount = new Amount()
@@ -64,11 +65,13 @@ public static class CreateOrder
             timeoutSeconds = timeoutSeconds,
             customerTelegramUserId = customerTelegramUserId,
         };
-
-        // creating JsonContent
+        
+        Log.Information("creating JsonContent");
         JsonContent content = JsonContent.Create(jsonApplication);
-
+        Log.Information("init request");
         using var request = new HttpRequestMessage(HttpMethod.Post, "https://pay.wallet.tg/wpay/store-api/v1/order");
+        
+        Log.Information("filling request");
         request.Content = content;
 
         request.Headers.Add("Wpay-Store-Api-Key", WpayStoreApiKey);
