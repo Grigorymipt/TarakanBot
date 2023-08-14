@@ -74,6 +74,7 @@ public static class CreateOrder
         // Log.Information("filling request");
         request.Content = content;
         Log.Information("adding headers");
+        new CancellationTokenSource().CancelAfter(30000);
         request.Headers.Add("Wpay-Store-Api-Key", WpayStoreApiKey);
         request.Headers.Add("Content-Type", "application/json");
         request.Headers.Add("Accept", "application/json");
