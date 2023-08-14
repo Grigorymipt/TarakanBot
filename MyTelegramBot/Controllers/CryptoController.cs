@@ -23,13 +23,13 @@ public class GetWalletController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> Post(
-        [FromBody] CreateOrder.ResponseCreate responseCreate,
+        [FromBody] CreateOrder.ResponseWebHook responseWebHook,
         [FromServices] Bot bot,
         CancellationToken cancellationToken)
     {
         Task.Run(() =>
         {
-            try { bot.SuccessPayment(responseCreate, cancellationToken); }
+            try { bot.SuccessPayment(responseWebHook, cancellationToken); }
             catch (Exception ex)
             {
                 var ErrorMessage = bot.HandleErrorAsync(botClient: default, exception: ex, cancellationToken: cancellationToken).Result;

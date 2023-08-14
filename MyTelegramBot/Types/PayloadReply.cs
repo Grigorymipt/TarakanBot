@@ -2,6 +2,8 @@ using MyTelegramBot;
 using MyTelegramBot.Types;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.Payments;
+using Telegram.Bot.Types.ReplyMarkups;
 
 public class PayloadReply : Listener
 {
@@ -16,9 +18,9 @@ public class PayloadReply : Listener
                 preCheckoutQueryId: preCheckoutQueryId,
                 cancellationToken: cancellationToken
             );   
-        Int64 chantId = context.Update.PreCheckoutQuery.From.Id;
         await base.Handler(context, cancellationToken);
     }
+    
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
     {
         if (context.Update.Type != UpdateType.PreCheckoutQuery) return false;

@@ -114,5 +114,4 @@ public static class CreateOrder
         public string? message { get; set; }
         public Data data { get; set; }
     }
-
 }

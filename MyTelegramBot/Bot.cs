@@ -12,6 +12,8 @@ using User = Telegram.Bot.Types.User;
 using Update = Telegram.Bot.Types.Update;
 using BotCommand = Telegram.Bot.Types.BotCommand;
 using Telegram.Bot.Types.ReplyMarkups;
+using Telegram.Bot.Types.Payments;
+using Crypto;
 
 namespace MyTelegramBot ;
 public class Bot {
@@ -167,18 +169,25 @@ public class Bot {
    //TODO: unused para botClient
     public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
-        if(botClient == null) botClient = _botClient; 
-        Console.WriteLine("Update Received!");
-        Context context = new Context(update, botClient);
-        Console.WriteLine("context updated");
-        foreach (Listener listener in Listeners) {
-            if (await listener.Validate(context, cancellationToken))
-            {
-                Console.WriteLine("Start Handling With" + listener.ToString());
-                await listener.Handler(context, cancellationToken);
+        try
+        {
+            if(botClient == null) botClient = _botClient; 
+            Console.WriteLine("Update Received!");
+            Context context = new Context(update, botClient);
+            Console.WriteLine("context updated");
+            foreach (Listener listener in Listeners) {
+                if (await listener.Validate(context, cancellationToken))
+                {
+                    Console.WriteLine("Start Handling With" + listener.ToString());
+                    await listener.Handler(context, cancellationToken);
+                }
             }
+            Console.WriteLine("Update Handled");
         }
-        Console.WriteLine("Update Handled");
+        catch(Exception ex)
+        {
+            await HandleErrorAsync(_botClient, ex, cancellationToken);
+        }
     }
     public async Task<string> HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
@@ -190,30 +199,25 @@ public class Bot {
         };
         return ErrorMessage;
     }
-    public async Task SuccessPayment(string chatId, string paymentId, CancellationToken cancellationToken)
+    public async Task SuccessPayment(CreateOrder.ResponseCreate responseWebhook, CancellationToken cancellationToken)
     {
-        List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
-        InlineKeyboardButton reply = InlineKeyboardButton
-                .WithCallbackData("Продолжить", "");
-        IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
-        categoryList.Add(inlineKeyboardButton);
-        IEnumerable<IEnumerable<InlineKeyboardButton>> enumerableList1 = categoryList;
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(enumerableList1);
-        try
+        string customData = responseWebhook.payload.customdata;
+        var dataSplited = customData.Split(' '); // Ex: "11011000101 listing"
+        var UserId = long.Parse(dataSplited[0]);
+        var Payload = dataSplited[1];
+        Update update = new PreCheckoutQuery()
         {
-            _botClient.end(
-            chatId: chatId,
-            text: response,
-            parseMode: Config.ParseMode,
-            replyMarkup: inlineKeyboardMarkup,
-            cancellationToken: cancellationToken
-        );
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+            Id = "d",
+            From = new User(){
+                Id = UserId,
+                IsBot = false,
+                FirstName = "",
+            },
+            Currency = responseWebhook.payload.orderAmount.currencyCode,
+            TotalAmount = int.Parse(responseWebhook.payload.orderAmount.amount),
+            InvoicePayload = Payload, // MB not message
+        };
+        await HandleUpdateAsync(_botClient, update, cancellationToken);
     }   
 
     private static IEnumerable<Type> GetTypesImplementedBy<T>(Assembly assembly)
