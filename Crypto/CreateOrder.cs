@@ -35,7 +35,7 @@ public static class CreateOrder
     //"client_ref=4E89", "ORD-5023-4E89",
     //1800, 0, Key API
 
-    public static async Task PostAsync(
+    public static async Task<string> PostAsync(
         string currencyCode,
         string amount,
         string description,
@@ -93,6 +93,7 @@ public static class CreateOrder
 
             ResponseCreate? responseCreate =
                 JsonSerializer.Deserialize<ResponseCreate>(jsonResponse);
+            return responseCreate.data.payLink;
         }
     }
     //ResponseCreate for CreateOrder
