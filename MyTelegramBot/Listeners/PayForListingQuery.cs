@@ -54,24 +54,21 @@ public class BuyListingNow : Query, IListener
         string response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
-        foreach (var category in buttons)
-        {
-            InlineKeyboardButton reply;
-            
-                try
-                {
-                    // Console.WriteLine("");
-                    reply = InlineKeyboardButton
-                        .WithUrl(category.Key, link);
-                }
-                catch(Exception ex)
-                {
-                    throw ex;
-            }
 
-            IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
-            categoryList.Add(inlineKeyboardButton);
+        InlineKeyboardButton reply;
+        try
+        {
+            // Console.WriteLine("");
+            reply = InlineKeyboardButton
+                .WithUrl("Оплатить", link);
         }
+        catch(Exception ex)
+        {
+            throw ex;
+        }
+
+        IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
+        categoryList.Add(inlineKeyboardButton);
 
         IEnumerable<IEnumerable<InlineKeyboardButton>> enumerableList1 = categoryList;
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(enumerableList1);
