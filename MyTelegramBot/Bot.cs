@@ -34,6 +34,7 @@ public class Bot {
     public async Task Init() 
     {
         Console.WriteLine("Initializing bot...");
+        Log.Information("Initializing bot...");
         
         var users = new UserRepository();
         var su = new MongoDatabase.ModelTG.User()

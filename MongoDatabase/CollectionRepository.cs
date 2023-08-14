@@ -44,6 +44,7 @@ public class CollectionRepository : Repository
     {
         client.GetDatabase(databaseName).CreateCollection(collectionName);
         Console.WriteLine($"Collection{collectionName} successfully created!");
+        Log.Information($"Collection{collectionName} successfully created!");
     }
     
     public IMongoCollection<T> GetCollection<T>(string collectionName)
