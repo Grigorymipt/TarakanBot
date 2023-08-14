@@ -39,9 +39,9 @@ public class BuyListingNow : Query, IListener
 
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
-        var amount = 100;
+        var amount = 0.01;
         await Crypto.CreateOrder.PostAsync(
-            "USD",
+            "TON",
             amount.ToString(),
             "some description",
             customData: context.Update.CallbackQuery.From.Id + "ListingPayload",
