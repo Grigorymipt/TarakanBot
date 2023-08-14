@@ -1,3 +1,4 @@
+using static Crypto.CreateOrder;
 using System.Net.Http.Json;
 using Serilog;
 using System.Text.Json;
@@ -9,7 +10,7 @@ public static class CreateOrder
     static HttpClient httpClient = new HttpClient();
 
     //classes for creating JsonApplication
-    class Amount
+    public class Amount
     {
         public string currencyCode { get; set; }
         public string amount { get; set; }
@@ -79,10 +80,12 @@ public static class CreateOrder
             try
             {
                 var ex = responseMessage.EnsureSuccessStatusCode();
+                // TODO: Grisha adds db save eventId to user
+                Log.Information("");
             }
             catch (Exception ex)
             {
-                Log.Information(ex.ToString());
+                Log.Error(ex.ToString());
             }
 
            
@@ -92,18 +95,24 @@ public static class CreateOrder
                 JsonSerializer.Deserialize<ResponseCreate>(jsonResponse);
         }
     }
+    public class Data
+    {
+        public string id { get; set; }
+        public string status { get; set; }
+        public string number { get; set; }
+        public Amount amount { get; set; }
+        public string createdDateTime { get; set; }
+        public string expirationDateTime { get; set; }
+        public string? completedDateTime { get; set; }
+        public string payLink { get; set; }
+        public string directPayLink { get; set; }
+    }
 
     public class ResponseCreate
     {
-        public Amount amount { get; set; }
-        public string description { get; set; }
-        public string? returnUrl { get; set; }
-        public string? failReturnUrl { get; set; }
-        public string? customData { get; set; }
-        public string externalId { get; set; }
-        public int timeoutSeconds { get; set; }
-        public int customerTelegramUserId { get; set; }
-
+        public string status { get; set; }
+        public string? message { get; set; }
+        public Data data { get; set; }
     }
 
 }
