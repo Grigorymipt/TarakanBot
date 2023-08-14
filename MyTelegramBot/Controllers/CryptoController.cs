@@ -18,8 +18,8 @@ namespace WebHookReceiver.Controllers;
 [Route("[controller]")]
 public class GetWalletController : ControllerBase
 {
-    private readonly ILogger<GetUpdatesController> _logger;
-    public GetWalletController(ILogger<GetUpdatesController> logger) => _logger = logger;
+    private readonly ILogger<GetWalletController> _logger;
+    public GetWalletController(ILogger<GetWalletController> logger) => _logger = logger;
 
     [HttpPost]
     public async Task<IActionResult> Post(
