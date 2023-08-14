@@ -74,14 +74,15 @@ public static class CreateOrder
         request.Headers.Add("Wpay-Store-Api-Key", WpayStoreApiKey);
         request.Headers.Add("Content-Type", "application/json");
         request.Headers.Add("Accept", "application/json");
-
+        Log.Information("Sending payment link request via wallet api");
         using (HttpResponseMessage responseMessage = await httpClient.SendAsync(request))
         {
+            Log.Information("Response received");
             try
             {
-                var ex = responseMessage.EnsureSuccessStatusCode();
+                responseMessage.EnsureSuccessStatusCode();
                 // TODO: Grisha adds db save eventId to user
-                Log.Information("");
+                Log.Information("smth");
             }
             catch (Exception ex)
             {
