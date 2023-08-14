@@ -46,14 +46,14 @@ public class BuyListingNow : Query, IListener
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
         Log.Information("Start Handling Payment");
-        var amount = 0.01;
+        var amount = "0.1";
         string link;
         if(Environment.GetEnvironmentVariable("PaymendVendor") == "wallet")
         {
             link = await Crypto.CreateOrder.PostAsync(
-                "TON",
-                amount.ToString(),
-                "some description",
+                currencyCode: "TON",
+                amount: amount,
+                description: "some description",
                 customData: context.Update.CallbackQuery.From.Id + "ListingPayload",
                 externalId:  new Random().Next(0, 1000000).ToString(), //TODO REMOVE!!!
                 timeoutSeconds: 120,
