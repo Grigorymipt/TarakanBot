@@ -141,12 +141,13 @@ public static class ChannelInfo
         await client.LoginUserIfNeeded();
         InputChannelBase inputChannelBase = new InputChannel(RegData.ChannelId, RegData.AccessHash);
 
-        Console.WriteLine("----------------"+ messages.Count + messages.Messages.Count());
-        Log.Information("----------------" + messages.Count + messages.Messages.Count());
+
         var channels = await client.Channels_GetChannels(inputChannelBase);
         var channel = channels.chats.FirstOrDefault();
-        var messages = await client.Channels_GetMessages(inputChannelBase, postId);
-
+        var messages = await client.Channels_GetMessages(inputChannelBase, postId);  
+        Console.WriteLine("----------------" + messages.Messages.Count());
+        Log.Information("----------------" + messages.Messages.Count()));
+        
         foreach (var msgBase in messages.Messages)
         {  
             if (msgBase is TL.Message message)
