@@ -69,7 +69,7 @@ public static class CreateOrder
         // Log.Information("creating JsonContent");
         JsonContent content = JsonContent.Create(jsonApplication);
         Log.Information("init request");
-        using var request = new HttpRequestMessage(HttpMethod.Post, "https://pay.wallet.tg/wpay/store-api/v1/order");
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://pay.wallet.tg/wpay/store-api/v1/order");
         
         // Log.Information("filling request");
         request.Content = content;
