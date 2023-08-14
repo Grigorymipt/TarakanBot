@@ -1,3 +1,4 @@
+using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -22,42 +23,59 @@ public static class Send
         string fullPath, 
         CancellationToken cancellationToken = default(CancellationToken))
     {
-        
-        ChatId chatId = context.Update.Type switch
+        Task.Run(() => 
         {
-            UpdateType.Message => context.Update.Message.Chat.Id,
-            UpdateType.CallbackQuery => context.Update.CallbackQuery.Message.Chat.Id,
-            _ => throw new NullReferenceException("Not Supported Type of update")
-        };
-        var fileStream = File.OpenRead(fullPath);
-        InputFile file = new InputFileStream(fileStream);
-        var document = context.BotClient.SendDocumentAsync(
-            chatId: chatId,
-            document: file,
-            cancellationToken: cancellationToken
-        ).Result;
+            ChatId chatId = context.Update.Type switch
+            {
+                UpdateType.Message => context.Update.Message.Chat.Id,
+                UpdateType.CallbackQuery => context.Update.CallbackQuery.Message.Chat.Id,
+                _ => throw new NullReferenceException("Not Supported Type of update")
+            };
+            var fileStream = File.OpenRead(fullPath);
+            InputFile file = new InputFileStream(fileStream);
+            var document = context.BotClient.SendDocumentAsync(
+                chatId: chatId,
+                document: file,
+                cancellationToken: cancellationToken
+            ).Result;
+        });
     }
     public static void Video(Context context, string path, CancellationToken cancellationToken = default(CancellationToken))
     {
-        ChatId chatId = context.Update.Message.Chat.Id;
-        var fileStream = File.OpenRead(path);
-        InputFile file = new InputFileStream(fileStream);
-        var document = context.BotClient.SendVideoAsync(
-            chatId: chatId,
-            video: file,
-            cancellationToken: cancellationToken
-        ).Result;
+        Task.Run(() => 
+        {
+            ChatId chatId = context.Update.Message.Chat.Id;
+            var fileStream = File.OpenRead(path);
+            InputFile file = new InputFileStream(fileStream);
+            var document = context.BotClient.SendVideoAsync(
+                chatId: chatId,
+                video: file,
+                cancellationToken: cancellationToken
+            ).Result;
+        });
     }
-    public static void Photo(Context context, string path, CancellationToken cancellationToken = default(CancellationToken))
+    public static async void Photo(Context context, string path, CancellationToken cancellationToken = default(CancellationToken))
     {
-        ChatId chatId = context.Update.Message.Chat.Id;
-        var fileStream = File.OpenRead(path);
-        InputFile file = new InputFileStream(fileStream);
-        var document = context.BotClient.SendPhotoAsync(
-            chatId: chatId,
-            photo: file,
-            cancellationToken: cancellationToken
-        ).Result;
+        Task.Run(() => 
+        {
+            try
+            {
+                new CancellationTokenSource().CancelAfter(7);
+                ChatId chatId = context.Update.Message.Chat.Id;
+                var fileStream = File.OpenRead(path);
+                InputFile file = new InputFileStream(fileStream);
+                var document = context.BotClient.SendPhotoAsync(
+                    chatId: chatId,
+                    photo: file,
+                    cancellationToken: cancellationToken
+                ).Result;
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex.ToString());
+                throw ex;
+            }
+        });
     }
     
 }

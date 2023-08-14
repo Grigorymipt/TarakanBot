@@ -117,6 +117,7 @@ public abstract class Command : Listener
     /// <param name="context"></param>
     /// <param name="buttonsList"></param>
     /// <param name="cancellationToken"></param>
+<<<<<<< HEAD
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
         var buttons = new Dictionary<string, string>(){};
@@ -151,4 +152,6 @@ public abstract class Command : Listener
             throw;
         }
     }
+=======
+>>>>>>> main
 }

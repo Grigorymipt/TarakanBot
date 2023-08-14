@@ -22,7 +22,7 @@ public abstract class Listener
     /// Property <c>Bot</c> represents a <c>Bot</c> instance with which <c>Listener</c> is related.
     /// </value>
     public Bot Bot { get; set; }
-
+    
 
     public HandleType HandleType { get; set; } = HandleType.Standard;
     private ReadOnlyDictionary<string, string> buttons;
@@ -88,7 +88,40 @@ public abstract class Listener
     /// <summary>Checks if the <c>Update</c> matches the listener condition.</summary>
     public abstract Task<bool> Validate(Context context, CancellationToken cancellationToken);
     /// <summary>Handles the <c>Update</c> if it is successfully validated.</summary>
-    public abstract Task Handler(Context context, CancellationToken cancellationToken);
+    
+    public virtual async Task Handler(Context context, CancellationToken cancellationToken)
+    {
+        var buttons = new Dictionary<string, string>(){};
+        string response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
+        Int64 chatId = ChatId(context);
+        
+        List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
+        foreach (var category in buttons)
+        {
+            InlineKeyboardButton reply = InlineKeyboardButton
+                .WithCallbackData(category.Key, category.Value);
+            IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
+            categoryList.Add(inlineKeyboardButton);
+        }
+
+        IEnumerable<IEnumerable<InlineKeyboardButton>> enumerableList1 = categoryList;
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(enumerableList1);
+        try
+        {
+            Message sentMessage = await context.BotClient.SendTextMessageAsync(
+                chatId: chatId,
+                text: response,
+                parseMode: Config.ParseMode,
+                replyMarkup: inlineKeyboardMarkup,
+                cancellationToken: cancellationToken
+            );
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 
     // public abstract Task Handler(Context context, Dictionary<string, string> buttonsList,
     //     CancellationToken cancellationToken);
@@ -107,5 +140,14 @@ public abstract class Listener
     /// <returns>Command result string.</returns>
     protected virtual async Task<string> RunAsync(Context context, CancellationToken cancellationToken) {
         return Run(context, cancellationToken);
+    }
+    protected long ChatId(Context context) {
+        Update update = context.Update;
+        return this switch{
+            Command command => update.Message.From.Id,
+            Query query => update.CallbackQuery.From.Id,
+            PayloadReply payloadReply => update.PreCheckoutQuery.From.Id,
+            _ => 0
+        };
     }
 }

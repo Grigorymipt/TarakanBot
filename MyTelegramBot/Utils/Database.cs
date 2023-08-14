@@ -88,7 +88,6 @@ public class Database
     {
         var category = new Category()
         {
-            TelegramId = new long(),
             Title = Title
         };
         _categoryRepository.CreateDocument(category);   
@@ -102,7 +101,11 @@ public class Database
     }
     public static async Task<Category> GetCategoryAsync(long Id)
     {
-        return await GetCategory(Id);
+        return await _categoryRepository.GetDocumentAsync(Id);
+    }
+    public static async Task<Category> GetCategoryAsync(Guid Id)
+    {
+        return await _categoryRepository.GetDocumentAsync(Id);
     }
     public static async Task<Category> GetCategoryAsync(Message message)
     {

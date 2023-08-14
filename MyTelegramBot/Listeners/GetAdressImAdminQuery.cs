@@ -20,7 +20,11 @@ public class GetAdressImAdminQuery : Query, IListener
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
         Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "admin.jpg", cancellationToken);
+<<<<<<< HEAD
         buttons = new Dictionary<string, string>() { { "Добавить канал", "/addChannel" } };
+=======
+        buttons = new Dictionary<string, string>(){{"Добавить канал", "/addChannel"}};
+>>>>>>> main
         return MessageToSend[0];
     }
 }
