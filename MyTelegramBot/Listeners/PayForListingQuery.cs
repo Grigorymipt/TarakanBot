@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Localization;
 using MyTelegramBot.Types;
+using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -43,6 +44,7 @@ public class BuyListingNow : Query, IListener
     }
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
+        Log.Information("Start Handling Payment");
         var amount = 0.01;
         var link = await Crypto.CreateOrder.PostAsync(
             "TON",
@@ -55,10 +57,12 @@ public class BuyListingNow : Query, IListener
             WpayStoreApiKey: Environment.GetEnvironmentVariable("WpayStoreApiKey")
         );
         var buttons = new Dictionary<string, string>(){};
+        Log.Information("Get message");
         string response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
+        Log.Information("Message Received");
         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
-
+        Log.Information("Setup reply buttons");
         InlineKeyboardButton reply;
         try
         {
@@ -76,13 +80,14 @@ public class BuyListingNow : Query, IListener
 
         IEnumerable<IEnumerable<InlineKeyboardButton>> enumerableList1 = categoryList;
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(enumerableList1);
-
+        Log.Information("Sending a message with a payment URL");
         Message sentMessage = await context.BotClient.SendTextMessageAsync(
             chatId: chatId,
             text: response,
             parseMode: Config.ParseMode,
             replyMarkup: inlineKeyboardMarkup
         );
+        Log.Information("Message sent successfull");
     }
 
 
