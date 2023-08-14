@@ -46,16 +46,31 @@ public class BuyListingNow : Query, IListener
     {
         Log.Information("Start Handling Payment");
         var amount = 0.01;
-        var link = await Crypto.CreateOrder.PostAsync(
-            "TON",
-            amount.ToString(),
-            "some description",
-            customData: context.Update.CallbackQuery.From.Id + "ListingPayload",
-            externalId: "0", //TODO REMOVE!!!
-            timeoutSeconds: 120,
-            customerTelegramUserId: (int)context.Update.CallbackQuery.From.Id,
-            WpayStoreApiKey: Environment.GetEnvironmentVariable("WpayStoreApiKey")
-        );
+        string link;
+        if(Environment.GetEnvironmentVariable("PaymendVendor") == "wallet")
+        {
+            link = await Crypto.CreateOrder.PostAsync(
+                "TON",
+                amount.ToString(),
+                "some description",
+                customData: context.Update.CallbackQuery.From.Id + "ListingPayload",
+                externalId: "0", //TODO REMOVE!!!
+                timeoutSeconds: 120,
+                customerTelegramUserId: (int)context.Update.CallbackQuery.From.Id,
+                WpayStoreApiKey: Environment.GetEnvironmentVariable("WpayStoreApiKey")
+            );
+        }
+        else
+            link = "google.com";//await Crypto.CreateOrder.PostAsync(
+        //     "TON",
+        //     amount.ToString(),
+        //     "some description",
+        //     customData: context.Update.CallbackQuery.From.Id + "ListingPayload",
+        //     externalId: "0", //TODO REMOVE!!!
+        //     timeoutSeconds: 120,
+        //     customerTelegramUserId: (int)context.Update.CallbackQuery.From.Id,
+        //     WpayStoreApiKey: Environment.GetEnvironmentVariable("WpayStoreApiKey")
+        // );
         var buttons = new Dictionary<string, string>(){};
         Log.Information("Get message");
         string response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
