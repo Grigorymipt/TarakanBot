@@ -1,9 +1,10 @@
 using System.Net.Http.Json;
 using Serilog;
+using System.Text.Json;
 
 namespace Crypto;
 
-public static class WalletInfo
+public static class CreateOrder
 {
     static HttpClient httpClient = new HttpClient();
 
@@ -75,10 +76,38 @@ public static class WalletInfo
 
         using (HttpResponseMessage responseMessage = await httpClient.SendAsync(request))
         {
-            responseMessage.EnsureSuccessStatusCode();
+            try
+            {
+                var ex = responseMessage.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                Log.Information(ex.ToString());
+            }
+
+           
             var jsonResponse = await responseMessage.Content.ReadAsStringAsync();
+<<<<<<< HEAD:Crypto/WalletInfo.cs
             Console.WriteLine(responseMessage.EnsureSuccessStatusCode());
             Log.Error(responseMessage.EnsureSuccessStatusCode().ToString());
+=======
+            ResponseCreate? responseCreate =
+                JsonSerializer.Deserialize<ResponseCreate>(jsonResponse);
+>>>>>>> aaf6526e1df2d5c142c8c3dfe2c996b45956aeb8:Crypto/CreateOrder.cs
         }
     }
+
+    public class ResponseCreate
+    {
+        public Amount amount { get; set; }
+        public string description { get; set; }
+        public string? returnUrl { get; set; }
+        public string? failReturnUrl { get; set; }
+        public string? customData { get; set; }
+        public string externalId { get; set; }
+        public int timeoutSeconds { get; set; }
+        public int customerTelegramUserId { get; set; }
+
+    }
+
 }
