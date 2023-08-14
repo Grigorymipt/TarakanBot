@@ -2,7 +2,6 @@ using static Crypto.CreateOrder;
 using System.Net.Http.Json;
 using Serilog;
 using System.Text.Json;
-
 namespace Crypto;
 
 public static class CreateOrder
@@ -83,20 +82,18 @@ public static class CreateOrder
             try
             {
                 responseMessage.EnsureSuccessStatusCode();
-                // TODO: Grisha adds db save eventId to user
                 Log.Information("smth");
+                var jsonResponse = await responseMessage.Content.ReadAsStringAsync();
+
+                ResponseCreate? responseCreate =
+                    JsonSerializer.Deserialize<ResponseCreate>(jsonResponse);
+                return responseCreate.data.payLink;
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
             }
-
-           
-            var jsonResponse = await responseMessage.Content.ReadAsStringAsync();
-
-            ResponseCreate? responseCreate =
-                JsonSerializer.Deserialize<ResponseCreate>(jsonResponse);
-            return responseCreate.data.payLink;
+            return "";
         }
     }
     //ResponseCreate for CreateOrder
