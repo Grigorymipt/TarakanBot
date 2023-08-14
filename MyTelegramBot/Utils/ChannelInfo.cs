@@ -146,7 +146,7 @@ public static class ChannelInfo
         var channel = channels.chats.FirstOrDefault();
         var messages = await client.Channels_GetMessages(inputChannelBase, postId);  
         Console.WriteLine("----------------" + messages.Messages.Count());
-        Log.Information("----------------" + messages.Messages.Count()));
+        Log.Information("----------------" + messages.Messages.Count());
         
         foreach (var msgBase in messages.Messages)
         {  
