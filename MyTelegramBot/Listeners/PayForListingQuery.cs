@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using Microsoft.Extensions.Localization;
 using MyTelegramBot.Types;
 using Serilog;
@@ -54,7 +55,7 @@ public class BuyListingNow : Query, IListener
                 amount.ToString(),
                 "some description",
                 customData: context.Update.CallbackQuery.From.Id + "ListingPayload",
-                externalId: "0", //TODO REMOVE!!!
+                externalId:  new Random().Next(0, 1000000).ToString(), //TODO REMOVE!!!
                 timeoutSeconds: 120,
                 customerTelegramUserId: (int)context.Update.CallbackQuery.From.Id,
                 WpayStoreApiKey: Environment.GetEnvironmentVariable("WpayStoreApiKey")
