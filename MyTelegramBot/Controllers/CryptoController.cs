@@ -5,12 +5,14 @@ using Microsoft.Extensions.Logging.Configuration;
 using MyTelegramBot;
 using Serilog;
 
-namespace WebHookReceiver.Controllers;
+
 using Telegram.Bot.Types.Enums;
 using Microsoft.Extensions.Logging;
 using MyTelegramBot.Types;
-using static Crypto.WalletInfo;
 using TL;
+using Crypto;
+
+namespace WebHookReceiver.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -21,13 +23,13 @@ public class GetWalletController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> Post(
-        [FromBody] ResponseCreate responseCreate,
+        [FromBody] CreateOrder.ResponseCreate responseCreate,
         [FromServices] Bot bot,
         CancellationToken cancellationToken)
     {
         Task.Run(() =>
         {
-            try { bot.SuccessPayment(responseCreate.Data.Id, cancellationToken); }
+            try { bot.SuccessPayment(responseCreate, cancellationToken); }
             catch (Exception ex)
             {
                 var ErrorMessage = bot.HandleErrorAsync(botClient: default, exception: ex, cancellationToken: cancellationToken).Result;

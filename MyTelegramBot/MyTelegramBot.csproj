@@ -35,6 +35,9 @@
 
     <ItemGroup>
       <ProjectReference Include="..\MongoDatabase\MongoDatabase.csproj" />
+      <ProjectReference Include="..\Crypto\Crypto.csproj">
+        <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
+      </ProjectReference>
     </ItemGroup>
 
     <ItemGroup>
