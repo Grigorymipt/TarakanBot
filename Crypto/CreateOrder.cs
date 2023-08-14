@@ -76,8 +76,6 @@ public static class CreateOrder
         Log.Information("adding headers");
         new CancellationTokenSource().CancelAfter(30000);
         request.Headers.Add("Wpay-Store-Api-Key", WpayStoreApiKey);
-        request.Headers.Add("Content-Type", "application/json");
-        request.Headers.Add("Accept", "application/json");
         Log.Information("Sending payment link request via wallet api");
         using (HttpResponseMessage responseMessage = await httpClient.SendAsync(request))
         {
