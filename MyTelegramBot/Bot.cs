@@ -199,13 +199,13 @@ public class Bot {
         };
         return ErrorMessage;
     }
-    public async Task SuccessPayment(CreateOrder.ResponseCreate responseWebhook, CancellationToken cancellationToken)
+    public async Task SuccessPayment(CreateOrder.ResponseWebHook responseWebhook, CancellationToken cancellationToken)
     {
-        string customData = responseWebhook.payload.customdata;
+        string customData = responseWebhook.payload.customData;
         var dataSplited = customData.Split(' '); // Ex: "11011000101 listing"
         var UserId = long.Parse(dataSplited[0]);
         var Payload = dataSplited[1];
-        Update update = new PreCheckoutQuery()
+        PreCheckoutQuery preCheckoutQuery = new PreCheckoutQuery()
         {
             Id = "d",
             From = new User(){
@@ -217,6 +217,8 @@ public class Bot {
             TotalAmount = int.Parse(responseWebhook.payload.orderAmount.amount),
             InvoicePayload = Payload, // MB not message
         };
+        Update update = new Update();
+        update.PreCheckoutQuery = preCheckoutQuery; 
         await HandleUpdateAsync(_botClient, update, cancellationToken);
     }   
 

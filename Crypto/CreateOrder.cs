@@ -39,13 +39,13 @@ public static class CreateOrder
         string currencyCode,
         string amount,
         string description,
-        string? returnUrl,
-        string? failReturnUrl,
-        string? customData,
         string externalId,
         int timeoutSeconds,
         int customerTelegramUserId,
-        string? WpayStoreApiKey,
+        string? returnUrl = null,
+        string? failReturnUrl = null,
+        string? customData = null,
+        string? WpayStoreApiKey = null,
         CancellationToken cancellationToken = default(CancellationToken)
         )
     {

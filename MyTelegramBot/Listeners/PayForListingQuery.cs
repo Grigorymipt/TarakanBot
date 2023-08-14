@@ -39,14 +39,15 @@ public class BuyListingNow : Query, IListener
 
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
-        Crypto.CreateOrder.PostAsync(
+        var amount = 100;
+        await Crypto.CreateOrder.PostAsync(
             "USD",
-            100,
+            amount.ToString(),
             "some description",
             customData: context.Update.CallbackQuery.From.Id + "ListingPayload",
-            externalId: 0, //TODO REMOVE!!!
+            externalId: "0", //TODO REMOVE!!!
             timeoutSeconds: 120,
-            customerTelegramUserId: context.Update.CallbackQuery.From.Username,
+            customerTelegramUserId: (int)context.Update.CallbackQuery.From.Id,
             WpayStoreApiKey: Environment.GetEnvironmentVariable("WpayStoreApiKey")
         );
         // var invoiceAsync = await context.BotClient.SendInvoiceAsync(
