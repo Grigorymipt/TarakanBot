@@ -164,6 +164,7 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
         Log.Information("Bot start forwarding creative");
         try
         {
+            Log.Information("Forward " + chatId + " " + messageParams[0].Replace("https://t.me/","@") + " " + messageParams[1]);
             context.BotClient.ForwardMessageAsync(
                 chatId: chatId,
                 fromChatId: messageParams[0].Replace("https://t.me/","@"),
