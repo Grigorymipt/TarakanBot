@@ -164,8 +164,8 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
         try
         {
             context.BotClient.ForwardMessageAsync(
-                chatId: '@' + chatId,
-                fromChatId: messageParams[0],
+                chatId: chatId,
+                fromChatId: messageParams[0].Replace("https://t.me/","@"),
                 messageId: int.Parse(messageParams[1])
             ).Wait();
             Log.Information("creative forwarded");
