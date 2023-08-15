@@ -6,6 +6,7 @@ using TL;
 using Channel = TL.Channel;
 using Message = Telegram.Bot.Types.Message;
 using User = MongoDatabase.ModelTG.User;
+using Serilog;
 
 namespace MyTelegramBot.Listeners;
 
@@ -49,7 +50,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
             { "Подписался на 10 каналов", "/iSubscribed" }
         };
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        if (user.Subscribes?.Count > 5) //TODO: 20 in prod
+        if (user?.Subscribes?.Count > 5) //TODO: 20 in prod
         {
             Buttons.Clear(); //FIXME
             return MessageToSend[1];   
@@ -61,11 +62,14 @@ public class SubscribeTenChannelsQuery : Query, IListener
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
         var buttons = new Dictionary<string, string>(){};
-        string response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
+        string response = Run(context, cancellationToken, out buttons);
+        Log.Information("run response received");
         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
         var channeltosubs = ChannelName(context.Update.CallbackQuery.From.Id);
-        response = response == MessageToSend[0] ? (channeltosubs.Title + channeltosubs.Describtion) : response; 
+        response = response == MessageToSend[0] ? (channeltosubs.Title + channeltosubs.Describtion) : response;
+        Log.Information("handling buttons");
+ 
         foreach (var category in buttons)
         {
             InlineKeyboardButton reply;
@@ -92,7 +96,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
             IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
             categoryList.Add(inlineKeyboardButton);
         }
-
+        Log.Information("start sending");
         IEnumerable<IEnumerable<InlineKeyboardButton>> enumerableList1 = categoryList;
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(enumerableList1);
 
