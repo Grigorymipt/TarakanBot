@@ -50,13 +50,11 @@ public class User : Document
 public class Channel : Document
 {
     public Channel() : base("Channel"){}
-    public long PersonID { get; set; }
+    public long Owner { get; set; }
     public string Title { get; set; }
-    public string Describtion { get; set; }
-    public int CategoryID { get; set; }
+    public string? Describtion { get; set; }
     public DateOnly Vip { get; set; } = DateOnly.MinValue;
     public int Reports { get; set; } = 0;
-    public long AccessHash { get; set; } = 0;
     public override void Update()
     {
         ChannelRepository channelRepository = new ChannelRepository();
@@ -68,7 +66,6 @@ public class Channel : Document
 public class Category : Document
 {
     public Category() : base("Category"){}
-    public string ISOTwoLettersCultureCode { get; set; } = "RU";
     public string Title { get; set; }
     public List<Channel> Channels { get; set; }
     public override void Update()
@@ -77,5 +74,4 @@ public class Category : Document
         Category oldDocument = categoryRepository.GetDocument(this.Id);
         categoryRepository.UpdateDocument(oldDocument, this);
     }
-
 }

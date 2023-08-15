@@ -55,7 +55,7 @@ public class CheckChannelExistence : InlineReply, IListener
         newUser.Channels.Add(newChannel); // FIXME: very strange behavior
         Channel channel = new Channel()
         {
-            PersonID = user.TelegramId,
+            Owner = user.TelegramId,
             Title = newChannel,
         }; // TODO: remove creating channel in abstract class
         Database.CreateChannel(channel);

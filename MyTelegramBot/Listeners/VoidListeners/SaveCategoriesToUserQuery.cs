@@ -17,7 +17,9 @@ public class SaveCategoriesToUserQuery : Query, IListener
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
+        Log.Information($"User: {user}");
         var category = Database.GetCategory(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText).Result;
+        Log.Information($"Category: {category}");
         var userName = user.UserName;
         var categoryName = category.Title;
         var categoryTelegramId = category.TelegramId;
@@ -27,6 +29,6 @@ public class SaveCategoriesToUserQuery : Query, IListener
         user.Categories.Add(category.TelegramId);
         Log.Information(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText);
         user.Update();
-        return null;
+        return "";
     }
 }
