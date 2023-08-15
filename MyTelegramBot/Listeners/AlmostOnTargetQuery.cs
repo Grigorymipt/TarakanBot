@@ -76,6 +76,8 @@ public class AlmostOnTargetQuery : InlineReply, IListener
                 return "Такого канала не существует";
             }
             Log.Error(ex.ToString());
+            Buttons.Clear();
+            return "Unexpected Error";
         }
         newUser.LastMessage = null;
         newUser.Update();
