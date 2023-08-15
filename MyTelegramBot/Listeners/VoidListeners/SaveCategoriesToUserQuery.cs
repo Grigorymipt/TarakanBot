@@ -32,6 +32,6 @@ public class SaveCategoriesToUserQuery : Query, IListener
 
         user.Update();
 
-        return base.Run(context, cancellationToken);
+        return null;
     }
 }

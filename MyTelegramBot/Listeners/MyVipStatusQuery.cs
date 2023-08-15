@@ -20,7 +20,7 @@ public class MyVipStatusQuery : Query, IListener
         {
             buttons.Add(variableChannel, "/getVipStatusForChannel " + variableChannel);
         }
-        return base.Run(context, cancellationToken);
+        return MessageToSend[0];
     }
 }
 

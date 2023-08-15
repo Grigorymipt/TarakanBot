@@ -19,7 +19,7 @@ public class MyChannelsQuery : Query, IListener
         {
             buttons.Add(variableChannel, "/chooseChannel " + variableChannel);
         }
-        return base.Run(context, cancellationToken);
+        return MessageToSend[0];
     }
 }
 

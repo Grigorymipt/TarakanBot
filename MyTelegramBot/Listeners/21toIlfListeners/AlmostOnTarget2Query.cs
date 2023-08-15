@@ -83,6 +83,6 @@ public class ContinueFreeQuery : Query, IListener
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
         Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "cat.jpg", cancellationToken);
-        return base.Run(context, cancellationToken);
+        return MessageToSend[0];
     }
 }

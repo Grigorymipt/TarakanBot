@@ -11,6 +11,7 @@ public class ContinueQuery : Query, IListener
 
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "subscriptions.jpg", cancellationToken);
         var result = CheckFiveCategories(context, out buttons);
         return result;
     }
@@ -34,11 +35,4 @@ public class ContinueQuery : Query, IListener
 
         return MessageToSend;
     }
-
-    protected override string Run(Context context, CancellationToken cancellationToken)
-    {
-        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "subscriptions.jpg", cancellationToken);
-        return base.Run(context, cancellationToken);
-    }
-
 }
