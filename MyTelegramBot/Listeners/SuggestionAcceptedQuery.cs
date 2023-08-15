@@ -23,10 +23,13 @@ public class SuggestionAcceptedQuery : Query, IListener
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
         buttons = new Dictionary<string, string>();
+        Console.WriteLine($"Adding creatives: {creatives.Count()}");
         foreach(var creative in creatives)
         {
             buttons.Add("Продолжить1", $"/whatLike {creative.Value}");
+            Console.WriteLine($"add creative {creative} to buttons list");
         }
+        Console.WriteLine("smth");
         return MessageToSend[0];
     }
 }
