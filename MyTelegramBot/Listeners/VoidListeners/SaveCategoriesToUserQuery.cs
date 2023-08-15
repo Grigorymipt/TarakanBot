@@ -18,15 +18,19 @@ public class SaveCategoriesToUserQuery : Query, IListener
     {
         Log.Information($"start running {this.GetType()}");
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
+        
+        var category = Database.GetCategory(long.Parse(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText)).Result;
+        
+        if(user == null) throw new NullReferenceException("User not found in DB");
         Log.Information($"User: {user}");
-        var category = Database.GetCategory(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText).Result;
+        if(category == null) throw new NullReferenceException("Category not found in DB");
         Log.Information($"Category: {category}");
+        
         var userName = user.UserName;
         var categoryName = category.Title;
         var categoryTelegramId = category.TelegramId;
         Log.Information($"Add {categoryName} with Id: {categoryTelegramId} to user {userName}.");
-        if(user == null) throw new NullReferenceException("User not found in DB");
-        if(category == null) throw new NullReferenceException("Category not found in DB");
+        
         user.Categories.Add(category.TelegramId);
         Log.Information(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText);
         user.Update();

@@ -103,6 +103,12 @@ public class Database
         if (category == null) return null;
         return category;
     }
+    public static async Task<Category> GetCategory(long telegramId)
+    {
+        var category = await _categoryRepository.GetDocumentAsync(telegramId);
+        if (category == null) return null;
+        return category;
+    }
     public static async Task<Category> GetCategoryAsync(long Id)
     {
         return await _categoryRepository.GetDocumentAsync(Id);
