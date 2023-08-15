@@ -180,7 +180,7 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
     }
     private string MakeReverseString(string message)
     {
-        if (message.Count() > 1) return message = message.Last() + MakeReverseString(message);
+        if (message.Count() > 1) return message = MakeReverseString(message.Remove(0, 1)) + message.First();
         else return message;
     }
 }
