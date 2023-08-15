@@ -15,7 +15,7 @@ public class SubscribeTenChannelsVipQuery : Query, IListener
     protected MongoDatabase.ModelTG.Channel ChannelName(long userId)
     {
         //FIFO logics
-        var channel = Database.FindChannelToListAsync().Result.First();
+        var channel = Database.FindChannelToListAsync(userId).Result.First();
         var user = Database.GetUser(userId);
             
         if (user.Channels?.Contains(channel.Title) == false)

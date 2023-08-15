@@ -157,9 +157,9 @@ public class Database
         return channel;
     }
 
-    public static async Task<List<Channel>> FindChannelToListAsync()
+    public static async Task<List<Channel>> FindChannelToListAsync(long user)
     {   
-        List<Channel> channels = await _channelRepository.GetOldestDocuments(20);
+        List<Channel> channels = await _channelRepository.GetOldestDocuments(user, 20);
         return channels;
     }
 

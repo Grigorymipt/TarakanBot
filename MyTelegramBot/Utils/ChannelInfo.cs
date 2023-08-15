@@ -208,20 +208,27 @@ public static class ChannelInfo
         // var channelId = SaveChannelRegInfo(channelName).Result.ChannelId; //try to get rid of using Telegram API
         try
         {
-            new CancellationTokenSource().CancelAfter(20);
-            var message = await botClient.SendTextMessageAsync(
-                chatId: channelName,
-                text: $"auxiliary message from {botClient.GetMeAsync().Result}, this will be removed soon",
-                disableNotification: true
-            );
-            long channelId = message.Chat.Id;
-            await botClient.DeleteMessageAsync(channelId, message.MessageId);
             var channelDB = Database.GetChannel(channelName);
-            if (channelDB != null)
+            if (channelDB == null) throw new NullReferenceException("channel not found");
+            long channelId;
+            if (channelDB.TelegramId == null) 
             {
-                channelDB.TelegramId = channelId;
-                channelDB.Update();
+                new CancellationTokenSource().CancelAfter(20);
+                var message = await botClient.SendTextMessageAsync(
+                    chatId: channelName,
+                    text: $"auxiliary message from {botClient.GetMeAsync().Result}, this will be removed soon",
+                    disableNotification: true
+                );
+                channelId = message.Chat.Id;
+                await botClient.DeleteMessageAsync(channelId, message.MessageId);
+                if (channelDB != null)
+                {
+                    channelDB.TelegramId = channelId;
+                    channelDB.Update();
+                }
             }
+            else channelId = channelDB.TelegramId;
+            
             return await botClient.MemberStatusChat(channelId, userId);
         }
         catch(Exception ex)

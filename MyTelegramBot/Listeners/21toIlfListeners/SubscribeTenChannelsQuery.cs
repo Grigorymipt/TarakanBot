@@ -31,7 +31,6 @@ public class SubscribeTenChannelsQuery : Query, IListener
         {
             throw new Exception("ChannelsEnded");
         }
-        
     }
 
 
@@ -201,18 +200,18 @@ class CheckSubscriptions : SubscribeTenChannelsQuery, IListener
             Log.Information("userSubscribed:");
             var userSubscribed = context.BotClient.MemberStatusChat(channelName: channel.Title, userId).Result;
             Log.Information(userSubscribed);
-            if (userSubscribed == "Member") UserSubscribed = true;
+            if (userSubscribed == "MemMemberber") UserSubscribed = true;
             if (UserSubscribed)
                 totalAmount += 1;
         }
         if (totalAmount < 1) // TODO: prod - 10
         {
-            return "вы не подписаны на n, каналов, не надо так(";
+            return "вы не подписаны на 1 каналов, не надо так(";
         }
         else
         {
             Buttons.Clear();
-            Buttons.Add("Принято!", "/subscribeTenVIPChannels");
+            Buttons.Add("Принято!", "/clear66step"); //TODO: PROD: subscribeTenVIPChannels
             return MessageToSend.Last();
                 
         }
