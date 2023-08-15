@@ -97,10 +97,9 @@ public class Database
         };
         _categoryRepository.CreateDocument(category);   
     }
-    public static async Task<Category> GetCategory(object identifier)
+    public static async Task<Category> GetCategory(string Title)
     {
-        var collectionId = identifier.ToString();
-        var category = await _categoryRepository.GetDocumentAsync(collectionId);
+        var category = await _categoryRepository.GetDocumentAsync(Title);
         if (category == null) return null;
         return category;
     }

@@ -5,8 +5,8 @@ namespace MongoDatabase.ModelTG;
 
 public abstract class Document
 {
-    public Guid Id { get; set; } // not to use
-    public long TelegramId { get; set; } = 0;
+    public Guid Id { get; set; } 
+    public long TelegramId { get; set; }
     public readonly string Name;
     public DateTime dateTime;
 
@@ -41,12 +41,12 @@ public class User : Document
     public override void Update()
     {
         UserRepository userRepository = new UserRepository();
-        User oldDocument = userRepository.GetDocument(this.TelegramId);
+        User oldDocument = userRepository.GetDocument(this.Id);
         userRepository.UpdateDocument(oldDocument, this);
     }
 
 }
-public abstract class MongoDocument{}
+
 public class Channel : Document
 {
     public Channel() : base("Channel"){}
@@ -60,7 +60,7 @@ public class Channel : Document
     public override void Update()
     {
         ChannelRepository channelRepository = new ChannelRepository();
-        Channel oldDocument = channelRepository.GetDocument(this.TelegramId);
+        Channel oldDocument = channelRepository.GetDocument(this.Id);
         channelRepository.UpdateDocument(oldDocument, this);
     }
 }
@@ -74,7 +74,7 @@ public class Category : Document
     public override void Update()
     {
         CategoryRepository categoryRepository = new CategoryRepository();
-        Category oldDocument = categoryRepository.GetDocument(this.TelegramId);
+        Category oldDocument = categoryRepository.GetDocument(this.Id);
         categoryRepository.UpdateDocument(oldDocument, this);
     }
 

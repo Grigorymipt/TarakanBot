@@ -1,6 +1,6 @@
 using MongoDB.Driver;
 using MongoDatabase.ModelTG;
-
+using Amazon.Runtime.Internal.Transform;
 
 namespace MongoDatabase;
 
@@ -50,7 +50,8 @@ public abstract class DocumentRepository<T> : Repository
         DeleteDocument(oldDocument);
         CreateDocument(newDocument);
     }
-    public abstract Document GetDocument(long Id);
+    public abstract Document GetDocument(Guid Id);
+    public  abstract Document GetDocument(long Id);
     public abstract Document GetDocument(string UserName);
     public abstract Task<T> GetDocumentAsync(long Id);
     public abstract Task<T> GetDocumentAsync(string UserName);

@@ -95,7 +95,16 @@ public abstract class Listener
     public virtual async Task Handler(Context context, CancellationToken cancellationToken)
     {
         var buttons = new Dictionary<string, string>(){};
-        string response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
+        var taskRun = Task.Run(() => Run(context, cancellationToken, out buttons));
+        string response;
+        try
+        {
+            response = taskRun.Result;
+        }
+        catch
+        {
+            throw taskRun.Exception;
+        }
         Int64 chatId = ChatId(context);
         
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();

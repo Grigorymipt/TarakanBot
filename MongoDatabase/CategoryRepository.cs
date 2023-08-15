@@ -21,14 +21,14 @@ public class CategoryRepository : DocumentRepository<Category>
         var filter = Builders<Category>.Filter.Eq(u => u.TelegramId, Id);
         return collection.Find(filter).FirstOrDefault();
     }
-    public override async Task<Category> GetDocumentAsync(long Id)
-    { 
-        return await Task<Category>.Run(() => GetDocument(Id));
-    }
-    public Category GetDocument(Guid Id)
+    public override Category GetDocument(Guid Id)
     {
         var filter = Builders<Category>.Filter.Eq(u => u.Id, Id);
         return collection.Find(filter).FirstOrDefault();
+    }
+    public override async Task<Category> GetDocumentAsync(long Id)
+    { 
+        return await Task<Category>.Run(() => GetDocument(Id));
     }
     public async Task<Category> GetDocumentAsync(Guid Id)
     { 
