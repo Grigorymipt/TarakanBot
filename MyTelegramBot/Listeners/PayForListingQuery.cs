@@ -159,6 +159,7 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
         }
 
         long chatId = Database.GetChannel(user.Channels.FirstOrDefault()).TelegramId;
+        if(chatId == null) throw new NullReferenceException("something wrong with DB");
         var messageParams = SplitReverse(messageLink, '/', 1);
         Log.Information("Bot start forwarding creative");
         try
@@ -172,7 +173,7 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
         }
         catch(Exception ex)
         {
-            Log.Information(ex.ToString());
+            Log.Error(ex.ToString());
         }
         
         buttons = new Dictionary<string, string>()

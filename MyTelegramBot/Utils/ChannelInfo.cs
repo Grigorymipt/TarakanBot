@@ -145,7 +145,7 @@ public static class ChannelInfo
 
     private static async Task<bool> IsAdmin(this ITelegramBotClient botClient, long channelId, long userId)
     {
-        if (await MemberStatusChat(botClient, channelId, userId) == "Admin") return true;
+        if (await MemberStatusChat(botClient, channelId, userId) == "Administrator") return true;
         return false;
     }
     public static async Task<bool> IsAdmin(this ITelegramBotClient botClient, string channelName, long userId)
@@ -163,8 +163,8 @@ public static class ChannelInfo
         {
             channelDB.TelegramId = channelId;
         } 
-        
-        if (await MemberStatusChat(botClient, channelId, userId) == "Admin") return true;
+        var status = await MemberStatusChat(botClient, channelId, userId);
+        if (status == "Administrator" || status == "Creator") return true;
         return false;
     }
 

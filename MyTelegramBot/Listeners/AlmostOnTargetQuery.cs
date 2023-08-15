@@ -1,5 +1,6 @@
 using MongoDatabase.ModelTG;
 using MyTelegramBot.Types;
+using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 using TL.Methods;
@@ -27,7 +28,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
         // Console.WriteLine(context.Update.Message.From.Id);
         
         Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "repost.jpg", cancellationToken);
-       
+
         var user = Database.GetUser(context.Update.Message.From.Id);
         // Console.WriteLine(context.Update.Message.Text);
         string newChannel = context.Update.Message.Text;
@@ -74,6 +75,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
                 Buttons.Add("Попробовать еще раз", "/saveCategory");
                 return "Такого канала не существует";
             }
+            Log.Error(ex.ToString());
         }
         newUser.LastMessage = null;
         newUser.Update();
