@@ -44,7 +44,7 @@ public class ChannelRepository : DocumentRepository<Channel>
 
     public async Task<List<Channel>> GetOldestDocuments(long Owner, int count = 20)
     {
-        var filter = Builders<Channel>.Filter.Eq(u => u.Owner, Owner);
+        var filter = Builders<Channel>.Filter.Ne(u => u.Owner, Owner);
         var builder = Builders<Channel>.Sort;
         var sort = builder.Ascending(f => f.dateTime);
         var documentList = await collection.Find(filter).Sort(sort).ToListAsync();
