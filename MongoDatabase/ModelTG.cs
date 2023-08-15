@@ -33,8 +33,8 @@ public class User : Document
 
     public string? LastMessage { get; set; }
     public List<long> Categories { get; set; } = new();
-    public List<Channel>? Subscribes { get; set; } 
-    public List<Channel>? SubscribesVip { get; set; } 
+    public List<Channel>? Subscribes { get; set; } = new(); 
+    public List<Channel>? SubscribesVip { get; set; } = new();
     public int Attempts { get; set; } = 0;
     public string CurrentPaymentId { get; set; } = "";
 
