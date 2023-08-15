@@ -1,15 +1,19 @@
 using System.Text;
 using Serilog;
+using Telegram.Bot;
+using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.InlineQueryResults;
 using TL;
 using TL.Methods;
 
 namespace MyTelegramBot.Types;
 
+[Obsolete]
 public static class ChannelInfo
 {
-    public static void AddChannelToList(){}
+    // ITelegramBotClient botClient = Login();
     private static string Config(string what)
         {
             switch (what)
@@ -26,12 +30,13 @@ public static class ChannelInfo
                 default: return null;
             }
         }
-    public static async Task Login()
+    public static async Task Login(ITelegramBotClient botClient)
     {
         using var client = new WTelegram.Client(Config);
         await client.LoginUserIfNeeded();
+        botClient = botClient;
     }
-    private static async Task SaveChannelRegInfo(string channelName) // TODO: FIXME dont call client before close
+    private static async Task<RegData> SaveChannelRegInfo(string channelName) // TODO: FIXME dont call client before close
     {
         using var client = new WTelegram.Client(Config);
         await client.LoginUserIfNeeded();
@@ -45,8 +50,10 @@ public static class ChannelInfo
             var channelDB = Database.GetChannel(RegData.ChannelTitle);
             if (channelDB != null)
             {
+                channelDB.TelegramId = RegData.ChannelId;
                 channelDB.AccessHash = RegData.AccessHash;
             } 
+            return RegData;
         }
         Console.WriteLine($"{channelName} not a ChaCnel");
         Log.Information($"{channelName} not a ChaCnel"); 
@@ -100,6 +107,7 @@ public static class ChannelInfo
         }
         
     }
+    [Obsolete]
     public static async Task<bool> Subscribed(string channelName, long userId)
     {
         var subscribers = await ListAllChannelUsers(channelName);
@@ -114,6 +122,7 @@ public static class ChannelInfo
             return true;
         return false;
     }
+    [Obsolete]
     public static async Task<bool> IsAdmin(string channelName, long userId)
     {
         try
@@ -132,6 +141,18 @@ public static class ChannelInfo
         {
             throw;
         }
+    }
+
+    private static async Task<bool> IsAdmin(this ITelegramBotClient botClient, long channelId, long userId)
+    {
+        if (await MemberStatusChat(botClient, channelId, userId) == "Admin") return true;
+        return false;
+    }
+    public static async Task<bool> IsAdmin(this ITelegramBotClient botClient, string channelName, long userId)
+    {
+        var channelId = SaveChannelRegInfo(channelName).Result.ChannelId; //try to get rid of using Telegram API
+        if (await MemberStatusChat(botClient, channelId, userId) == "Admin") return true;
+        return false;
     }
 
     public static async Task<bool> CheckMessageAutor(string channelName, int postId, int repostId)
@@ -165,5 +186,30 @@ public static class ChannelInfo
             }
         }
         return false;
+    }
+   
+
+    public static async Task<string> MemberStatusChat(this ITelegramBotClient botClient, string channelName, long userId)
+    {
+        var channelId = Database.GetChannel(channelName).TelegramId;
+        return await botClient.MemberStatusChat(channelId, userId);
+    }
+
+    public static async Task<string> MemberStatusChat(this ITelegramBotClient botClient, long channelId, long userId)
+    {
+        string status = "Nobody";
+        try
+        {
+            ChatMember member = await botClient.GetChatMemberAsync(channelId, userId);
+            status = member.Status.ToString();
+            Log.Information($"User: {member.User.Username} is a {status}");
+        }
+        catch(Exception ex)
+        {
+            if (ex is ApiRequestException arex)
+            Log.Error($"User: {userId} not found in {channelId}");
+            status = "Nobody";
+        }
+        return status;
     }
 }

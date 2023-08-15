@@ -152,7 +152,7 @@ public class Bot {
             secretToken: null,
             cancellationToken: cts.Token
             );
-            await ChannelInfo.Login();
+            await ChannelInfo.Login(null);
             Console.WriteLine("Webhook configured!");
         }
         Me = await _botClient.GetMeAsync();

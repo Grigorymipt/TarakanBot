@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using Microsoft.Extensions.Localization;
+using MongoDB.Bson.Serialization.Conventions;
 using MyTelegramBot.Types;
 using Serilog;
 using Telegram.Bot;
@@ -141,27 +142,49 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
                         "пройти небольшой квест. Обещаю, уже на следующем шаге я раскрою секрет как получить " +
                         "первый 1.000.000 подписчиков на свой Telegram-канал не вложив ни рубля. \n" +
                         "🧐 Кстати, что тебе нравится больше, смотреть фильмы или читать книги?",
-                        "Ты не репостнул запись, или проверка еще не прошла",
+                        "у вас более одного канала, уточните на какой канал вы хотите добавить в каталог"
         };
         
     }
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
-        if(ChannelInfo.CheckMessageAutor("TestForTestingAndTestingForTest", 5, 6).Result) 
+        buttons = new();
+        var messageLink = context.Update.CallbackQuery.Data;
+        var userId = context.Update.CallbackQuery.From.Id;
+        var user = Database.GetUser(userId);
+        if (user.Channels?.Count > 1) 
         {
-            buttons = new Dictionary<string, string>()
-            {
-                { "Смотреть фильмы", "/watchMovies" },
-                { "Читать книги", "/readBooks" }
-            };
-            Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "userhub.jpg", cancellationToken);
-            return MessageToSend[0];
+            return MessageToSend[1] + $" Канал {user.Channels.First()} будет добавлен в каталог";
         }
-        buttons = new Dictionary<string, string>();
-        buttons.Add("Повторить проверку репоста", "/whatLike");
-        return MessageToSend[1];
+
+        long chatId = Database.GetChannel(user.Channels.FirstOrDefault()).TelegramId;
+        var messageParams = SplitReverse(messageLink, '/', 1);
+        context.BotClient.ForwardMessageAsync(
+            chatId: chatId,
+            fromChatId: messageParams[0],
+            messageId: int.Parse(messageParams[1])
+        );
+        buttons = new Dictionary<string, string>()
+        {
+            { "Смотреть фильмы", "/watchMovies" },
+            { "Читать книги", "/readBooks" }
+        };
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "userhub.jpg", cancellationToken);
+        return MessageToSend[0];
+    }
+
+    // start spliting from the end of the string
+    public string[] SplitReverse(string message, char separator, int count)
+    {
+        return MakeReverseString(message).Split(separator, count);
+    }
+    private string MakeReverseString(string message)
+    {
+        if (message.Count() > 1) return message = message.Last() + MakeReverseString(message);
+        else return message;
     }
 }
+
 public class ConfirmListingPayment : PayloadReply, IListener // TODO: make abstract listener for payments
 {
     public ConfirmListingPayment(Bot bot) : base(bot)

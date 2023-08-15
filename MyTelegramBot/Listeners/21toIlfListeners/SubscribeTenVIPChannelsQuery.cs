@@ -174,8 +174,8 @@ class CheckSubscriptionsVip : SubscribeTenChannelsVipQuery, IListener
         foreach (var channel in 
             user.Subscribes ??= new List<MongoDatabase.ModelTG.Channel>())
         {
-            var userSubscribed = ChannelInfo.Subscribed(channelName: channel.Title, userId).Result;
-            if (userSubscribed) UserSubscribed = true;
+            var userSubscribed = context.BotClient.MemberStatusChat(channelName: channel.Title, userId).Result;
+            if (userSubscribed == "Member") UserSubscribed = true;
             if (UserSubscribed)
                 totalAmount += 1;
         }

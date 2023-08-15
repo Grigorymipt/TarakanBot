@@ -1,6 +1,8 @@
 using MongoDatabase.ModelTG;
 using MyTelegramBot.Types;
+using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
+using TL.Methods;
 
 namespace MyTelegramBot.Listeners;
 
@@ -39,7 +41,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
         newChannel = newChannel.Remove(0, 1);
         try
         {
-            if (ChannelInfo.IsAdmin(newChannel, context.Update.Message.From.Id).Result) 
+            if (context.BotClient.IsAdmin(newChannel, context.Update.Message.From.Id).Result) 
             {
                 if(newUser.Channels == null || newUser.Channels.Contains(newChannel) == false)
                 {

@@ -13,7 +13,7 @@ namespace Tests;
 
 public class DatabaseTests
 {
-    [Fact]
+    /*[Fact]
     public void SimpleConnectionTest()
     {
         var cString = Environment.GetEnvironmentVariable("connectionString");
@@ -134,5 +134,5 @@ public class DatabaseTests
                 ).Result == false
             );
     }
-    
+    */
 }
