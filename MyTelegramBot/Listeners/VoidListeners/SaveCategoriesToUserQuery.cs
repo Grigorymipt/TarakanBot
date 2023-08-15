@@ -16,6 +16,7 @@ public class SaveCategoriesToUserQuery : Query, IListener
 
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
+        Log.Information($"start running {this.GetType()}");
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
         Log.Information($"User: {user}");
         var category = Database.GetCategory(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText).Result;

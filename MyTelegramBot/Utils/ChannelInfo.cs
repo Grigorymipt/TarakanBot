@@ -51,7 +51,6 @@ public static class ChannelInfo
             if (channelDB != null)
             {
                 channelDB.TelegramId = RegData.ChannelId;
-                channelDB.AccessHash = RegData.AccessHash;
             } 
             return RegData;
         }
