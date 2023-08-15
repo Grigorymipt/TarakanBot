@@ -192,7 +192,7 @@ class CheckSubscriptions : SubscribeTenChannelsQuery, IListener
         }
         if (totalAmount < 1) // TODO: prod - 10
         {
-            return MessageToSend[-2];
+            return "вы не подписаны на n, каналов, не надо так(";
         }
         else
         {
