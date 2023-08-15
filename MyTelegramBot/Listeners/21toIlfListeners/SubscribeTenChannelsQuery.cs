@@ -3,7 +3,7 @@ using MyTelegramBot.Types;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 using TL;
-using Channel = TL.Channel;
+using Channel = MongoDatabase.ModelTG.Channel;
 using Message = Telegram.Bot.Types.Message;
 using User = MongoDatabase.ModelTG.User;
 using Serilog;
@@ -15,18 +15,23 @@ public class SubscribeTenChannelsQuery : Query, IListener
     protected MongoDatabase.ModelTG.Channel ChannelName(long userId)
     {
         //FIFO logics
-        var channel = Database.FindChannelToListAsync().Result.First();
+        var channel = Database.FindChannelToListAsync(userId).Result.First();
         var user = Database.GetUser(userId);
 
-        // do
-        // {
-        channel.dateTime = DateTime.Now;
-        channel.Update();
-        // } while (user.Channels?.Contains(channel.Title) == true);    
-        user.Subscribes ??= new List<MongoDatabase.ModelTG.Channel>();
-        user.Subscribes.Add(channel);
-        user.Update();
-        return channel;
+        if (user.SubscribesVip?.Contains(channel) == false) 
+        { 
+            channel.dateTime = DateTime.Now;
+            channel.Update();
+            user.Subscribes ??= new List<MongoDatabase.ModelTG.Channel>();
+            user.Subscribes.Add(channel);
+            user.Update();
+            return channel;
+        }
+        else 
+        {
+            throw new Exception("ChannelsEnded");
+        }
+        
     }
 
 
@@ -67,7 +72,16 @@ public class SubscribeTenChannelsQuery : Query, IListener
         Log.Information("run response received");
         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
-        var channeltosubs = ChannelName(context.Update.CallbackQuery.From.Id);
+        Channel channeltosubs;
+        try 
+        {
+            channeltosubs = ChannelName(context.Update.CallbackQuery.From.Id);
+        }
+        catch(Exception ex)
+        {
+            if(ex.Message == "ChannelsEnded") channeltosubs = new Channel();
+        }
+        channeltosubs = new Channel();
         response = response == MessageToSend[0] ? (channeltosubs.Title + channeltosubs.Describtion) : response;
         Log.Information("handling buttons");
  

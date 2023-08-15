@@ -42,9 +42,9 @@ public class ChannelRepository : DocumentRepository<Channel>
         return await Task<Channel>.Run(() => GetDocument(Title));
     }
 
-    public async Task<List<Channel>> GetOldestDocuments(int count = 20)
+    public async Task<List<Channel>> GetOldestDocuments(long Owner, int count = 20)
     {
-        var filter = Builders<Channel>.Filter.Empty;
+        var filter = Builders<Channel>.Filter.Eq(u => u.Owner, Owner);
         var builder = Builders<Channel>.Sort;
         var sort = builder.Ascending(f => f.dateTime);
         var documentList = await collection.Find(filter).Sort(sort).ToListAsync();
