@@ -18,7 +18,7 @@ public class CorrectTestAnswer : Query, IListener
         buttons = new Dictionary<string, string>();
         foreach (var category in categories)
         {
-            buttons.Add(category.Title, "/saveCategoryToUser " + category.TelegramId);
+            buttons.Add(category.Title, "/saveCategoryToUser " + category.Title);
         }
         buttons.Add("Продолжить", "/continueTo");
         return MessageToSend[0];
