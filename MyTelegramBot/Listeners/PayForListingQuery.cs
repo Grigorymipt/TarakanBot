@@ -148,6 +148,7 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
     }
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
+        Log.Information("start running " + this.GetType());
         buttons = new();
         var messageLink = context.Update.CallbackQuery.Data;
         var userId = context.Update.CallbackQuery.From.Id;
@@ -159,11 +160,13 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
 
         long chatId = Database.GetChannel(user.Channels.FirstOrDefault()).TelegramId;
         var messageParams = SplitReverse(messageLink, '/', 1);
+        Log.Information("Bot start forwarding creative");
         context.BotClient.ForwardMessageAsync(
             chatId: chatId,
             fromChatId: messageParams[0],
             messageId: int.Parse(messageParams[1])
-        );
+        ).Wait();
+        Log.Information("creative forwarded");
         buttons = new Dictionary<string, string>()
         {
             { "Смотреть фильмы", "/watchMovies" },
