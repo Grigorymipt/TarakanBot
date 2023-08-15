@@ -204,6 +204,7 @@ public static class ChannelInfo
 
     public static async Task<string> MemberStatusChat(this ITelegramBotClient botClient, string channelName, long userId)
     {
+        if(channelName.First() != '@') channelName = $"@{channelName}";
         // var channelId = SaveChannelRegInfo(channelName).Result.ChannelId; //try to get rid of using Telegram API
         try
         {
