@@ -69,14 +69,17 @@ public class AlmostOnTargetQuery : InlineReply, IListener
         }
         catch (Exception ex)
         {
+            Log.Error(ex.Message);
+            Buttons.Clear();
+            Buttons.Add("Попробовать еще раз", "/saveCategory");
             if (ex.Message == "Channel not Exists")
             {
-                Buttons.Clear();
-                Buttons.Add("Попробовать еще раз", "/saveCategory");
                 return "Такого канала не существует";
             }
-            Log.Error(ex.ToString());
-            Buttons.Clear();
+            else if(ex is System.AggregateException aex)
+            {
+                return "Добавьте наш бот админом с правами отправки сообщений в ваш канал, после нажмите 'Попробовать еще раз'";
+            }
             return "Unexpected Error";
         }
         newUser.LastMessage = null;
