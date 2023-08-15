@@ -53,7 +53,9 @@ public class SubscribeTenChannelsQuery : Query, IListener
             { "Подписался на 10 каналов", "/iSubscribed" }
         };
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
+        if(user == null) throw new NullReferenceException("user if null");
         user.Subscribes ??= new();
+        if(user.Subscribes == null) throw new NullReferenceException("channels not found");
         if (user.Subscribes.Count() > 5) //TODO: 20 in prod
         {
             Buttons.Clear(); //FIXME
