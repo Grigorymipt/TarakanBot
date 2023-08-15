@@ -211,7 +211,7 @@ public static class ChannelInfo
             if(channelName.First() != '@') channelName = $"@{channelName}";
             if (channelDB == null) throw new NullReferenceException("channel not found");
             long channelId;
-            if (channelDB.TelegramId == null) 
+            if (channelDB.TelegramId == null||channelDB.TelegramId == 0) 
             {
                 new CancellationTokenSource().CancelAfter(20);
                 var message = await botClient.SendTextMessageAsync(
