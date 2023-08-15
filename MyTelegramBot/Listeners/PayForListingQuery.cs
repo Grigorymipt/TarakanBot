@@ -164,7 +164,7 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
         try
         {
             context.BotClient.ForwardMessageAsync(
-                chatId: chatId,
+                chatId: '@' + chatId,
                 fromChatId: messageParams[0],
                 messageId: int.Parse(messageParams[1])
             ).Wait();
