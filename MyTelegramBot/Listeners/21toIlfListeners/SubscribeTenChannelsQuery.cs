@@ -18,18 +18,18 @@ public class SubscribeTenChannelsQuery : Query, IListener
         var channel = Database.FindChannelToListAsync(userId).Result.First();
         var user = Database.GetUser(userId);
         user.Subscribes ??= new List<MongoDatabase.ModelTG.Channel>();
-        if (user.SubscribesVip.Contains(channel) == false) 
-        { 
-            channel.dateTime = DateTime.Now;
-            channel.Update();
-            user.Subscribes.Add(channel);
-            user.Update();
-            return channel;
-        }
-        else 
-        {
-            throw new Exception("ChannelsEnded");
-        }
+        // if (user.Subscribes.Contains(channel) == false) 
+        // { 
+        channel.dateTime = DateTime.Now;
+        channel.Update();
+        user.Subscribes.Add(channel);
+        user.Update();
+        return channel;
+        // }
+        // else 
+        // {
+        //     throw new Exception("ChannelsEnded");
+        // }
     }
 
 
