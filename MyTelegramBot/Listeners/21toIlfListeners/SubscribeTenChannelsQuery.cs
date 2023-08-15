@@ -53,6 +53,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
             { "Подписался на 10 каналов", "/iSubscribed" }
         };
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
+        user.Subscribes ??= new();
         if (user.Subscribes.Count() > 5) //TODO: 20 in prod
         {
             Buttons.Clear(); //FIXME
