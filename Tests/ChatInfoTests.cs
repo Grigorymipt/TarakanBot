@@ -22,6 +22,6 @@ public class ChatInfoTests
         var userId = 710549873;
 
         TelegramBotClient botClient = new TelegramBotClient(MyTelegramBot.Config.BotToken);
-        Console.WriteLine(await ChannelInfo.MemberStatusChat(botClient, channelId, userId));
+        // Console.WriteLine(await ChannelInfo.MemberStatusChat(botClient, channelId, userId));
     }
 }

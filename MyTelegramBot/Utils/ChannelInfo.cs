@@ -150,7 +150,20 @@ public static class ChannelInfo
     }
     public static async Task<bool> IsAdmin(this ITelegramBotClient botClient, string channelName, long userId)
     {
-        var channelId = SaveChannelRegInfo(channelName).Result.ChannelId; //try to get rid of using Telegram API
+        // var channelId = SaveChannelRegInfo(channelName).Result.ChannelId; //try to get rid of using Telegram API
+        var message = await botClient.SendTextMessageAsync(
+            chatId: channelName,
+            text: $"auxiliary message from {botClient.GetMeAsync().Result}, this will be removed soon",
+            disableNotification: true
+        );
+        long channelId = message.Chat.Id;
+        await botClient.DeleteMessageAsync(channelId, message.MessageId);
+        var channelDB = Database.GetChannel(channelName);
+        if (channelDB != null)
+        {
+            channelDB.TelegramId = channelId;
+        } 
+        
         if (await MemberStatusChat(botClient, channelId, userId) == "Admin") return true;
         return false;
     }

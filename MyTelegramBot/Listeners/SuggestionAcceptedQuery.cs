@@ -27,7 +27,23 @@ public class SuggestionAcceptedQuery : Query, IListener
         {
             buttons.Add("Продолжить1", $"/whatLike {creative.Value}");
         }
-        buttons.Add("Продолжить1", "/whatLike");
         return MessageToSend[0];
+    }
+}
+
+
+
+public class ExampleQuery : Query, IListener
+{
+    Dictionary<string, string> creatives = new(); // read from file
+    public ExampleQuery(Bot bot) : base(bot)
+    {
+        Names = new[] { "/exampleQuery" };
+    }
+    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
+    {
+        buttons = new Dictionary<string, string>();
+        buttons.Add("some button", "/commandToRedirect");
+        return "some text";
     }
 }

@@ -123,10 +123,7 @@ public class Bot {
         });
         await _botClient.SetMyCommandsAsync(
             listCommands.AsEnumerable()
-            );
-        
-        //Login Telegram API account:
-        
+            );        
 
         Console.WriteLine("Starting bot...");
 
@@ -152,7 +149,7 @@ public class Bot {
             secretToken: null,
             cancellationToken: cts.Token
             );
-            await ChannelInfo.Login(null);
+            // await ChannelInfo.Login(null);
             Console.WriteLine("Webhook configured!");
         }
         Me = await _botClient.GetMeAsync();
