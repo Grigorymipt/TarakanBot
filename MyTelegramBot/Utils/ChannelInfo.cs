@@ -161,6 +161,7 @@ public static class ChannelInfo
         if (channelDB != null)
         {
             channelDB.TelegramId = channelId;
+            channelDB.Update();
         } 
         var status = await MemberStatusChat(botClient, channelId, userId);
         if (status == "Administrator" || status == "Creator") return true;
@@ -203,7 +204,20 @@ public static class ChannelInfo
 
     public static async Task<string> MemberStatusChat(this ITelegramBotClient botClient, string channelName, long userId)
     {
-        var channelId = Database.GetChannel(channelName).TelegramId;
+        // var channelId = SaveChannelRegInfo(channelName).Result.ChannelId; //try to get rid of using Telegram API
+        var message = await botClient.SendTextMessageAsync(
+            chatId: channelName,
+            text: $"auxiliary message from {botClient.GetMeAsync().Result}, this will be removed soon",
+            disableNotification: true
+        );
+        long channelId = message.Chat.Id;
+        await botClient.DeleteMessageAsync(channelId, message.MessageId);
+        var channelDB = Database.GetChannel(channelName);
+        if (channelDB != null)
+        {
+            channelDB.TelegramId = channelId;
+            channelDB.Update();
+        }
         return await botClient.MemberStatusChat(channelId, userId);
     }
 
