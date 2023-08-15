@@ -184,6 +184,7 @@ class CheckSubscriptions : SubscribeTenChannelsQuery, IListener
         foreach (var channel in 
             user.Subscribes ??= new List<MongoDatabase.ModelTG.Channel>())
         {
+            Log.Information("userSubscribed:");
             var userSubscribed = context.BotClient.MemberStatusChat(channelName: channel.Title, userId).Result;
             Log.Information(userSubscribed);
             if (userSubscribed == "Member") UserSubscribed = true;
