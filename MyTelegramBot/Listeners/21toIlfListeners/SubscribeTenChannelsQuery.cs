@@ -40,8 +40,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
             "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять каналов, предложенных выше."
             };
         Names = new[] { "/subscribeTenChannels" };
-        //Links = ...
-        
+
     }
 
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
@@ -77,9 +76,9 @@ public class SubscribeTenChannelsQuery : Query, IListener
         }
         catch(Exception ex)
         {
-            if(ex.Message == "ChannelsEnded") channeltosubs = new Channel();
+            Log.Information(ex.Message);
+            throw;
         }
-        channeltosubs = new Channel();
         response = response == MessageToSend[0] ? (channeltosubs.Title + channeltosubs.Describtion) : response;
         Log.Information("handling buttons");
  
