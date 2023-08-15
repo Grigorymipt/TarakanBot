@@ -201,7 +201,7 @@ class CheckSubscriptions : SubscribeTenChannelsQuery, IListener
             Log.Information("userSubscribed:");
             var userSubscribed = context.BotClient.MemberStatusChat(channelName: channel.Title, userId).Result;
             Log.Information(userSubscribed);
-            if (userSubscribed == "MemMemberber") UserSubscribed = true;
+            if (userSubscribed == "Member") UserSubscribed = true;
             if (UserSubscribed)
                 totalAmount += 1;
         }
