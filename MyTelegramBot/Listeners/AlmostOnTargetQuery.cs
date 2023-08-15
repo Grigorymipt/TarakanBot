@@ -42,7 +42,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
         newChannel = newChannel.Remove(0, 1);
         try
         {
-            if (context.BotClient.IsAdmin(newChannel, context.Update.Message.From.Id).Result) 
+            if (context.BotClient.IsAdmin("@" + newChannel, context.Update.Message.From.Id).Result) 
             {
                 if(newUser.Channels == null || newUser.Channels.Contains(newChannel) == false)
                 {
