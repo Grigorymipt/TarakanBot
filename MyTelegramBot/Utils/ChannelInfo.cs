@@ -205,20 +205,29 @@ public static class ChannelInfo
     public static async Task<string> MemberStatusChat(this ITelegramBotClient botClient, string channelName, long userId)
     {
         // var channelId = SaveChannelRegInfo(channelName).Result.ChannelId; //try to get rid of using Telegram API
-        var message = await botClient.SendTextMessageAsync(
-            chatId: channelName,
-            text: $"auxiliary message from {botClient.GetMeAsync().Result}, this will be removed soon",
-            disableNotification: true
-        );
-        long channelId = message.Chat.Id;
-        await botClient.DeleteMessageAsync(channelId, message.MessageId);
-        var channelDB = Database.GetChannel(channelName);
-        if (channelDB != null)
+        try
         {
-            channelDB.TelegramId = channelId;
-            channelDB.Update();
+            new CancellationTokenSource().CancelAfter(20);
+            var message = await botClient.SendTextMessageAsync(
+                chatId: channelName,
+                text: $"auxiliary message from {botClient.GetMeAsync().Result}, this will be removed soon",
+                disableNotification: true
+            );
+            long channelId = message.Chat.Id;
+            await botClient.DeleteMessageAsync(channelId, message.MessageId);
+            var channelDB = Database.GetChannel(channelName);
+            if (channelDB != null)
+            {
+                channelDB.TelegramId = channelId;
+                channelDB.Update();
+            }
+            return await botClient.MemberStatusChat(channelId, userId);
         }
-        return await botClient.MemberStatusChat(channelId, userId);
+        catch(Exception ex)
+        {
+            Log.Error(ex.Message);
+            return "Nobody";
+        }
     }
 
     public static async Task<string> MemberStatusChat(this ITelegramBotClient botClient, long channelId, long userId)
