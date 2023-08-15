@@ -204,11 +204,11 @@ public static class ChannelInfo
 
     public static async Task<string> MemberStatusChat(this ITelegramBotClient botClient, string channelName, long userId)
     {
-        if(channelName.First() != '@') channelName = $"@{channelName}";
         // var channelId = SaveChannelRegInfo(channelName).Result.ChannelId; //try to get rid of using Telegram API
         try
         {
             var channelDB = Database.GetChannel(channelName);
+            if(channelName.First() != '@') channelName = $"@{channelName}";
             if (channelDB == null) throw new NullReferenceException("channel not found");
             long channelId;
             if (channelDB.TelegramId == null) 
@@ -228,7 +228,7 @@ public static class ChannelInfo
                 }
             }
             else channelId = channelDB.TelegramId;
-            
+
             return await botClient.MemberStatusChat(channelId, userId);
         }
         catch(Exception ex)
