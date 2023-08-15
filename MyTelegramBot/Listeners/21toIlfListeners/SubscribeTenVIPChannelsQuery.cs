@@ -184,14 +184,13 @@ class CheckSubscriptionsVip : SubscribeTenChannelsVipQuery, IListener
         }
         if (totalAmount < 1) // TODO: prod - 10
         {
-            return MessageToSend[2];
+            return  "вы не подписаны на n Vip каналов, не надо так(";
         }
         else
         {
             Buttons.Clear();
             Buttons.Add("Принято!", "/clear66step");
             return MessageToSend.Last();
-                
         }
     }
     // public override async Task Handler(Context context, Dictionary<string, string> buttonsList, CancellationToken cancellationToken)
