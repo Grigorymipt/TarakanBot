@@ -17,12 +17,13 @@ public class SubscribeTenChannelsQuery : Query, IListener
         //FIFO logics
         var channel = Database.FindChannelToListAsync().Result.First();
         var user = Database.GetUser(userId);
-        do
-        {
-            channel.dateTime = DateTime.Now;
-            channel.Update();
-        } while (user.Channels?.Contains(channel.Title) == true);    
-        user.Subscribes??=new List<MongoDatabase.ModelTG.Channel>();
+
+        // do
+        // {
+        channel.dateTime = DateTime.Now;
+        channel.Update();
+        // } while (user.Channels?.Contains(channel.Title) == true);    
+        user.Subscribes ??= new List<MongoDatabase.ModelTG.Channel>();
         user.Subscribes.Add(channel);
         user.Update();
         return channel;
