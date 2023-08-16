@@ -10,8 +10,7 @@ public class AlmostOnTarget2Query : InlineQuery, IListener
     public AlmostOnTarget2Query(Bot bot) : base(bot)
     {
         Names = new[] { "/clear66step" };
-        MessageToSend = new[] {"🤙 Отлично! 🎯 Мы уже у цели! Отправь мне Username канала, который будем продвигать, в " +
-                        "таком виде: @channel💡 Канал обязательно должен быть открытым."};
+        MessageToSend = new[] { "" };
         MessageLabel = "GetAddressInline2";
     }
 }
@@ -34,9 +33,7 @@ public class CheckChannelExistence : InlineReply, IListener
         string MessageToSend;
         if (ChannelExists(context, cancellationToken))
         {
-            MessageToSend = "🎯 Канал успешно добавлен! 🚨 ВАЖНО 🚨 Если удалить бота @ТАКОГО из администраторов, то" +
-                            " ваш канал выпадет из выдачи и вы перестанете получать подписчиков. 🤫 С годовой " +
-                            "VIP-подпиской можно добавить сразу 2 канала.";
+            MessageToSend = Globals.responses.GetValueOrDefault("AddedSuccessfully");
             Buttons.Clear();
             Buttons.Add("🤠 Продолжить бесплатно", "/continueFree");
             Buttons.Add("🏆 Подробнее о статусе VIP", "/moreAboutVIP");
