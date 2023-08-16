@@ -128,6 +128,7 @@ public class Database
 
     public static void CreateChannel(Channel channel)
     {
+        if(channel.TelegramId == 0) ChannelInfo.LoginChat(channel.Title);
         _channelRepository.CreateDocument(channel);
     }
     public static void CreateChannel(string Title)
@@ -137,7 +138,7 @@ public class Database
             TelegramId = new long(),
             Title = Title
         };
-        _channelRepository.CreateDocument(channel);
+        CreateChannel(channel);
     }
     
     public static Channel GetChannel(Message message)

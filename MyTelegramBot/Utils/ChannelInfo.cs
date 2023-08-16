@@ -13,6 +13,7 @@ namespace MyTelegramBot.Types;
 [Obsolete]
 public static class ChannelInfo
 {
+    readonly static TelegramBotClient _botClient = new TelegramBotClient(MyTelegramBot.Config.BotToken);
     // ITelegramBotClient botClient = Login();
     private static string Config(string what)
         {
@@ -151,24 +152,30 @@ public static class ChannelInfo
     public static async Task<bool> IsAdmin(this ITelegramBotClient botClient, string channelName, long userId)
     {
         // var channelId = SaveChannelRegInfo(channelName).Result.ChannelId; //try to get rid of using Telegram API
-        var message = await botClient.SendTextMessageAsync(
-            chatId: channelName,
-            text: $"auxiliary message from {botClient.GetMeAsync().Result}, this will be removed soon",
-            disableNotification: true
-        );
-        long channelId = message.Chat.Id;
-        await botClient.DeleteMessageAsync(channelId, message.MessageId);
-        var channelDB = Database.GetChannel(channelName);
-        if (channelDB != null)
-        {
-            channelDB.TelegramId = channelId;
-            channelDB.Update();
-        } 
+        var channelId = await LoginChat(channelName);
         var status = await MemberStatusChat(botClient, channelId, userId);
         if (status == "Administrator" || status == "Creator") return true;
         return false;
     }
 
+    public static async Task<long> LoginChat(string channelName)
+    {
+        var message = await _botClient.SendTextMessageAsync(
+            chatId: channelName,
+            text: $"auxiliary message from {_botClient.GetMeAsync().Result}, this will be removed soon",
+            disableNotification: true
+        );
+        long channelId = message.Chat.Id;
+        await _botClient.DeleteMessageAsync(channelId, message.MessageId);
+        var channelDB = Database.GetChannel(channelName);
+        if (channelDB != null)
+        {
+            channelDB.TelegramId = channelId;
+            channelDB.Update();
+        }
+        return channelId;
+    }
+    
     public static async Task<bool> CheckMessageAutor(string channelName, int postId, int repostId)
     {        
         var RegData = await GetChannels(channelName);
@@ -201,7 +208,6 @@ public static class ChannelInfo
         }
         return false;
     }
-   
 
     public static async Task<string> MemberStatusChat(this ITelegramBotClient botClient, string channelName, long userId)
     {
