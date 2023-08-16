@@ -161,17 +161,16 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
         }
 
         long chatId = Database.GetChannel(user.Channels.FirstOrDefault()).TelegramId;
-        if(chatId == null) throw new NullReferenceException("something wrong with DB");
+        if(chatId == 0) throw new NullReferenceException("something wrong with DB");
         var messageParams = SplitReverse(messageLink, '/', 2);
-        Log.Information(messageParams.ToString());
         Log.Information("Bot start forwarding creative");
         try
         {
-            Log.Information("Forward " + chatId + " " + messageParams[0].Replace("https://t.me/","@") + " " + messageParams[1]);
+            Log.Information("Forward " + chatId + " " + messageParams[1].Replace("https://t.me/","@") + " " + messageParams[0]);
             context.BotClient.ForwardMessageAsync(
                 chatId: chatId,
-                fromChatId: messageParams[0].Replace("https://t.me/","@"),
-                messageId: int.Parse(messageParams[1])
+                fromChatId: messageParams[1].Replace("https://t.me/","@"),
+                messageId: int.Parse(messageParams[0])
             ).Wait();
             Log.Information("creative forwarded");
         }
