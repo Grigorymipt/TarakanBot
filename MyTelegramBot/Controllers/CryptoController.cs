@@ -18,22 +18,23 @@ namespace WebHookReceiver.Controllers;
 [Route("[controller]")]
 public class GetWalletController : ControllerBase
 {
-    private readonly ILogger<GetUpdatesController> _logger;
-    public GetWalletController(ILogger<GetUpdatesController> logger) => _logger = logger;
+    private readonly ILogger<GetWalletController> _logger;
+    public GetWalletController(ILogger<GetWalletController> logger) => _logger = logger;
 
     [HttpPost]
     public async Task<IActionResult> Post(
-        [FromBody] CreateOrder.ResponseCreate responseCreate,
+        [FromBody] CreateOrder.ResponseWebHook responseWebHook,
         [FromServices] Bot bot,
         CancellationToken cancellationToken)
     {
         Task.Run(() =>
         {
-            try { bot.SuccessPayment(responseCreate, cancellationToken); }
+            try { bot.SuccessPayment(responseWebHook, cancellationToken); }
             catch (Exception ex)
             {
                 var ErrorMessage = bot.HandleErrorAsync(botClient: default, exception: ex, cancellationToken: cancellationToken).Result;
                 _logger.Log(LogLevel.Error, 1312, ErrorMessage);
+                throw ex;
             }
         });
         return Ok();

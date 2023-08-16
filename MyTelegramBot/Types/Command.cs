@@ -6,7 +6,8 @@ using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
 using MyTelegramBot.Utils;
 using Telegram.Bot.Types.ReplyMarkups;
-
+using Serilog;
+    
 
 namespace MyTelegramBot.Types ;
 /// <summary>

@@ -3,9 +3,10 @@ using MyTelegramBot.Types;
 using Telegram.Bot;
 using Telegram.Bot.Types.ReplyMarkups;
 using TL;
-using Channel = TL.Channel;
+using Channel = MongoDatabase.ModelTG.Channel;
 using Message = Telegram.Bot.Types.Message;
 using User = MongoDatabase.ModelTG.User;
+using Serilog;
 
 namespace MyTelegramBot.Listeners;
 
@@ -14,17 +15,21 @@ public class SubscribeTenChannelsQuery : Query, IListener
     protected MongoDatabase.ModelTG.Channel ChannelName(long userId)
     {
         //FIFO logics
-        var channel = Database.FindChannelToListAsync().Result.First();
+        var channel = Database.FindChannelToListAsync(userId).Result.First();
         var user = Database.GetUser(userId);
-        do
-        {
-            channel.dateTime = DateTime.Now;
-            channel.Update();
-        } while (user.Channels?.Contains(channel.Title) == true);    
-        user.Subscribes??=new List<MongoDatabase.ModelTG.Channel>();
+        user.Subscribes ??= new List<MongoDatabase.ModelTG.Channel>();
+        // if (user.Subscribes.Contains(channel) == false) 
+        // { 
+        channel.dateTime = DateTime.Now;
+        channel.Update();
         user.Subscribes.Add(channel);
         user.Update();
         return channel;
+        // }
+        // else 
+        // {
+        //     throw new Exception("ChannelsEnded");
+        // }
     }
 
 
@@ -35,8 +40,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
             "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять каналов, предложенных выше."
             };
         Names = new[] { "/subscribeTenChannels" };
-        //Links = ...
-        
+
     }
 
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
@@ -49,7 +53,10 @@ public class SubscribeTenChannelsQuery : Query, IListener
             { "Подписался на 10 каналов", "/iSubscribed" }
         };
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        if (user.Subscribes?.Count > 5) //TODO: 20 in prod
+        if(user == null) throw new NullReferenceException("user if null");
+        user.Subscribes ??= new();
+        if(user.Subscribes == null) throw new NullReferenceException("channels not found");
+        if (user.Subscribes.Count() > 5) //TODO: 20 in prod
         {
             Buttons.Clear(); //FIXME
             return MessageToSend[1];   
@@ -61,11 +68,23 @@ public class SubscribeTenChannelsQuery : Query, IListener
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
         var buttons = new Dictionary<string, string>(){};
-        string response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
+        string response = Run(context, cancellationToken, out buttons);
+        Log.Information("run response received");
         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
-        var channeltosubs = ChannelName(context.Update.CallbackQuery.From.Id);
-        response = response == MessageToSend[0] ? (channeltosubs.Title + channeltosubs.Describtion) : response; 
+        Channel channeltosubs;
+        try 
+        {
+            channeltosubs = ChannelName(context.Update.CallbackQuery.From.Id);
+        }
+        catch(Exception ex)
+        {
+            Log.Information(ex.Message);
+            throw;
+        }
+        response = response == MessageToSend[0] ? (channeltosubs.Title + channeltosubs.Describtion) : response;
+        Log.Information("handling buttons");
+ 
         foreach (var category in buttons)
         {
             InlineKeyboardButton reply;
@@ -92,7 +111,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
             IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
             categoryList.Add(inlineKeyboardButton);
         }
-
+        Log.Information("start sending");
         IEnumerable<IEnumerable<InlineKeyboardButton>> enumerableList1 = categoryList;
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(enumerableList1);
 
@@ -179,19 +198,21 @@ class CheckSubscriptions : SubscribeTenChannelsQuery, IListener
         foreach (var channel in 
             user.Subscribes ??= new List<MongoDatabase.ModelTG.Channel>())
         {
-            var userSubscribed = ChannelInfo.Subscribed(channelName: channel.Title, userId).Result;
-            if (userSubscribed) UserSubscribed = true;
+            Log.Information("userSubscribed:");
+            var userSubscribed = context.BotClient.MemberStatusChat(channelName: channel.Title, userId).Result;
+            Log.Information(userSubscribed);
+            if (userSubscribed == "Member") UserSubscribed = true;
             if (UserSubscribed)
                 totalAmount += 1;
         }
         if (totalAmount < 1) // TODO: prod - 10
         {
-            return MessageToSend[-2];
+            return "вы не подписаны на 1 каналов, не надо так(";
         }
         else
         {
             Buttons.Clear();
-            Buttons.Add("Принято!", "/subscribeTenVIPChannels");
+            Buttons.Add("Принято!", "/clear66step"); //TODO: PROD: subscribeTenVIPChannels
             return MessageToSend.Last();
                 
         }

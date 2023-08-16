@@ -6,6 +6,7 @@ using System.IO;
 using System.Reflection;
 using System;
 using MongoDatabase.ModelTG;
+using Serilog;
 
 namespace MongoDatabase;
 public class CollectionRepository : Repository
@@ -33,6 +34,7 @@ public class CollectionRepository : Repository
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                Log.Error(e.ToString());
                 CreateCollection(necessaryCollection);
             }
         }
@@ -42,6 +44,7 @@ public class CollectionRepository : Repository
     {
         client.GetDatabase(databaseName).CreateCollection(collectionName);
         Console.WriteLine($"Collection{collectionName} successfully created!");
+        Log.Information($"Collection{collectionName} successfully created!");
     }
     
     public IMongoCollection<T> GetCollection<T>(string collectionName)

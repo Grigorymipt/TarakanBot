@@ -27,18 +27,13 @@ public class MoreAboutVIP : Query, IListener
     }
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "cat.jpg", cancellationToken);
         buttons = new Dictionary<string, string>()
         {
             {"Приобрести VIP 🏆 позже", "/buyVIPLater"},
             {"Приобрести статус VIP 🏆", "/buyVIPNow"}
         };
         return MessageToSend[0];
-    }
-
-    protected override string Run(Context context, CancellationToken cancellationToken)
-    {
-        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "cat.jpg", cancellationToken);
-        return base.Run(context, cancellationToken);
     }
 }
 
@@ -53,7 +48,7 @@ public class BuyVIPLater : Query, IListener
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
         //TODO: mb some logic to remind every N days/weeks?
-        return base.Run(context, cancellationToken);
+        return MessageToSend[0];
     }
 }
 

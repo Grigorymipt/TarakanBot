@@ -18,9 +18,17 @@ public class UserRepository : DocumentRepository<User>
         collection.InsertOne(document);
     }
 
+    
     public override User GetDocument(long Id)
     {
         var filter = Builders<User>.Filter.Eq(u => u.TelegramId, Id);
+        var user = new User();
+        user = collection.Find(filter).FirstOrDefault();
+        return user;
+    }
+    public override User GetDocument(Guid Id)
+    {
+        var filter = Builders<User>.Filter.Eq(u => u.Id, Id);
         var user = new User();
         user = collection.Find(filter).FirstOrDefault();
         return user;
@@ -44,4 +52,9 @@ public class UserRepository : DocumentRepository<User>
         var children = collection.FindAsync(filter).Result.ToListAsync().Result.Where(c => c.dateTime > dateTime).ToList();
         return children;
     } 
+    public User GetDocumentByTrn(string TrnId)
+    {
+        var filter = Builders<User>.Filter.Eq(u => u.CurrentPaymentId, TrnId);
+        return collection.Find(filter).FirstOrDefault();
+    }
 }

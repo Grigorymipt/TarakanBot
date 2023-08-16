@@ -2,7 +2,6 @@ using static Crypto.CreateOrder;
 using System.Net.Http.Json;
 using Serilog;
 using System.Text.Json;
-
 namespace Crypto;
 
 public static class CreateOrder
@@ -35,20 +34,21 @@ public static class CreateOrder
     //"client_ref=4E89", "ORD-5023-4E89",
     //1800, 0, Key API
 
-    public static async Task PostAsync(
+    public static async Task<string> PostAsync(
         string currencyCode,
         string amount,
         string description,
-        string? returnUrl,
-        string? failReturnUrl,
-        string? customData,
-        string externalId,
+ 	string externalId,
         int timeoutSeconds,
         int customerTelegramUserId,
-        string? WpayStoreApiKey,
+        string? returnUrl = null,
+        string? failReturnUrl = null,
+        string? customData = null,
+        string? WpayStoreApiKey = null,
         CancellationToken cancellationToken = default(CancellationToken)
         )
     {
+        Log.Information("Start PostAsync");
         JsonApplication jsonApplication = new JsonApplication()
         {
             amount = new Amount()
@@ -64,36 +64,38 @@ public static class CreateOrder
             timeoutSeconds = timeoutSeconds,
             customerTelegramUserId = customerTelegramUserId,
         };
-
-        // creating JsonContent
+        
+        // Log.Information("creating JsonContent");
         JsonContent content = JsonContent.Create(jsonApplication);
-
-        using var request = new HttpRequestMessage(HttpMethod.Post, "https://pay.wallet.tg/wpay/store-api/v1/order");
+        Log.Information("init request");
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://pay.wallet.tg/wpay/store-api/v1/order");
+        
+        // Log.Information("filling request");
         request.Content = content;
-
+        Log.Information("adding headers");
+        new CancellationTokenSource().CancelAfter(30000);
         request.Headers.Add("Wpay-Store-Api-Key", WpayStoreApiKey);
-        request.Headers.Add("Content-Type", "application/json");
-        request.Headers.Add("Accept", "application/json");
-
+        Log.Information("Sending payment link request via wallet api");
         using (HttpResponseMessage responseMessage = await httpClient.SendAsync(request))
         {
+            Log.Information("Response received");
             try
             {
-                var ex = responseMessage.EnsureSuccessStatusCode();
-                // TODO: Grisha adds db save eventId to user
-                Log.Information("");
+                responseMessage.EnsureSuccessStatusCode();
+                Log.Information("smth");
+                var jsonResponse = await responseMessage.Content.ReadAsStringAsync();
+
+                ResponseCreate? responseCreate =
+                    JsonSerializer.Deserialize<ResponseCreate>(jsonResponse);
+                return responseCreate.data.payLink;
             }
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
+                throw;
             }
-
-
-            var jsonResponse = await responseMessage.Content.ReadAsStringAsync();
-            ResponseCreate? responseCreate =
-                JsonSerializer.Deserialize<ResponseCreate>(jsonResponse);
+            return "";
         }
-
     }
     //ResponseCreate for CreateOrder
     public class Data
@@ -143,5 +145,4 @@ public static class CreateOrder
         public string type { get; set; }
         public Payload payload { get; set; }
     }
-
 }

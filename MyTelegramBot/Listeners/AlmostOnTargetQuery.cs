@@ -1,6 +1,9 @@
 using MongoDatabase.ModelTG;
 using MyTelegramBot.Types;
+using Serilog;
+using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
+using TL.Methods;
 
 namespace MyTelegramBot.Listeners;
 
@@ -25,7 +28,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
         // Console.WriteLine(context.Update.Message.From.Id);
         
         Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "repost.jpg", cancellationToken);
-       
+
         var user = Database.GetUser(context.Update.Message.From.Id);
         // Console.WriteLine(context.Update.Message.Text);
         string newChannel = context.Update.Message.Text;
@@ -39,7 +42,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
         newChannel = newChannel.Remove(0, 1);
         try
         {
-            if (ChannelInfo.IsAdmin(newChannel, context.Update.Message.From.Id).Result) 
+            if (context.BotClient.IsAdmin("@" + newChannel, context.Update.Message.From.Id).Result) 
             {
                 if(newUser.Channels == null || newUser.Channels.Contains(newChannel) == false)
                 {
@@ -47,7 +50,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
                     newUser.Channels.Add(newChannel); // FIXME: very strange behavior
                     Channel channel = new Channel()
                     {
-                        PersonID = user.TelegramId,
+                        Owner = user.TelegramId,
                         Title = newChannel,
                     };
                     Database.CreateChannel(channel);
@@ -66,12 +69,19 @@ public class AlmostOnTargetQuery : InlineReply, IListener
         }
         catch (Exception ex)
         {
+            Log.Error(ex.Message);
+            Buttons.Clear();
+            Buttons.Add("Попробовать еще раз", "/saveCategory");
             if (ex.Message == "Channel not Exists")
             {
-                Buttons.Clear();
-                Buttons.Add("Попробовать еще раз", "/saveCategory");
                 return "Такого канала не существует";
             }
+            else if(ex is System.AggregateException aex)
+            {
+                return "Добавьте наш бот админом с правами отправки сообщений в ваш канал, после нажмите 'Попробовать еще раз'";
+            }
+            return "Unexpected Error";
+            throw;
         }
         newUser.LastMessage = null;
         newUser.Update();

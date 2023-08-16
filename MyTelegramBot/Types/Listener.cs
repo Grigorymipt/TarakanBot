@@ -89,10 +89,13 @@ public abstract class Listener
     public abstract Task<bool> Validate(Context context, CancellationToken cancellationToken);
     /// <summary>Handles the <c>Update</c> if it is successfully validated.</summary>
     
+    public virtual async Task Handler(string chantId, TelegramBotClient botClient, CancellationToken cancellationToken)
+    {
+    }
     public virtual async Task Handler(Context context, CancellationToken cancellationToken)
     {
         var buttons = new Dictionary<string, string>(){};
-        string response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
+        var response = Run(context, cancellationToken, out buttons);
         Int64 chatId = ChatId(context);
         
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
@@ -129,8 +132,7 @@ public abstract class Listener
     /// <summary>Processes a command synchronously.</summary>
     /// <returns>Command result string.</returns>
     protected virtual string Run(Context context, CancellationToken cancellationToken) {
-        var buttons = new Dictionary<string, string>();
-        return Run(context, cancellationToken, out buttons);
+        return MessageToSend[0];
     }
     protected virtual string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons) {
         buttons = new Dictionary<string, string>();

@@ -29,6 +29,7 @@ public class GetUpdatesController : ControllerBase
             _ => "not recognized"
         };
         Console.WriteLine($"TelegramAPIWebhookReceived: {text}");
+        Log.Information($"TelegramAPIWebhookReceived: {text}");
         _logger.Log(LogLevel.Information, eventId: new EventId(), message: update.Type.ToString());
         // Task.Run(() => {
         try 

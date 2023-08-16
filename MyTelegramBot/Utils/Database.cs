@@ -2,6 +2,7 @@ using MongoDatabase;
 using MongoDatabase.ModelTG;
 using MyTelegramBot.Convertors;
 using MyTelegramBot.Utils;
+using Serilog;
 using Telegram.Bot.Types;
 using User = MongoDatabase.ModelTG.User;
 namespace MyTelegramBot.Types;
@@ -30,6 +31,7 @@ public class Database
         if (parent != null)
         {
             Console.WriteLine(parent.UserName);
+            Log.Information(parent.UserName);
             string parentUserName = parent.UserName;
             user.RefId = parentUserName;
             if (parent.Children == null) 
@@ -47,6 +49,11 @@ public class Database
 
     public static User GetUser(long Id) { return _userRepository.GetDocument(Id);}
     public static User GetUser(string username){ return _userRepository.GetDocument(username);
+    }
+    public static User GetUserByTrnId(string Id)
+    {
+        var user = _userRepository.GetDocumentByTrn(Id);
+        return user;
     }
     public static User UpdateUser(Message message)
     {
@@ -90,10 +97,15 @@ public class Database
         };
         _categoryRepository.CreateDocument(category);   
     }
-    public static async Task<Category> GetCategory(object identifier)
+    public static async Task<Category> GetCategory(string Title)
     {
-        var collectionId = identifier.ToString();
-        var category = await _categoryRepository.GetDocumentAsync(collectionId);
+        var category = await _categoryRepository.GetDocumentAsync(Title);
+        if (category == null) return null;
+        return category;
+    }
+    public static async Task<Category> GetCategory(long telegramId)
+    {
+        var category = await _categoryRepository.GetDocumentAsync(telegramId);
         if (category == null) return null;
         return category;
     }
@@ -114,8 +126,9 @@ public class Database
         return await _categoryRepository.GetAllDocumentsAsync();
     }
 
-    public static void CreateChannel(Channel channel)
+    public static async void CreateChannel(Channel channel)
     {
+        if(channel.TelegramId == 0) channel.TelegramId = await ChannelInfo.LoginChat("@" + channel.Title);
         _channelRepository.CreateDocument(channel);
     }
     public static void CreateChannel(string Title)
@@ -125,7 +138,7 @@ public class Database
             TelegramId = new long(),
             Title = Title
         };
-        _channelRepository.CreateDocument(channel);
+        CreateChannel(channel);
     }
     
     public static Channel GetChannel(Message message)
@@ -145,9 +158,9 @@ public class Database
         return channel;
     }
 
-    public static async Task<List<Channel>> FindChannelToListAsync()
+    public static async Task<List<Channel>> FindChannelToListAsync(long user)
     {   
-        List<Channel> channels = await _channelRepository.GetOldestDocuments(20);
+        List<Channel> channels = await _channelRepository.GetOldestDocuments(user, 20);
         return channels;
     }
 

@@ -5,8 +5,8 @@ namespace MongoDatabase.ModelTG;
 
 public abstract class Document
 {
-    public Guid Id { get; set; } // not to use
-    public long TelegramId { get; set; } = 0;
+    public Guid Id { get; set; } 
+    public long TelegramId { get; set; }
     public readonly string Name;
     public DateTime dateTime;
 
@@ -33,34 +33,32 @@ public class User : Document
 
     public string? LastMessage { get; set; }
     public List<long> Categories { get; set; } = new();
-    public List<Channel>? Subscribes { get; set; } 
-    public List<Channel>? SubscribesVip { get; set; } 
+    public List<Channel>? Subscribes { get; set; } = new(); 
+    public List<Channel>? SubscribesVip { get; set; } = new();
     public int Attempts { get; set; } = 0;
     public string CurrentPaymentId { get; set; } = "";
 
     public override void Update()
     {
         UserRepository userRepository = new UserRepository();
-        User oldDocument = userRepository.GetDocument(this.TelegramId);
+        User oldDocument = userRepository.GetDocument(this.Id);
         userRepository.UpdateDocument(oldDocument, this);
     }
 
 }
-public abstract class MongoDocument{}
+
 public class Channel : Document
 {
     public Channel() : base("Channel"){}
-    public long PersonID { get; set; }
+    public long Owner { get; set; }
     public string Title { get; set; }
-    public string Describtion { get; set; }
-    public int CategoryID { get; set; }
+    public string? Describtion { get; set; }
     public DateOnly Vip { get; set; } = DateOnly.MinValue;
     public int Reports { get; set; } = 0;
-    public long AccessHash { get; set; } = 0;
     public override void Update()
     {
         ChannelRepository channelRepository = new ChannelRepository();
-        Channel oldDocument = channelRepository.GetDocument(this.TelegramId);
+        Channel oldDocument = channelRepository.GetDocument(this.Id);
         channelRepository.UpdateDocument(oldDocument, this);
     }
 }
@@ -68,14 +66,12 @@ public class Channel : Document
 public class Category : Document
 {
     public Category() : base("Category"){}
-    public string ISOTwoLettersCultureCode { get; set; } = "RU";
     public string Title { get; set; }
     public List<Channel> Channels { get; set; }
     public override void Update()
     {
         CategoryRepository categoryRepository = new CategoryRepository();
-        Category oldDocument = categoryRepository.GetDocument(this.TelegramId);
+        Category oldDocument = categoryRepository.GetDocument(this.Id);
         categoryRepository.UpdateDocument(oldDocument, this);
     }
-
 }

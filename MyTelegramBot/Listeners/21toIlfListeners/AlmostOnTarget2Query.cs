@@ -55,7 +55,7 @@ public class CheckChannelExistence : InlineReply, IListener
         newUser.Channels.Add(newChannel); // FIXME: very strange behavior
         Channel channel = new Channel()
         {
-            PersonID = user.TelegramId,
+            Owner = user.TelegramId,
             Title = newChannel,
         }; // TODO: remove creating channel in abstract class
         Database.CreateChannel(channel);
@@ -83,6 +83,6 @@ public class ContinueFreeQuery : Query, IListener
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
         Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "cat.jpg", cancellationToken);
-        return base.Run(context, cancellationToken);
+        return MessageToSend[0];
     }
 }

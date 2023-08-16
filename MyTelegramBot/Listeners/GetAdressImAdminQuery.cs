@@ -7,7 +7,7 @@ using User = MongoDatabase.ModelTG.User;
 
 namespace MyTelegramBot.Listeners;
 
-public class  GetAdressImAdminQuery : Query, IListener
+public class GetAdressImAdminQuery : Query, IListener
 {
     public GetAdressImAdminQuery(Bot bot) : base(bot)
     {

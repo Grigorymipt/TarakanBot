@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using Serilog;
 
 namespace MongoDatabase;
 
@@ -33,6 +34,7 @@ public class Repository
         catch
         {
             _connectionString = "mongodb://admin:qi%Cf%C0@garouhiqua.beget.app/admin"; //add db
+            throw;
         }
         finally
         {
@@ -49,7 +51,8 @@ public class Repository
         catch(Exception exception)
         {
             status = StatusDatabase.ConnectionFailed;
-            Console.WriteLine(exception);
+            Log.Error(exception.ToString());
+            throw;
         }
         return client;
     }

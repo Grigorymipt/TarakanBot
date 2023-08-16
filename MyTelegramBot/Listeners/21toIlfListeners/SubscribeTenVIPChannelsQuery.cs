@@ -6,6 +6,7 @@ using TL;
 using Channel = TL.Channel;
 using Message = Telegram.Bot.Types.Message;
 using User = MongoDatabase.ModelTG.User;
+using Serilog;
 
 namespace MyTelegramBot.Listeners;
 
@@ -14,13 +15,15 @@ public class SubscribeTenChannelsVipQuery : Query, IListener
     protected MongoDatabase.ModelTG.Channel ChannelName(long userId)
     {
         //FIFO logics
-        var channel = Database.FindChannelToListAsync().Result.First();
+        var channel = Database.FindChannelToListAsync(userId).Result.First();
         var user = Database.GetUser(userId);
-        do
-        {
-            channel.dateTime = DateTime.Now;
-            channel.Update();
-        } while (user.Channels?.Contains(channel.Title) == true);   
+            
+        if (user.Channels?.Contains(channel.Title) == false)
+            if (user.SubscribesVip?.Contains(channel) == false) 
+            { 
+                channel.dateTime = DateTime.Now;
+                channel.Update();
+            }
          
         user.SubscribesVip??=new List<MongoDatabase.ModelTG.Channel>();
         user.SubscribesVip.Add(channel);
@@ -50,7 +53,7 @@ public class SubscribeTenChannelsVipQuery : Query, IListener
             { "Подписался на 10 каналов", "/iSubscribedVip" }
         };
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        if (user.SubscribesVip?.Count > 5) //TODO: 20 in prod
+        if (user?.SubscribesVip?.Count > 5) //TODO: 20 in prod
         {
             Buttons.Clear(); //FIXME
             return MessageToSend[1];   
@@ -62,11 +65,13 @@ public class SubscribeTenChannelsVipQuery : Query, IListener
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
         var buttons = new Dictionary<string, string>(){};
-        string response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
+        string response = Run(context, cancellationToken, out buttons);
+        Log.Information("run response received");
         Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
         var channeltosubs = ChannelName(context.Update.CallbackQuery.From.Id);
         response = response == MessageToSend[0] ? (channeltosubs.Title + channeltosubs.Describtion) : response; 
+        Log.Information("handling buttons");
         foreach (var category in buttons)
         {
             InlineKeyboardButton reply;
@@ -96,7 +101,7 @@ public class SubscribeTenChannelsVipQuery : Query, IListener
 
         IEnumerable<IEnumerable<InlineKeyboardButton>> enumerableList1 = categoryList;
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(enumerableList1);
-
+        Log.Information("start sending");
         Message sentMessage = await context.BotClient.SendTextMessageAsync(
             chatId: chatId,
             text: response,
@@ -174,21 +179,20 @@ class CheckSubscriptionsVip : SubscribeTenChannelsVipQuery, IListener
         foreach (var channel in 
             user.Subscribes ??= new List<MongoDatabase.ModelTG.Channel>())
         {
-            var userSubscribed = ChannelInfo.Subscribed(channelName: channel.Title, userId).Result;
-            if (userSubscribed) UserSubscribed = true;
+            var userSubscribed = context.BotClient.MemberStatusChat(channelName: channel.Title, userId).Result;
+            if (userSubscribed == "Member") UserSubscribed = true;
             if (UserSubscribed)
                 totalAmount += 1;
         }
         if (totalAmount < 1) // TODO: prod - 10
         {
-            return MessageToSend[2];
+            return  "вы не подписаны на n Vip каналов, не надо так(";
         }
         else
         {
             Buttons.Clear();
             Buttons.Add("Принято!", "/clear66step");
             return MessageToSend.Last();
-                
         }
     }
     // public override async Task Handler(Context context, Dictionary<string, string> buttonsList, CancellationToken cancellationToken)

@@ -77,7 +77,7 @@ public class AllHandshakesQuery : Query, IListener
                          $"{visited.Count} пользователей\n"+
                          $"{0} VIP";
         
-        return base.Run(context, cancellationToken);
+        return MessageToSend;
     }
 }
 
@@ -96,7 +96,7 @@ public class FirstLevelHandshakesQuery : Query, IListener
         var children = user.Children;
         foreach (var variableChild in children)
             MessageToSend += $"@{variableChild} | allHandshakesOfNik | Vips\n";
-        return base.Run(context, cancellationToken);
+        return MessageToSend;
     }
 }
 

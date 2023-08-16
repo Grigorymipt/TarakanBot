@@ -16,13 +16,17 @@ public class StartCommand : Command, IListener{
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
         Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "2.2", cancellationToken);
+
         Buttons = new Dictionary<string, string>();
         Console.WriteLine(context.Update.Message.From.Id);
+        Log.Information(context.Update.Message.From.Id.ToString());
         User user = Database.GetUser(context.Update.Message.From.Id); // TODO: Reduce DB calls
-        
+
         if (user == null) user = Database.CreateUser(context.Update.Message);
-        
+
         else if (user.RefId == null) user = Database.UpdateUser(context.Update.Message);
+
+
         
         if (user.RefId != null) 
         {
@@ -31,13 +35,15 @@ public class StartCommand : Command, IListener{
             return "С помощью #UserHub ты сможешь быстро и удобно находить лучшие телеграмм " +
                                        "каналы на любую интересную тебе тему. Я что-то вроде поисковика в телеграмм, " +
                                        "где все каналы разбиты по категориям и рейтингу. " +
-                                       "Жми 'каталог' и я покажу тебе как здесь все устроено. " + 
+                                       "Жми 'каталог' и я покажу тебе как здесь все устроено. " +
             "Если же ты владелец телеграм-канала, то жми 'Я админ' и добавляй свой канал в каталог #UserHub. " +
             "Это позволить тебе получать подписчиков, действительно заинтересованных в твоем контенте.";
         }
         return "Этим ботом можно пользоваться, только перейдя в него " +
-               "по реферальной ссылке от пользователя, который уже имеет доступ к боту."; 
+               "по реферальной ссылке от пользователя, который уже имеет доступ к боту.";
     }
+
+
 
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
     {

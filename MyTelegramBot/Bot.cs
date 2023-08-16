@@ -2,11 +2,18 @@ using System.Reflection;
 using MongoDatabase;
 using MongoDatabase.ModelTG;
 using MyTelegramBot.Types;
+using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
+using TL;
 using User = Telegram.Bot.Types.User;
+using Update = Telegram.Bot.Types.Update;
+using BotCommand = Telegram.Bot.Types.BotCommand;
+using Telegram.Bot.Types.ReplyMarkups;
+using Telegram.Bot.Types.Payments;
+using Crypto;
 
 namespace MyTelegramBot ;
 public class Bot {
@@ -27,11 +34,12 @@ public class Bot {
             Listeners.Add(instance);
         }
         Console.WriteLine("Total Listeners: " + Listeners.Count);
+        Log.Information("Total Listeners: " + Listeners.Count);
     }
     
     public async Task Init() 
     {
-        Console.WriteLine("Initializing bot...");
+        Log.Information("Initializing bot...");
         
         var users = new UserRepository();
         var su = new MongoDatabase.ModelTG.User()
@@ -114,10 +122,7 @@ public class Bot {
         });
         await _botClient.SetMyCommandsAsync(
             listCommands.AsEnumerable()
-            );
-        
-        //Login Telegram API account:
-        
+            );        
 
         Console.WriteLine("Starting bot...");
 
@@ -143,7 +148,7 @@ public class Bot {
             secretToken: null,
             cancellationToken: cts.Token
             );
-            await ChannelInfo.Login();
+            // await ChannelInfo.Login(null);
             Console.WriteLine("Webhook configured!");
         }
         Me = await _botClient.GetMeAsync();
@@ -183,6 +188,28 @@ public class Bot {
         };
         return ErrorMessage;
     }
+    public async Task SuccessPayment(CreateOrder.ResponseWebHook responseWebhook, CancellationToken cancellationToken)
+    {
+        string customData = responseWebhook.payload.customData;
+        var dataSplited = customData.Split(' '); // Ex: "11011000101 listing"
+        var UserId = long.Parse(dataSplited[0]);
+        var Payload = dataSplited[1];
+        PreCheckoutQuery preCheckoutQuery = new PreCheckoutQuery()
+        {
+            Id = "d",
+            From = new User(){
+                Id = UserId,
+                IsBot = false,
+                FirstName = "",
+            },
+            Currency = responseWebhook.payload.orderAmount.currencyCode,
+            TotalAmount = int.Parse(responseWebhook.payload.orderAmount.amount),
+            InvoicePayload = Payload, // MB not message
+        };
+        Update update = new Update();
+        update.PreCheckoutQuery = preCheckoutQuery; 
+        await HandleUpdateAsync(_botClient, update, cancellationToken);
+    }   
 
     private static IEnumerable<Type> GetTypesImplementedBy<T>(Assembly assembly)
     {
