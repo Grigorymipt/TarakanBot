@@ -160,7 +160,8 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
 
         long chatId = Database.GetChannel(user.Channels.FirstOrDefault()).TelegramId;
         if(chatId == null) throw new NullReferenceException("something wrong with DB");
-        var messageParams = SplitReverse(messageLink, '/', 1);
+        var messageParams = SplitReverse(messageLink, '/', 2);
+        Log.Information(messageParams.ToString());
         Log.Information("Bot start forwarding creative");
         try
         {
