@@ -160,11 +160,19 @@ public static class ChannelInfo
 
     public static async Task<long> LoginChat(string channelName)
     {
-        var message = await _botClient.SendTextMessageAsync(
-            chatId: channelName,
-            text: $"auxiliary message from {_botClient.GetMeAsync().Result}, this will be removed soon",
-            disableNotification: true
-        );
+        try 
+        {
+            var message = await _botClient.SendTextMessageAsync(
+                chatId: channelName,
+                text: $"auxiliary message from {_botClient.GetMeAsync().Result}, this will be removed soon",
+                disableNotification: true
+                );
+        }
+        catch(Exception ex)
+        {
+            Log.Error(ex.Message); 
+            throw; //FIXME : doesnt throw up stack
+        }
         long channelId = message.Chat.Id;
         await _botClient.DeleteMessageAsync(channelId, message.MessageId);
         var channelDB = Database.GetChannel(channelName);
