@@ -37,7 +37,6 @@ public abstract class InlineReply : Command
     }
     public override async Task Handler(Context context, CancellationToken cancellationToken)
     {
-        Console.WriteLine(MessageLabel);
         Log.Information(MessageLabel);
         await base.Handler(context, cancellationToken);
         var user = Database.GetUser(context.Update.Message.From.Id);
