@@ -15,7 +15,7 @@ public class StartCommand : Command, IListener{
     
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
-        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "admin", cancellationToken);
+        Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "admin.jpg", cancellationToken);
 
         Buttons = new Dictionary<string, string>();
         Console.WriteLine(context.Update.Message.From.Id);
