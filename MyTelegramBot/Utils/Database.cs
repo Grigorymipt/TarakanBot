@@ -128,7 +128,7 @@ public class Database
 
     public static async void CreateChannel(Channel channel)
     {
-        if(channel.TelegramId == 0) await ChannelInfo.LoginChat("@" + channel.Title);
+        if(channel.TelegramId == 0) channel.TelegramId = await ChannelInfo.LoginChat("@" + channel.Title);
         _channelRepository.CreateDocument(channel);
     }
     public static void CreateChannel(string Title)
