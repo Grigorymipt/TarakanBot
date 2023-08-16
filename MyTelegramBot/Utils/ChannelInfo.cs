@@ -167,21 +167,22 @@ public static class ChannelInfo
                 text: $"auxiliary message from {_botClient.GetMeAsync().Result}, this will be removed soon",
                 disableNotification: true
                 );
+            long channelId = message.Chat.Id;
+            await _botClient.DeleteMessageAsync(channelId, message.MessageId);
+            var channelDB = Database.GetChannel(channelName);
+            if (channelDB != null)
+            {
+                channelDB.TelegramId = channelId;
+                channelDB.Update();
+            }
+            return channelId;
         }
         catch(Exception ex)
         {
             Log.Error(ex.Message); 
-            throw; //FIXME : doesnt throw up stack
+            //throw; //FIXME : doesnt throw up stack
         }
-        long channelId = message.Chat.Id;
-        await _botClient.DeleteMessageAsync(channelId, message.MessageId);
-        var channelDB = Database.GetChannel(channelName);
-        if (channelDB != null)
-        {
-            channelDB.TelegramId = channelId;
-            channelDB.Update();
-        }
-        return channelId;
+        return 0;
     }
     
     public static async Task<bool> CheckMessageAutor(string channelName, int postId, int repostId)
