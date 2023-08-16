@@ -123,6 +123,7 @@ namespace MyTelegramBot.Utils
                 Console.WriteLine(e);
                 Log.Error(e.ToString());
                 parsedCommand.ArgumentsText = null;
+                throw;
             }
             finally
             {

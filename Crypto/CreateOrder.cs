@@ -92,6 +92,7 @@ public static class CreateOrder
             catch (Exception ex)
             {
                 Log.Error(ex.ToString());
+                throw;
             }
             return "";
         }

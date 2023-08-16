@@ -166,25 +166,18 @@ public class Bot {
    //TODO: unused para botClient
     public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
     {
-        try
-        {
-            if(botClient == null) botClient = _botClient; 
-            Console.WriteLine("Update Received!");
-            Context context = new Context(update, botClient);
-            Console.WriteLine("context updated");
-            foreach (Listener listener in Listeners) {
-                if (await listener.Validate(context, cancellationToken))
-                {
-                    Console.WriteLine("Start Handling With" + listener.ToString());
-                    await listener.Handler(context, cancellationToken);
-                }
+        if(botClient == null) botClient = _botClient; 
+        Console.WriteLine("Update Received!");
+        Context context = new Context(update, botClient);
+        Console.WriteLine("context updated");
+        foreach (Listener listener in Listeners) {
+            if (await listener.Validate(context, cancellationToken))
+            {
+                Console.WriteLine("Start Handling With" + listener.ToString());
+                await listener.Handler(context, cancellationToken);
             }
-            Console.WriteLine("Update Handled");
         }
-        catch(Exception ex)
-        {
-            await HandleErrorAsync(_botClient, ex, cancellationToken);
-        }
+        Console.WriteLine("Update Handled");
     }
     public async Task<string> HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {

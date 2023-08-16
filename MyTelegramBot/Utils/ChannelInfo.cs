@@ -103,6 +103,7 @@ public static class ChannelInfo
                 // if(ex is TimeoutException) 
                 throw;
             }
+            throw;
         }
         
     }
@@ -235,6 +236,7 @@ public static class ChannelInfo
         {
             Log.Error(ex.Message);
             return "Nobody";
+            throw;
         }
     }
 
@@ -252,6 +254,7 @@ public static class ChannelInfo
             if (ex is ApiRequestException arex)
             Log.Error($"User: {userId} not found in {channelId}");
             status = "Nobody";
+            throw;
         }
         return status;
     }

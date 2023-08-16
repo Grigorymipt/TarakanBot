@@ -175,6 +175,7 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
         catch(Exception ex)
         {
             Log.Error(ex.ToString());
+            throw;
         }
         
         buttons = new Dictionary<string, string>()

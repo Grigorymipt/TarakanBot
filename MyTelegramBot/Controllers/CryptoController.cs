@@ -34,6 +34,7 @@ public class GetWalletController : ControllerBase
             {
                 var ErrorMessage = bot.HandleErrorAsync(botClient: default, exception: ex, cancellationToken: cancellationToken).Result;
                 _logger.Log(LogLevel.Error, 1312, ErrorMessage);
+                throw ex;
             }
         });
         return Ok();

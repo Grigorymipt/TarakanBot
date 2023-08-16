@@ -81,6 +81,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
                 return "Добавьте наш бот админом с правами отправки сообщений в ваш канал, после нажмите 'Попробовать еще раз'";
             }
             return "Unexpected Error";
+            throw;
         }
         newUser.LastMessage = null;
         newUser.Update();
