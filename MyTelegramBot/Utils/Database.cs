@@ -126,9 +126,9 @@ public class Database
         return await _categoryRepository.GetAllDocumentsAsync();
     }
 
-    public static void CreateChannel(Channel channel)
+    public static async void CreateChannel(Channel channel)
     {
-        if(channel.TelegramId == 0) ChannelInfo.LoginChat(channel.Title);
+        if(channel.TelegramId == 0) await ChannelInfo.LoginChat(channel.Title);
         _channelRepository.CreateDocument(channel);
     }
     public static void CreateChannel(string Title)
