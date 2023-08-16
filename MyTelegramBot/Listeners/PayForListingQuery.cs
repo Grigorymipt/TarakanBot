@@ -2,12 +2,14 @@ using System.Security.Cryptography;
 using Microsoft.Extensions.Localization;
 using MongoDB.Bson.Serialization.Conventions;
 using MyTelegramBot.Types;
+using MyTelegramBot.Utils;
 using Serilog;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.Payments;
 using Telegram.Bot.Types.ReplyMarkups;
+using TL;
 
 namespace MyTelegramBot.Listeners;
 
@@ -150,7 +152,7 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
     {
         Log.Information("start running " + this.GetType());
         buttons = new();
-        var messageLink = context.Update.CallbackQuery.Data;
+        var messageLink = ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText;
         var userId = context.Update.CallbackQuery.From.Id;
         var user = Database.GetUser(userId);
         if (user.Channels?.Count > 1) 
@@ -191,7 +193,7 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
     // start spliting from the end of the string
     public string[] SplitReverse(string message, char separator, int count)
     {
-        return MakeReverseString(message).Split(separator, count);
+        return MakeReverseString(message).Split(separator, count).Select(x => MakeReverseString(x)).ToArray();
     }
     private string MakeReverseString(string message)
     {
