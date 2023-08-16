@@ -36,7 +36,6 @@ public class CollectionRepository : Repository
                 Console.WriteLine(e);
                 Log.Error(e.ToString());
                 CreateCollection(necessaryCollection);
-                throw;
             }
         }
     }
