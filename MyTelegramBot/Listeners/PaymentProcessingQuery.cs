@@ -7,7 +7,6 @@ public class PaymentProcessingQuery : Query, IListener
     public PaymentProcessingQuery(Bot bot) : base(bot)
     {
         Names = new[] { "/iPaid" };
-        MessageToSend = new string[]{"😇 Ожидаю подтверждение платежа в блокчейне. Как только платеж будет получен я вас оповещу!"
-        };
+        MessageToSend = new string[]{Globals.GetCommand("WaitForCryptoPayment")};
     }
 }

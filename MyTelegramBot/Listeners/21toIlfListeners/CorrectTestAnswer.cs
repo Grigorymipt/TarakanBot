@@ -7,8 +7,7 @@ public class CorrectTestAnswer : Query, IListener
     public CorrectTestAnswer(Bot bot) : base(bot)
     {
         Names = new[] { "/hundredMillions" };
-        MessageToSend = new[] {"🤑 Верно! Еще несколько простых действий и миллион подписчиков твой! + Выбери минимум 5 тем," +
-                        " которые тебя РЕАЛЬНО интересуют."};
+        MessageToSend = new[] {Globals.GetCommand("fivecats")};
 
                         
     }
@@ -20,7 +19,7 @@ public class CorrectTestAnswer : Query, IListener
         {
             buttons.Add(category.Title, "/saveCategoryToUser " + category.TelegramId);
         }
-        buttons.Add(Globals.responses.GetValueOrDefault("continue"), "/continueTo");
+        buttons.Add(Globals.GetCommand("continue"), "/continueTo");
         return MessageToSend[0];
     }
 }

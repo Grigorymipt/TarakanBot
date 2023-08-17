@@ -8,12 +8,12 @@ public class MyChannelsQuery : Query, IListener
     public MyChannelsQuery(Bot bot) : base(bot)
     {
         Names = new[] { "/myChannels" };
-        MessageToSend = new string[] {"Мои каналы"};
+        MessageToSend = new string[] {Globals.GetCommand("MyChannels")};
     }
 
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
-        buttons = new Dictionary<string, string>(){{"Добавить канал", "/addChannel"}};
+        buttons = new Dictionary<string, string>(){{Globals.GetCommand("AddChannel"), "/addChannel"}};
         foreach (var variableChannel 
                  in Database.GetUser(context.Update.CallbackQuery.From.Id).Channels)
         {
@@ -28,7 +28,7 @@ public class ChooseChannelQuery : Query, IListener
     public ChooseChannelQuery(Bot bot) : base(bot)
     {
         Names = new[] { "/chooseChannel" };
-        MessageToSend = new string[] {"Канал "
+        MessageToSend = new string[] { Globals.GetCommand("SelectedChannel")
         };
     }
 
@@ -36,11 +36,11 @@ public class ChooseChannelQuery : Query, IListener
     {
         Buttons = new Dictionary<string, string>()
         {
-            { "Поменять канал", "/changeChannel" },
-            {"Статистика", "/handshakeStats"}, // TODO: not handshake
+            { Globals.GetCommand("ChangeChannel"), "/changeChannel" },
+            { Globals.GetCommand("ChannelStats"), "/handshakeStats"}, // TODO: not handshake
         };
         var channelName = ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText;
-        Buttons.Add("VIP статус", "/getVipStatusForChannel " + channelName);
+        Buttons.Add(Globals.GetCommand("VipStatus"), "/getVipStatusForChannel " + channelName);
         return MessageToSend + channelName;
     }
 }
@@ -50,8 +50,6 @@ public class ChangeChannelQuery : Query, IListener
     public ChangeChannelQuery(Bot bot) : base(bot)
     {
         Names = new[] { "/changeChannel" };
-        MessageToSend = new string[] {"💡Поменять канал можно только в том случае, если у вас изменился адрес канала. При этом " +
-                        "канал остался прежним. Для этого необходимо связаться с тех. поддержкой #UserHub  -----> @uchjhi"};
-
+        MessageToSend = new string[] {Globals.GetCommand("CallSupport")};
     }
 }

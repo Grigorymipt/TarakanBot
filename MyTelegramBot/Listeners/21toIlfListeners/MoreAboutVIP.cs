@@ -12,7 +12,7 @@ public class MoreAboutVIP : Query, IListener
     {
         Names = new[] { "/moreAboutVIP" };
         MessageToSend = new[] {
-            Globals.responses.GetValueOrDefault("WhatVipFor")
+            Globals.GetCommand("WhatVipFor")
         };
     }
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
@@ -20,8 +20,8 @@ public class MoreAboutVIP : Query, IListener
         Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "cat.jpg", cancellationToken);
         buttons = new Dictionary<string, string>()
         {
-            {Globals.responses.GetValueOrDefault("BuyLater"), "/buyVIPLater"},
-            {Globals.responses.GetValueOrDefault("BuyNow"), "/buyVIPNow"}
+            {Globals.GetCommand("BuyLater"), "/buyVIPLater"},
+            {Globals.GetCommand("BuyNow"), "/buyVIPNow"}
         };
         return MessageToSend[0];
     }
@@ -32,7 +32,7 @@ public class BuyVIPLater : Query, IListener
     public BuyVIPLater(Bot bot) : base(bot)
     {
         Names = new[] { "/buyVIPLater" };
-        MessageToSend = new[] {"Что-то я не нашел сообщения для такого случая..."};
+        MessageToSend = new[] {Globals.GetCommand("Congratulations")};
     }
 
     protected override string Run(Context context, CancellationToken cancellationToken)
@@ -48,7 +48,7 @@ public class BuyVIPNow : Query, IListener
     public BuyVIPNow(Bot bot) : base(bot)
     {
         Names = new[] { "/buyVIPNow" };
-        MessageToSend = new[] {"Тут Сергей подкатывает платежку с применением @wallet. С меня кнопочка товара."};
+        MessageToSend = new[] {Globals.GetCommand("YourRate")};
         prices = new[]
         {
             new LabeledPrice("vipLabel", 10000)

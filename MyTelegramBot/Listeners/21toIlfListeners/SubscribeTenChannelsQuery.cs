@@ -37,7 +37,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
     {
         MessageToSend = new string[]{ 
             "ShowChannel", 
-            "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять каналов, предложенных выше."
+            Globals.GetCommand("ManySkips")
             };
         Names = new[] { "/subscribeTenChannels" };
 
@@ -47,10 +47,10 @@ public class SubscribeTenChannelsQuery : Query, IListener
     {
         Buttons = new Dictionary<string, string>()
         {
-            { Globals.responses.GetValueOrDefault("subscribed"), "/subscribeListedChannel" }, // MakeLink
-            { Globals.responses.GetValueOrDefault("skip"), "/skipListedChannel" },
-            { Globals.responses.GetValueOrDefault("blacklist"), "/blockListedChannel " },
-            { Globals.responses.GetValueOrDefault("check"), "/iSubscribed" }
+            { Globals.GetCommand("subscribed"), "/subscribeListedChannel" }, // MakeLink
+            { Globals.GetCommand("skip"), "/skipListedChannel" },
+            { Globals.GetCommand("blacklist"), "/blockListedChannel " },
+            { Globals.GetCommand("check"), "/iSubscribed" }
         };
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
         if(user == null) throw new NullReferenceException("user if null");
@@ -147,10 +147,9 @@ public class BlockTenChannelsQuery : SubscribeTenChannelsQuery
         Names = new []{"/blockListedChannel"};
         MessageToSend = new string[] {
             "ShowChannel",
-            "🤯 Благодарим! 🧐 Наша полиция нравов обязательно разберется с этим! \n\n" + "ShowChannel", 
-            "🤯 Благодарим! 🧐 Наша полиция нравов обязательно разберется с этим! \n\n" +
-                           "Вы слишком много раз нажали кнопку пропустить. Подпишитесь как минимум на десять" +
-                            " каналов, предложенных выше."};
+            Globals.GetCommand("BlackList"), 
+            Globals.GetCommand("BlackList") + Globals.GetCommand("ManySkips")
+                           };
     }
 
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
@@ -181,8 +180,8 @@ class CheckSubscriptions : SubscribeTenChannelsQuery, IListener
     {
         Names = new[] { "/iSubscribed" };
         MessageToSend = base.MessageToSend
-        .Append(Globals.responses.GetValueOrDefault("subscribemore"))
-        .Append(Globals.responses.GetValueOrDefault("tenvips")).ToArray();
+        .Append(Globals.GetCommand("subscribemore"))
+        .Append(Globals.GetCommand("tenvips")).ToArray();
     
     }
 
@@ -204,12 +203,12 @@ class CheckSubscriptions : SubscribeTenChannelsQuery, IListener
         }
         if (totalAmount < 1) // TODO: prod - 10
         {
-            return "вы не подписаны на 1 каналов, не надо так(";
+            return Globals.GetCommand("SubscribeMore");
         }
         else
         {
             Buttons.Clear();
-            Buttons.Add(Globals.responses.GetValueOrDefault("clear"), "/clear66step"); //TODO: PROD: subscribeTenVIPChannels
+            Buttons.Add(Globals.GetCommand("clear"), "/clear66step"); //TODO: PROD: subscribeTenVIPChannels
             return MessageToSend.Last();
                 
         }

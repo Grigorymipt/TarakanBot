@@ -23,13 +23,13 @@ public class PromoCommand : Query, IListener
     {
         buttons = new Dictionary<string, string>()
         {
-            { "PDF", "/pdf" },
-            { "Креативы для Телеграм канала", "/creativesForChannel" },
-            { "Видео", "/videos" },
-            { "Stories фото", "/storiesPhoto" },
-            { "Stories видео", "/storiesVideo" },
+            { Globals.GetCommand("PromoPDF"), "/pdf" },
+            { Globals.GetCommand("Creatives"), "/creativesForChannel" },
+            { Globals.GetCommand("PromoVideos"), "/videos" },
+            { Globals.GetCommand("StoriesPhoto"), "/storiesPhoto" },
+            { Globals.GetCommand("StoriesVideo"), "/storiesVideo" },
         };
-        return "Промо материалы";
+        return Globals.GetCommand("Promo");
     }
 }
 
@@ -41,8 +41,8 @@ public class PDFQuery : Query, IListener
     
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
-        Send.Document(context, Environment.GetEnvironmentVariable("pathToMaterials")+"conspect.pdf", null, cancellationToken);
-        return "Зачем вам этот PDF, когда надежнее пользоваться счетом древних РУСов";
+        Send.Document(context, Environment.GetEnvironmentVariable("pathToMaterials") + "conspect.pdf", null, cancellationToken);
+        return Globals.GetCommand("getvideo");
     }
 }
 
@@ -52,12 +52,20 @@ public class CreativesQuery : Query, IListener
     {
         Names = new[] { "/creativesForChannel" };
     }
+    protected override string Run(Context context, CancellationToken cancellationToken)
+    {
+        return Globals.GetCommand("Creatives");
+    }
 }
 public class StoriesPhotoQuery : Query, IListener
 {
     public StoriesPhotoQuery(Bot bot) : base(bot)
     {
         Names = new[] { "/storiesPhoto" };
+    }
+    protected override string Run(Context context, CancellationToken cancellationToken)
+    {
+        return Globals.GetCommand("StoriesPhoto");
     }
 }
 public class StoriesVideoQuery : Query, IListener
@@ -66,11 +74,19 @@ public class StoriesVideoQuery : Query, IListener
     {
         Names = new[] { "/storiesVideo" };
     }
+    protected override string Run(Context context, CancellationToken cancellationToken)
+    {
+        return Globals.GetCommand("StoriesVideo");
+    }
 }
 public class VideosQuery : Query, IListener
 {
     public VideosQuery(Bot bot) : base(bot)
     {
         Names = new[] { "/videos" };
+    }
+    protected override string Run(Context context, CancellationToken cancellationToken)
+    {
+        return Globals.GetCommand("PromoVideos");
     }
 }

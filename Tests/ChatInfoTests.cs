@@ -15,15 +15,16 @@ namespace Tests;
 
 public class ChatInfoTests
 {
-    // [Fact]
-    // public async void TestChatIf()
-    // {
-    //     var channelId = -1001927535266;
-    //     var userId = 710549873;
+    [Fact]
+    public async void TestChatIf()
+    {
+        var channelId = -1001927535266;
+        var userId = 710549873;
 
-    //     TelegramBotClient botClient = new TelegramBotClient(MyTelegramBot.Config.BotToken);
-    //     // Console.WriteLine(await ChannelInfo.MemberStatusChat(botClient, channelId, userId));
-    // }
+        TelegramBotClient botClient = new TelegramBotClient(MyTelegramBot.Config.BotToken);
+        // Console.WriteLine(await ChannelInfo.MemberStatusChat(botClient, channelId, userId));
+    }
+    
     [Fact]
     public async void TestReplace()
     {

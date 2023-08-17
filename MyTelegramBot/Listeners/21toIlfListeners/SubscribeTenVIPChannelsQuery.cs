@@ -47,10 +47,10 @@ public class SubscribeTenChannelsVipQuery : Query, IListener
     {
         Buttons = new Dictionary<string, string>()
         {
-            { Globals.responses.GetValueOrDefault("subscribed"), "/subscribeListedChannelVip" }, // MakeLink
-            { Globals.responses.GetValueOrDefault("skip"), "/skipListedChannelVip" },
-            { Globals.responses.GetValueOrDefault("blacklist"), "/blockListedChannelVip " },
-            { Globals.responses.GetValueOrDefault("check"), "/iSubscribedVip" }
+            { Globals.GetCommand("subscribed"), "/subscribeListedChannelVip" }, // MakeLink
+            { Globals.GetCommand("skip"), "/skipListedChannelVip" },
+            { Globals.GetCommand("blacklist"), "/blockListedChannelVip " },
+            { Globals.GetCommand("check"), "/iSubscribedVip" }
         };
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
         if (user?.SubscribesVip?.Count > 5) //TODO: 20 in prod
@@ -162,9 +162,8 @@ class CheckSubscriptionsVip : SubscribeTenChannelsVipQuery, IListener
     public CheckSubscriptionsVip(Bot bot) : base(bot)
     {
         Names = new[] { "/iSubscribedVip" };
-        MessageToSend.Append(Globals.responses.GetValueOrDefault("subscribemorevip"));
-        MessageToSend.Append(Globals.responses.GetValueOrDefault("staysubscribed"));
-    
+        MessageToSend.Append(Globals.GetCommand("subscribemorevip"));
+        MessageToSend.Append(Globals.GetCommand("staysubscribed"));
     }
 
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
@@ -185,12 +184,12 @@ class CheckSubscriptionsVip : SubscribeTenChannelsVipQuery, IListener
         }
         if (totalAmount < 1) // TODO: prod - 10
         {
-            return  "вы не подписаны на n Vip каналов, не надо так(";
+            return Globals.GetCommand("SubscribeMore");
         }
         else
         {
             Buttons.Clear();
-            Buttons.Add("Принято!", "/clear66step");
+            Buttons.Add(Globals.GetCommand("clear"), "/clear66step");
             return MessageToSend.Last();
         }
     }

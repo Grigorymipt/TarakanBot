@@ -52,7 +52,7 @@ public static class Program
                     elkConfiguration.Host);
         Log.Logger = logger;
         logger.Information("helloELKFromGrigorymipt");
-        Log.Information(Globals.responses.GetValueOrDefault("laststep"));
+        Log.Information(Globals.GetCommand("laststep"));
         Log.Information("helloELKFromGrigorymipt");
         Log.Information(Config.BotToken);
         TelegramBotClient botClient = new TelegramBotClient(Config.BotToken);

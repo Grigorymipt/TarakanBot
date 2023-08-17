@@ -14,7 +14,7 @@ public class SuggestionAcceptedQuery : Query, IListener
 
         //add logics to get creatives link
         creatives.Add("Креатив 1", "https://t.me/vokyj/5");
-        MessageToSend = new string[] {Globals.responses.GetValueOrDefault("repost")};
+        MessageToSend = new string[] {Globals.GetCommand("repost")};
         foreach (var creative in creatives)
         {
             MessageToSend[0] += "\n" + creative.Key + ": " + creative.Value;
@@ -26,7 +26,7 @@ public class SuggestionAcceptedQuery : Query, IListener
         Log.Information($"Adding creatives: {creatives.Count()}");
         foreach(var creative in creatives)
         {
-            buttons.Add(Globals.responses.GetValueOrDefault("continue"), $"/whatLike {creative.Value}");
+            buttons.Add(Globals.GetCommand("continue"), $"/whatLike {creative.Value}");
             Log.Information($"add creative {creative} to buttons list");
         }
         Log.Information("smth");

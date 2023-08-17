@@ -20,13 +20,13 @@ public class ContinueQuery : Query, IListener
     {
         buttons = new Dictionary<string, string>();
         var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        var MessageToSend = Globals.responses.GetValueOrDefault(Globals.responses.GetValueOrDefault("choosenmore")) + (5 - user.Categories.Count);
+        var MessageToSend = Globals.GetCommand(Globals.GetCommand("choosenmore")) + (5 - user.Categories.Count);
         if (user is { Categories.Count: >= 5 })
         {
-            MessageToSend = Globals.responses.GetValueOrDefault("nicetaste");
+            MessageToSend = Globals.GetCommand("nicetaste");
             if (user is { Categories.Count: >= 5 })
                 buttons.Clear();
-            buttons.Add("Начать подписываться", "/subscribeTenChannels");
+            buttons.Add(Globals.GetCommand("StartSubscribing"), "/subscribeTenChannels");
         }
 
         return MessageToSend;

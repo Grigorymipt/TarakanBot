@@ -13,13 +13,13 @@ public class MenuCommand : Command, IListener
     {
         buttons = new Dictionary<string, string>()
         {
-            { "🤝 Мои рукопожатия", "/myHandshakes" },
-            { "Мои каналы", "/myChannels" },
-            { "🏆 Vip статус", "/myVipStatus" },
-            { "Каталог каналов", "/catalog" },
-            { "Комьюнити #USERHUB", "/UserhubCommunity" },
-            { "Промо материалы", "/promo" },
-            { "Баланс", "/myBalance" },
+            { Globals.GetCommand("MyHandshakes"), "/myHandshakes" },
+            { Globals.GetCommand("MyChannels"), "/myChannels" },
+            { Globals.GetCommand("MyVIP"), "/myVipStatus" },
+            { Globals.GetCommand("catalog"), "/catalog" },
+            { Globals.GetCommand("Community"), "/UserhubCommunity" },
+            { Globals.GetCommand("Promo"), "/promo" },
+            { Globals.GetCommand("MyBalance"), "/myBalance" },
         };
         return MessageToSend[0];
     }

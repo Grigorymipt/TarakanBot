@@ -34,16 +34,16 @@ public class CheckChannelExistence : InlineReply, IListener
         string MessageToSend;
         if (ChannelExists(context, cancellationToken))
         {
-            MessageToSend = Globals.responses.GetValueOrDefault("sendchannelname");
+            MessageToSend = Globals.GetCommand("sendchannelname");
             Buttons.Clear();
-            Buttons.Add("🤠 Продолжить бесплатно", "/continueFree");
-            Buttons.Add("🏆 Подробнее о статусе VIP", "/moreAboutVIP");
+            Buttons.Add(Globals.GetCommand("TryFree"), "/continueFree");
+            Buttons.Add(Globals.GetCommand("MoreAboutVip"), "/moreAboutVIP");
         }
         else
         {
-            MessageToSend = Globals.responses.GetValueOrDefault("notexists2");
+            MessageToSend = Globals.GetCommand("notexists2");
             Buttons.Clear();
-            Buttons.Add(Globals.responses.GetValueOrDefault("trysendagain"), "/clear66step");
+            Buttons.Add(Globals.GetCommand("trysendagain"), "/clear66step");
         }
         var user = Database.GetUser(context.Update.Message.From.Id);
         string newChannel = context.Update.Message.Text;
@@ -67,7 +67,7 @@ public class ContinueFreeQuery : Query, IListener
     {
         Names = new[] { "/continueFree" };
         MessageToSend = new[] {
-            Globals.responses.GetValueOrDefault("Congratulations")
+            Globals.GetCommand("Congratulations")
                         };
     }
 

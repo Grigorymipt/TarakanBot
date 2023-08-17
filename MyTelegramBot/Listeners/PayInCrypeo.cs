@@ -11,7 +11,7 @@ public class PayInCrypto : Query, IListener
     public PayInCrypto(Bot bot) : base(bot)
     {
         Names = new[] { "/payInCrypto" };
-        MessageToSend = new string[] {"Тут Сергей подкатывает платежку с применением @wallet. С меня кнопочка товара."
+        MessageToSend = new string[] {Globals.GetCommand("PayForListing")
         };
         prices = new[]
         {

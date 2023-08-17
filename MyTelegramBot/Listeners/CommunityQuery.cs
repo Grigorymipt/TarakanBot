@@ -7,15 +7,15 @@ public class CommunityQuery : Query, IListener
     public CommunityQuery(Bot bot) : base(bot)
     {
         Names = new[] { "/myHandshakes" };
-        MessageToSend = new string[]{"Комьюнити"
+        MessageToSend = new string[]{Globals.GetCommand("Community")
         };
     }
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
         buttons = new Dictionary<string, string>()
         {
-            {"🔍 Все рукопожатия", "/allHandshakes"},
-            {"1-й уровень", "/firstLevelHandshakes"},
+            {Globals.GetCommand("AllHandshakes"), "/allHandshakes"},
+            {Globals.GetCommand("FirstLevelHandshakes"), "/firstLevelHandshakes"},
         };
         return MessageToSend[0];
     }

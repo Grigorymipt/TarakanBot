@@ -18,9 +18,9 @@ public class ChooseChannelForListingQuery : Query, IListener
         {
             var user = Database.GetUser(userName);
             user.MainChannel = channelName;
-            Buttons.Add(Globals.responses.GetValueOrDefault("continue"), "/suggestionAccepted");
-            return Globals.responses.GetValueOrDefault("ChosenSuccessfully") + channelName;  
+            Buttons.Add(Globals.GetCommand("continue"), "/suggestionAccepted");
+            return Globals.GetCommand("ChosenSuccessfully") + channelName;  
         }
-        return Globals.responses.GetValueOrDefault("SmthGoesWrong");
+        return Globals.GetCommand("SmthGoesWrong");
     }
 }

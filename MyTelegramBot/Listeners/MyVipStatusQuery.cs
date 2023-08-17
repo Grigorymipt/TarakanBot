@@ -8,8 +8,7 @@ public class MyVipStatusQuery : Query, IListener
     public MyVipStatusQuery(Bot bot) : base(bot)
     {
         Names = new[] { "/myVipStatus" };
-        MessageToSend = new string[]{"🏆 VIP статус\n" +
-                        "Выберите канал:"
+        MessageToSend = new string[]{Globals.GetCommand("VipChooseChannel")
         };
     }
 
@@ -50,15 +49,14 @@ public class GetVipStatusFotChannelQuery : Query, IListener
         {
             if (channel.Vip.CompareTo(today) < 0)
             {
-                MessageToSend = "🏆 Для активации VIP необходимо выбрать тариф";
-                Buttons.Add("$50 в месяц", "/payForMonth");//TODO: опять же платежка сергея
-                Buttons.Add("$500 в год",  "/payForYear");
+                MessageToSend = Globals.GetCommand("ChooseRate");
+                Buttons.Add(Globals.GetCommand("FiftyMonth"), "/payForMonth");//TODO: опять же платежка сергея
+                Buttons.Add(Globals.GetCommand("FiveHundYear"),  "/payForYear");
             }
             else
             {
-                MessageToSend = $"🏆 VIP статус активирован до {channel.Vip}. \n" +
-                                "💡 Рекомендую включить авто продление. \n" +
-                                "Если ни один канал не имеет статус VIP, то можно потерять партнерские начисления!\n";
+                MessageToSend = Globals.GetCommand("VipInfo") + channel.Vip +
+                                Globals.GetCommand("RecPaySug");
             }
         }
         return MessageToSend;

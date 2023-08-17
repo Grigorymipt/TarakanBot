@@ -1,3 +1,4 @@
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MyTelegramBot.Types;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -11,7 +12,7 @@ public class WatchMovies : Query, IListener // TODO: Query, IListener
     public WatchMovies(Bot bot) : base(bot)
     {
         Names = new[] { "/watchmovies", "/watchMovies" };
-        MessageToSend = new string[] {Globals.responses.GetValueOrDefault("get video")
+        MessageToSend = new string[] {Globals.GetCommand("getvideo")
                         };
     }
 
@@ -29,8 +30,8 @@ public class WatchMovies : Query, IListener // TODO: Query, IListener
     // }
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
-        Buttons = new Dictionary<string, string>( ){ { "Посмотрел, отправить кодовое слово", "/sendKeyWord" } };
-        return MessageToSend + " https://www.youtube.com/watch?v=A0_Abt4dzAA";
+        Buttons = new Dictionary<string, string>( ){ { Globals.GetCommand("SendMeTheKeyWord"), "/sendKeyWord" } };
+        return MessageToSend + Globals.GetCommand("VideoLink");
     }
 }
 
@@ -39,7 +40,7 @@ public class SendKeyWord : Types.InlineQuery, IListener
     public SendKeyWord(Bot bot) : base(bot)
     {
         Names = new[] { "/sendKeyWord" };
-        MessageToSend = new string[] {"Кодовое слово из видео:"};
+        MessageToSend = new string[] {Globals.GetCommand("WriteKeyWord")};
         MessageLabel = "KeyWord";
     }
 }
@@ -49,9 +50,9 @@ public class GetKeyWord : Types.InlineReply, IListener
     public GetKeyWord(Bot bot) : base(bot)
     {
         MessageToSend = new string[]{
-            Globals.responses.GetValueOrDefault("getpdf"),
-            Globals.responses.GetValueOrDefault("watchagain"),
-            Globals.responses.GetValueOrDefault("mbbooks")
+            Globals.GetCommand("getpdf"),
+            Globals.GetCommand("watchagain"),
+            Globals.GetCommand("mbbooks")
         };
         MessageLabel = "KeyWord";
     }
@@ -59,10 +60,10 @@ public class GetKeyWord : Types.InlineReply, IListener
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
         Buttons = new Dictionary<string, string>();
-        if (context.Update.Message.Text.Equals("Миллион") || context.Update.Message.Text.Equals("миллион"))
+        if (context.Update.Message.Text.Equals(Globals.GetCommand("TestKeyWord1")) || context.Update.Message.Text.Equals(Globals.GetCommand("TestKeyWord2")))
         {
             Buttons.Clear();
-            Buttons.Add(Globals.responses.GetValueOrDefault("passtest"), "/startTest");
+            Buttons.Add(Globals.GetCommand("passtest"), "/startTest");
             return MessageToSend[0];
         }
         else
@@ -73,13 +74,13 @@ public class GetKeyWord : Types.InlineReply, IListener
             if (user.Attempts < 2)
             {
                 Buttons.Clear();
-                Buttons.Add(Globals.responses.GetValueOrDefault("wrongagain"), "/sendKeyWord");
+                Buttons.Add(Globals.GetCommand("wrongagain"), "/sendKeyWord");
                 return MessageToSend[1];
             }
             else
             {
                 Buttons.Clear();
-                Buttons.Add(Globals.responses.GetValueOrDefault("passtest"), "/startTest");
+                Buttons.Add(Globals.GetCommand("passtest"), "/startTest");
                 ChatId chatId = context.Update.Message.Chat.Id;
                 Send.Document(context, Environment.GetEnvironmentVariable("pathToMaterials")+"conspect.pdf", cancellationToken);
                 return MessageToSend[2];

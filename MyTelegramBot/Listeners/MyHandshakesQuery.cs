@@ -89,7 +89,7 @@ public class FirstLevelHandshakesQuery : Query, IListener
     }
     protected override string Run(Context context, CancellationToken cancellationToken)
     {
-        var MessageToSend = "🧑‍💻 Ник | Всего Рукопожатий | VIP";
+        var MessageToSend = Globals.GetCommand("ShowAllHandStats");
         var user = Database.GetUser(
             context.Update.CallbackQuery.From.Id
         );

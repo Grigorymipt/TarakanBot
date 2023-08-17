@@ -11,15 +11,15 @@ public class AlmostOnTargetQuery : InlineReply, IListener
 {
     public AlmostOnTargetQuery(Bot bot) : base(bot)
     {
-        MessageToSend = new[] {Globals.responses.GetValueOrDefault("laststep")};
+        MessageToSend = new[] {Globals.GetCommand("laststep")};
         MessageLabel = "GetAddressInline";
     }
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
         Buttons = new Dictionary<string, string>()
         {
-            {Globals.responses.GetValueOrDefault("sugaccepted"), "/suggestionAccepted"},
-            {Globals.responses.GetValueOrDefault("payforlist"), "/buyListingNow"}
+            {Globals.GetCommand("sugaccepted"), "/suggestionAccepted"},
+            {Globals.GetCommand("payforlist"), "/buyListingNow"}
         };
         // Console.WriteLine(context.Update.Message.From.Id);
         
@@ -31,8 +31,8 @@ public class AlmostOnTargetQuery : InlineReply, IListener
         if (newChannel.First() != '@')
         {
             Buttons.Clear();
-            Buttons.Add("Ввести имя канала заново","/saveCategory");
-            return "Некорректное имя канала!";
+            Buttons.Add(Globals.GetCommand("SendChannelNameAgain"),"/saveCategory");
+            return Globals.GetCommand("InvalidChannelName");
         }
         var newUser = user;
         newChannel = newChannel.Remove(0, 1);

@@ -30,11 +30,11 @@ public class StartCommand : Command, IListener{
         
         if (user.RefId != null) 
         {
-            Buttons.Add(Globals.responses.GetValueOrDefault("ImAdmin"), "/admin");
-            Buttons.Add(Globals.responses.GetValueOrDefault("catalog"), "/catalog");
-            return Globals.responses.GetValueOrDefault("StartRef");
+            Buttons.Add(Globals.GetCommand("ImAdmin"), "/admin");
+            Buttons.Add(Globals.GetCommand("catalog"), "/catalog");
+            return Globals.GetCommand("StartRef");
         }
-        return Globals.responses.GetValueOrDefault("StartNoRef");
+        return Globals.GetCommand("StartNoRef");
     }
 
 

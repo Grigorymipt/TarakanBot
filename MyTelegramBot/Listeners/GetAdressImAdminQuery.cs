@@ -12,13 +12,13 @@ public class GetAdressImAdminQuery : Query, IListener
     public GetAdressImAdminQuery(Bot bot) : base(bot)
     {
         Names = new[] { "/admin" };
-        MessageToSend = new string[] {Globals.responses.GetValueOrDefault("addchannel"),};
+        MessageToSend = new string[] {Globals.GetCommand("addchannel"),};
     }
 
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
         Send.Photo(context, Environment.GetEnvironmentVariable("pathToMaterials") + "admin.jpg", cancellationToken);
-        buttons = new Dictionary<string, string>(){{Globals.responses.GetValueOrDefault("addchannelbut"), "/addChannel"}};
+        buttons = new Dictionary<string, string>(){{Globals.GetCommand("addchannelbut"), "/addChannel"}};
         return MessageToSend[0];
     }
 }
