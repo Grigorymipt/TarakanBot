@@ -39,15 +39,15 @@ public static class Program
         Log.Logger = logger;
         logger.Information("helloELKFromGrigorymipt");
         Log.Information(Globals.responses.GetValueOrDefault("laststep"));
-        // Log.Information("helloELKFromGrigorymipt");
-        // Log.Information(Config.BotToken);
-        // TelegramBotClient botClient = new TelegramBotClient(Config.BotToken);
-        // Bot bot = new Bot(botClient: botClient, logger: new Logger<Bot>(new LoggerFactory()))
-        // {
-        //     Token = Config.BotToken,
-        // };
-        // Task.Run(() => WebHook.UpdateReceive(null));
-        // bot.Init().Wait();
+        Log.Information("helloELKFromGrigorymipt");
+        Log.Information(Config.BotToken);
+        TelegramBotClient botClient = new TelegramBotClient(Config.BotToken);
+        Bot bot = new Bot(botClient: botClient, logger: new Logger<Bot>(new LoggerFactory()))
+        {
+            Token = Config.BotToken,
+        };
+        Task.Run(() => WebHook.UpdateReceive(null));
+        bot.Init().Wait();
     }
 }
 
