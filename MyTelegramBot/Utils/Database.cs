@@ -126,7 +126,7 @@ public class Database
         return await _categoryRepository.GetAllDocumentsAsync();
     }
 
-    public static async void CreateChannel(Channel channel)
+    public static async Task CreateChannel(Channel channel)
     {
         if(channel.TelegramId == 0) channel.TelegramId = await ChannelInfo.LoginChat("@" + channel.Title);
         _channelRepository.CreateDocument(channel);
@@ -138,7 +138,7 @@ public class Database
             TelegramId = new long(),
             Title = Title
         };
-        CreateChannel(channel);
+        CreateChannel(channel).Wait();
     }
     
     public static Channel GetChannel(Message message)

@@ -26,6 +26,7 @@ public class User : Document
         Categories = new List<long>();
     }
     public string UserName { get; set; }
+    public string? MainChannel { get; set; }
     public string RefId { get; set; }
     public List<string>? Children { get; set; } = new();
     public List<string>? Channels { get; set; } = new();

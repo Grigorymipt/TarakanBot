@@ -129,7 +129,7 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
     {
         Names = new[] {"/whatLike"};
         MessageToSend = new string[] {Globals.responses.GetValueOrDefault("channeladded"),
-                        "у вас более одного канала, уточните на какой канал вы хотите добавить в каталог"
+                         Globals.responses.GetValueOrDefault("ChooseChannelForListingButton")
         };
         
     }
@@ -140,10 +140,16 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
         var messageLink = ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText;
         var userId = context.Update.CallbackQuery.From.Id;
         var user = Database.GetUser(userId);
-        if (user.Channels?.Count > 1) 
+        if (user.Channels?.Count > 1 && user.MainChannel == null) 
         {
-            return MessageToSend[1] + $" Канал {user.Channels.First()} будет добавлен в каталог";
+            foreach(var channel in user.Channels)
+            {
+                var Title = Database.GetChannel(channel).Title;
+                buttons.Add(Globals.responses.GetValueOrDefault("ChooseChannelForListing"), $"/chooseChannelForListing {Title}");
+            }
+            return MessageToSend[1];
         }
+        user.MainChannel = null;
 
         long chatId = Database.GetChannel(user.Channels.FirstOrDefault()).TelegramId;
         if(chatId == 0) throw new NullReferenceException("something wrong with DB");
