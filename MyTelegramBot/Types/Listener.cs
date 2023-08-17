@@ -95,10 +95,21 @@ public abstract class Listener
         Int64 chatId = ChatId(context);
         
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
-        foreach (var category in buttons)
+        
+        // Buttons:
+        foreach (var category in handleParameters.buttons)
         {
             InlineKeyboardButton reply = InlineKeyboardButton
                 .WithCallbackData(category.Key, category.Value);
+            IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
+            categoryList.Add(inlineKeyboardButton);
+        }
+
+        // URLs:
+        foreach (var category in handleParameters.links)
+        {
+            InlineKeyboardButton reply = InlineKeyboardButton
+                .WithUrl(category.Key, category.Value);
             IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
             categoryList.Add(inlineKeyboardButton);
         }

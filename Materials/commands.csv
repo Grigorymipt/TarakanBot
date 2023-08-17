@@ -70,7 +70,7 @@ ChooseTimePeriod,Выберите временной период
 MyHandshakes,🤝 Мои рукопожатия
 FirstLevel,1-й уровень
 Stats,Статистика
-Today,Сегодня 
+Day,Сегодня 
 Week,Неделя
 Month,Месяц
 Quarter,Квартал
@@ -80,7 +80,9 @@ TotalHandshakes,Всего пользователей: ХХХ, VIP: ХХХ
 YourHandshakesFor,Ваши рукопожатия за 
 Community,Комьюнити USERHUB
 CommunityChannel,Канал
+CommunityChannelLink,link
 CommunityChat,Чат 
+CommunityChatLink,link
 Promo,Промо материалы
 StoriesPhoto,Сторис фото
 StoriesVideo,Сторис видео

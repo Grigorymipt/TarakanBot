@@ -10,13 +10,19 @@ public class CommunityQuery : Query, IListener
         MessageToSend = new string[]{Globals.GetCommand("Community")
         };
     }
-    protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
+    protected override HandleParameters GetSendParameters(Context context, CancellationToken cancellationToken)
     {
-        buttons = new Dictionary<string, string>()
-        {
-            {Globals.GetCommand("AllHandshakes"), "/allHandshakes"},
-            {Globals.GetCommand("FirstLevelHandshakes"), "/firstLevelHandshakes"},
-        };
-        return MessageToSend[0];
+        HandleParameters handleParameters = new HandleParameters();
+        handleParameters.MessageToSend = MessageToSend[0];
+
+        handleParameters.links.Add(
+            Globals.GetCommand("CommunityChannel"), 
+            Globals.GetCommand("CommunityChannelLink"));
+            
+        handleParameters.links.Add(
+            Globals.GetCommand("CommunityChat"),
+            Globals.GetCommand("CommunityChatLink"));
+        
+        return handleParameters;
     }
 }
