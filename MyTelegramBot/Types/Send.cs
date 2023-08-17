@@ -47,7 +47,7 @@ public static class Send
             
         });
     }
-    public static void Video(Context context, string path, CancellationToken cancellationToken = default(CancellationToken))
+    public static async void Video(Context context, string path, CancellationToken cancellationToken = default(CancellationToken))
     {
         Task.Run(() => 
         {
