@@ -115,11 +115,6 @@ public class Bot {
             Command = "menu",
             Description = "Пользовательское меню"
         });
-        listCommands.Add(new BotCommand()
-        {
-            Command = "watchmovies",
-            Description = "Люблю смотреть фильмы"
-        });
         await _botClient.SetMyCommandsAsync(
             listCommands.AsEnumerable()
             );        

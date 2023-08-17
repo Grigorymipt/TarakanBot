@@ -30,8 +30,8 @@ public class StartCommand : Command, IListener{
         
         if (user.RefId != null) 
         {
-            Buttons.Add("Я адмэн", "/admin");
-            Buttons.Add("Каталог", "/catalog");
+            Buttons.Add(Globals.responses.GetValueOrDefault("ImAdmin"), "/admin");
+            Buttons.Add(Globals.responses.GetValueOrDefault("catalog"), "/catalog");
             return Globals.responses.GetValueOrDefault("StartRef");
         }
         return Globals.responses.GetValueOrDefault("StartNoRef");

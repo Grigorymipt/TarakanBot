@@ -20,7 +20,7 @@ public class CorrectTestAnswer : Query, IListener
         {
             buttons.Add(category.Title, "/saveCategoryToUser " + category.TelegramId);
         }
-        buttons.Add("Продолжить", "/continueTo");
+        buttons.Add(Globals.responses.GetValueOrDefault("continue"), "/continueTo");
         return MessageToSend[0];
     }
 }

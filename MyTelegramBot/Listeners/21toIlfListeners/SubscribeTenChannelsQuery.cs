@@ -47,10 +47,10 @@ public class SubscribeTenChannelsQuery : Query, IListener
     {
         Buttons = new Dictionary<string, string>()
         {
-            { "🟢 Подписаться", "/subscribeListedChannel" }, // MakeLink
-            { "🔴 Пропустить", "/skipListedChannel" },
-            { "🔴 Black List 🔴", "/blockListedChannel " },
-            { "Подписался на 10 каналов", "/iSubscribed" }
+            { Globals.responses.GetValueOrDefault("subscribed"), "/subscribeListedChannel" }, // MakeLink
+            { Globals.responses.GetValueOrDefault("skip"), "/skipListedChannel" },
+            { Globals.responses.GetValueOrDefault("blacklist"), "/blockListedChannel " },
+            { Globals.responses.GetValueOrDefault("check"), "/iSubscribed" }
         };
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
         if(user == null) throw new NullReferenceException("user if null");
@@ -181,11 +181,8 @@ class CheckSubscriptions : SubscribeTenChannelsQuery, IListener
     {
         Names = new[] { "/iSubscribed" };
         MessageToSend = base.MessageToSend
-        .Append("вы не подписаны на n, каналов, не надо так(")
-        .Append("🎯 Отлично, теперь необходимо подписаться на 10 каналов VIP блоггеров. При нажатии на " +
-                                "кнопку пропустить канал будет заменен на другой, исходя из указанных интересов. " +
-                                "Нажать 'пропустить' можно не более 20 раз. 🚨🚔 Если канал нарушает правила пользования " +
-                                "#UserHub, то жми «пропустить» а затем «Black List» и наши специалисты разберутся с этим.").ToArray();
+        .Append(Globals.responses.GetValueOrDefault("subscribemore"))
+        .Append(Globals.responses.GetValueOrDefault("tenvips")).ToArray();
     
     }
 
@@ -212,7 +209,7 @@ class CheckSubscriptions : SubscribeTenChannelsQuery, IListener
         else
         {
             Buttons.Clear();
-            Buttons.Add("Принято!", "/clear66step"); //TODO: PROD: subscribeTenVIPChannels
+            Buttons.Add(Globals.responses.GetValueOrDefault("clear"), "/clear66step"); //TODO: PROD: subscribeTenVIPChannels
             return MessageToSend.Last();
                 
         }

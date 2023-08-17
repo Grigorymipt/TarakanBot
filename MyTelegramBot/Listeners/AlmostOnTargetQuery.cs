@@ -11,19 +11,15 @@ public class AlmostOnTargetQuery : InlineReply, IListener
 {
     public AlmostOnTargetQuery(Bot bot) : base(bot)
     {
-        MessageToSend = new[] {"🎯 Мы почти у цели. Остался последний шаг!🤫 У меня к тебе деловое предложение. " +
-                        "Предлагаю опубликовать в твоем канале репост одного из моих постов, где я рекомендую " +
-                        "людям пользоваться каталогом #UserHub, а взамен я размещу твой канал в каталоге абсолютно" +
-                        " бесплатно и навсегда. Если же этот вариант не подходит, то ты можешь приобрести пожизненный " +
-                        "листинг в каталоге всего за 100$"};
+        MessageToSend = new[] {Globals.responses.GetValueOrDefault("laststep")};
         MessageLabel = "GetAddressInline";
     }
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
         Buttons = new Dictionary<string, string>()
         {
-            {"🤝 Предложение принято", "/suggestionAccepted"},
-            {"💳 Плачу за листинг", "/buyListingNow"}
+            {Globals.responses.GetValueOrDefault("sugaccepted"), "/suggestionAccepted"},
+            {Globals.responses.GetValueOrDefault("payforlist"), "/buyListingNow"}
         };
         // Console.WriteLine(context.Update.Message.From.Id);
         

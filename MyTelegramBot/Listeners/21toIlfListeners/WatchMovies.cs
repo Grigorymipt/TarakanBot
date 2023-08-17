@@ -11,9 +11,7 @@ public class WatchMovies : Query, IListener // TODO: Query, IListener
     public WatchMovies(Bot bot) : base(bot)
     {
         Names = new[] { "/watchmovies", "/watchMovies" };
-        MessageToSend = new string[] {
-            "😉 Отлично, тогда лови короткое видео обо мне. Смотри внимательно, в видео спрятано кодовое" +
-                        " слово! Нужно будет отправить его мне, чтобы перейти к следующему шагу."
+        MessageToSend = new string[] {Globals.responses.GetValueOrDefault("get video")
                         };
     }
 
@@ -51,13 +49,9 @@ public class GetKeyWord : Types.InlineReply, IListener
     public GetKeyWord(Bot bot) : base(bot)
     {
         MessageToSend = new string[]{
-            "🥳 Правильно! Ты почти у цели. Дополнительно лови PDF презентацию! Здесь ты найдешь" +
-                " ответы на все вопросы. Жми на 'пройти тест' 👇",
-            "😎 Соберись, всего несколько шагов отделяет тебя от первого 1.000.000 подписчиков. " +
-                "Еще раз посмотри внимательно видео! (подсказка, с 00:00 сек до 00:00 сек)",
-            "😳 Возможно, книги ты любишь больше! Тогда лови PDF презентацию. Только, читай" +
-                " внимательно, необходимо будет ответить на пару вопросов."
-
+            Globals.responses.GetValueOrDefault("getpdf"),
+            Globals.responses.GetValueOrDefault("watchagain"),
+            Globals.responses.GetValueOrDefault("mbbooks")
         };
         MessageLabel = "KeyWord";
     }
@@ -68,7 +62,7 @@ public class GetKeyWord : Types.InlineReply, IListener
         if (context.Update.Message.Text.Equals("Миллион") || context.Update.Message.Text.Equals("миллион"))
         {
             Buttons.Clear();
-            Buttons.Add("💡 Пройти тест.", "/startTest");
+            Buttons.Add(Globals.responses.GetValueOrDefault("passtest"), "/startTest");
             return MessageToSend[0];
         }
         else
@@ -79,13 +73,13 @@ public class GetKeyWord : Types.InlineReply, IListener
             if (user.Attempts < 2)
             {
                 Buttons.Clear();
-                Buttons.Add("Попробовать еще раз", "/sendKeyWord");
+                Buttons.Add(Globals.responses.GetValueOrDefault("wrongagain"), "/sendKeyWord");
                 return MessageToSend[1];
             }
             else
             {
                 Buttons.Clear();
-                Buttons.Add("💡 Пройти тест.", "/startTest");
+                Buttons.Add(Globals.responses.GetValueOrDefault("passtest"), "/startTest");
                 ChatId chatId = context.Update.Message.Chat.Id;
                 Send.Document(context, Environment.GetEnvironmentVariable("pathToMaterials")+"conspect.pdf", cancellationToken);
                 return MessageToSend[2];

@@ -7,10 +7,7 @@ public class ReadBooks : Query, IListener // TODO: Query, IListener
     public ReadBooks(Bot bot) : base(bot)
     {
         Names = new[] { "/readBooks" };
-        MessageToSend = new[] {"😉 Отлично, тогда лови PDF презентацию! Только, читай внимательно, необходимо ответить на пару" +
-                        " вопросов. На всякий случай так же скину короткий ролик обо мне, возможно, он поможет тебе " +
-                        "ответить на все вопросы."};
-        
+        MessageToSend = new[] {Globals.responses.GetValueOrDefault("getbook")};
     }
 
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)

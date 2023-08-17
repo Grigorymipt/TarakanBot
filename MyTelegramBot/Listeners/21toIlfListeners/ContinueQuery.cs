@@ -20,14 +20,10 @@ public class ContinueQuery : Query, IListener
     {
         buttons = new Dictionary<string, string>();
         var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        var MessageToSend = "🤷 Необходимо выбрать еще " + (5 - user.Categories.Count) + " категорий и нажать «продолжить»!";
+        var MessageToSend = Globals.responses.GetValueOrDefault(Globals.responses.GetValueOrDefault("choosenmore")) + (5 - user.Categories.Count);
         if (user is { Categories.Count: >= 5 })
         {
-            MessageToSend = "😍 Хороший вкус! Теперь необходимо подписаться на 10 каналов! Это те самые 10 каналов, " +
-                            "которые используют систему #10рукопожатий и получают подписчиков БЕСПЛАТНО! При нажатии на " +
-                            "кнопку 'пропустить' канал будет заменен на другой, в соответствии указанными интересами." +
-                            " Не более 20 раз можно нажать «пропустить». 🚨🚔 Если канал нарушает правила пользования " +
-                            "(кликабельно) #UserHub, то жми «пропустить», а затем «Black List» и наши специалисты разберутся с этим.";
+            MessageToSend = Globals.responses.GetValueOrDefault("nicetaste");
             if (user is { Categories.Count: >= 5 })
                 buttons.Clear();
             buttons.Add("Начать подписываться", "/subscribeTenChannels");

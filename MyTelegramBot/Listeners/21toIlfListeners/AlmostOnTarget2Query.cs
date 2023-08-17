@@ -23,8 +23,9 @@ public class CheckChannelExistence : InlineReply, IListener
     }
     private bool ChannelExists(Context context, CancellationToken cancellationToken = default)
     {
-        // TODO some logic:  check owner rights and add to DB if owner
-        return true;
+        var channelName = context.Update.Message.Text;
+        var userId = context.Update.Message.From.Id;
+        return ChannelInfo.IsAdmin(channelName, userId).Result;
     }
 
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
@@ -33,18 +34,16 @@ public class CheckChannelExistence : InlineReply, IListener
         string MessageToSend;
         if (ChannelExists(context, cancellationToken))
         {
-            MessageToSend = Globals.responses.GetValueOrDefault("AddedSuccessfully");
+            MessageToSend = Globals.responses.GetValueOrDefault("sendchannelname");
             Buttons.Clear();
             Buttons.Add("🤠 Продолжить бесплатно", "/continueFree");
             Buttons.Add("🏆 Подробнее о статусе VIP", "/moreAboutVIP");
         }
         else
         {
-            MessageToSend =
-                "🤯 Такого канала в твое владении не существует. Проверь, пожалуйста, Username и отправь сообщение " +
-                "еще раз!";
+            MessageToSend = Globals.responses.GetValueOrDefault("notexists2");
             Buttons.Clear();
-            Buttons.Add("Отправить еще раз", "/clear66step");
+            Buttons.Add(Globals.responses.GetValueOrDefault("trysendagain"), "/clear66step");
         }
         var user = Database.GetUser(context.Update.Message.From.Id);
         string newChannel = context.Update.Message.Text;
@@ -68,12 +67,7 @@ public class ContinueFreeQuery : Query, IListener
     {
         Names = new[] { "/continueFree" };
         MessageToSend = new[] {
-                        "🥳 Поздравляю! Ты сделал это! До 1.000.000 подписчиков остался всего 1 шаг. \n" +
-                        "Твоя персональная ссылка на сервис #UserHub \n------------------ссылка------------------- \n." +
-                        "Рассказывай о сервисе #UserHub и все приглашенные на 10-и уровнях рукопожатий подпишутся " +
-                        "на твой канал. В разделе /Menu можно найти рекламные промо материалы! 🚀 Вперед к своему " +
-                        "первому 1.000.000 подписчиков! Ссылка на чат комьюнити блоггеров! \n" +
-                        "------------------ссылка-------------------"
+            Globals.responses.GetValueOrDefault("Congratulations")
                         };
     }
 

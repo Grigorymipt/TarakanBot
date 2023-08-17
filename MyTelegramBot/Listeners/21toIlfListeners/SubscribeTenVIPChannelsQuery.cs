@@ -47,10 +47,10 @@ public class SubscribeTenChannelsVipQuery : Query, IListener
     {
         Buttons = new Dictionary<string, string>()
         {
-            { "🟢 Подписаться", "/subscribeListedChannelVip" }, // MakeLink
-            { "🔴 Пропустить", "/skipListedChannelVip" },
-            { "🔴 Black List 🔴", "/blockListedChannelVip " },
-            { "Подписался на 10 каналов", "/iSubscribedVip" }
+            { Globals.responses.GetValueOrDefault("subscribed"), "/subscribeListedChannelVip" }, // MakeLink
+            { Globals.responses.GetValueOrDefault("skip"), "/skipListedChannelVip" },
+            { Globals.responses.GetValueOrDefault("blacklist"), "/blockListedChannelVip " },
+            { Globals.responses.GetValueOrDefault("check"), "/iSubscribedVip" }
         };
         User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
         if (user?.SubscribesVip?.Count > 5) //TODO: 20 in prod
@@ -162,9 +162,8 @@ class CheckSubscriptionsVip : SubscribeTenChannelsVipQuery, IListener
     public CheckSubscriptionsVip(Bot bot) : base(bot)
     {
         Names = new[] { "/iSubscribedVip" };
-        MessageToSend.Append("вы не подписаны на n, каналов, не надо так(");
-        MessageToSend.Append("😉 Отлично, проверка прошла успешно! \n 🚨 ВАЖНО. \n Не отписывайся от этих каналов, " +
-                            "иначе можно попасть в BlackList!");
+        MessageToSend.Append(Globals.responses.GetValueOrDefault("subscribemorevip"));
+        MessageToSend.Append(Globals.responses.GetValueOrDefault("staysubscribed"));
     
     }
 

@@ -7,6 +7,6 @@ public class ChannelNotExists : Query, IListener
     public ChannelNotExists(Bot bot) : base(bot)
     {
         Names = new[] { "/channelExists" };
-        MessageToSend = new[] {"🤯  Такого канала не существует.Проверь пожалуйста Username и отправь сообщение еще раз!"};
+        MessageToSend = new[] {Globals.responses.GetValueOrDefault("notexists")};
     }
 }

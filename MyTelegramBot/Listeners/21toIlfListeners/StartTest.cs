@@ -7,15 +7,15 @@ public class StartTest : Query, IListener
     public StartTest(Bot bot) : base(bot)
     {
         Names = new[] { "/startTest" };
-        MessageToSend = new[] {"🟢 Сколько пользователей ChatGPT получил за первые 2 месяца благодаря 'сарафанному радио'?"};
+        MessageToSend = new[] {Globals.responses.GetValueOrDefault("gpt")};
     }
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
         buttons = new Dictionary<string, string>()
         {
-            {"1 млн.", "/oneMillion"},
-            {"10 млн.", "/tenMillions"},
-            {"100 млн.", "/hundredMillions"}
+            {Globals.responses.GetValueOrDefault("onemill"), "/oneMillion"},
+            {Globals.responses.GetValueOrDefault("tenmillions"), "/tenMillions"},
+            {Globals.responses.GetValueOrDefault("hundredmillions"), "/hundredMillions"}
         };
         return MessageToSend[0];
     }
@@ -26,6 +26,6 @@ public class WrongTestAnswer : StartTest, IListener
     public WrongTestAnswer(Bot bot) : base(bot)
     {
         Names = new[] { "/oneMillion", "/tenMillions" };
-        MessageToSend = new[] {"🙅‍♂ Неверно, попробуй еще раз!"};
+        MessageToSend = new[] {Globals.responses.GetValueOrDefault("wrongagain")};
     }
 }

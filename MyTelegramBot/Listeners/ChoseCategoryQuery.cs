@@ -7,7 +7,7 @@ public class ChoseCategoryQuery : Query, IListener
     public ChoseCategoryQuery(Bot bot) : base(bot)
     {
         Names = new[] { "/addChannel" };
-        MessageToSend = new string[] { "Выбери одну из категорий которая максимально подходит твоему каналу. ✅ "};
+        MessageToSend = new string[] { Globals.responses.GetValueOrDefault("choosecategory")};
     }
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
