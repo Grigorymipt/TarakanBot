@@ -39,12 +39,19 @@ public class SubscribeTenChannelsQuery : Query, IListener
             "ShowChannel", 
             Globals.GetCommand("ManySkips")
             };
-        Names = new[] { "/subscribeTenChannels" };
-
+        Names = new[] { "/subscribeTenChannels", "/subscribeTenChannelsVip" };
     }
 
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {
+        User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
+        if(user == null) throw new NullReferenceException("user if null");
+        List<Channel> subscribes = new();
+        string command;
+        if(context.Update.CallbackQuery.Message.Text.Split(" ", 1).First() == "/subscribeTenChannels")
+            subscribes = user.Subscribes;
+        else 
+            subscribes = user.SubscribesVip;
         Buttons = new Dictionary<string, string>()
         {
             { Globals.GetCommand("subscribed"), "/subscribeListedChannel" }, // MakeLink
@@ -52,11 +59,8 @@ public class SubscribeTenChannelsQuery : Query, IListener
             { Globals.GetCommand("blacklist"), "/blockListedChannel " },
             { Globals.GetCommand("check"), "/iSubscribed" }
         };
-        User user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        if(user == null) throw new NullReferenceException("user if null");
-        user.Subscribes ??= new();
-        if(user.Subscribes == null) throw new NullReferenceException("channels not found");
-        if (user.Subscribes.Count() > 5) //TODO: 20 in prod
+        if(subscribes == null) throw new NullReferenceException("channels not found");
+        if (subscribes.Count() > 5) //TODO: 20 in prod
         {
             Buttons.Clear(); //FIXME
             return MessageToSend[1];   
