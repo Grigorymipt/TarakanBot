@@ -25,33 +25,47 @@ public static class Send
     {
         Task.Run(() => 
         {
-            ChatId chatId = context.Update.Type switch
+            try 
             {
-                UpdateType.Message => context.Update.Message.Chat.Id,
-                UpdateType.CallbackQuery => context.Update.CallbackQuery.Message.Chat.Id,
-                _ => throw new NullReferenceException("Not Supported Type of update")
-            };
-            var fileStream = File.OpenRead(fullPath);
-            InputFile file = new InputFileStream(fileStream);
-            var document = context.BotClient.SendDocumentAsync(
-                chatId: chatId,
-                document: file,
-                cancellationToken: cancellationToken
-            ).Result;
+                ChatId chatId = context.Update.Type switch
+                {
+                    UpdateType.Message => context.Update.Message.Chat.Id,
+                    UpdateType.CallbackQuery => context.Update.CallbackQuery.Message.Chat.Id,
+                    _ => throw new NullReferenceException("Not Supported Type of update")
+                };
+                var fileStream = File.OpenRead(fullPath);
+                InputFile file = new InputFileStream(fileStream);
+                var document = context.BotClient.SendDocumentAsync(
+                    chatId: chatId,
+                    document: file,
+                    cancellationToken: cancellationToken).Result;
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
+            
         });
     }
     public static void Video(Context context, string path, CancellationToken cancellationToken = default(CancellationToken))
     {
         Task.Run(() => 
         {
-            ChatId chatId = context.Update.Message.Chat.Id;
-            var fileStream = File.OpenRead(path);
-            InputFile file = new InputFileStream(fileStream);
-            var document = context.BotClient.SendVideoAsync(
-                chatId: chatId,
-                video: file,
-                cancellationToken: cancellationToken
-            ).Result;
+            try
+            {
+                ChatId chatId = context.Update.Message.Chat.Id;
+                var fileStream = File.OpenRead(path);
+                InputFile file = new InputFileStream(fileStream);
+                var document = context.BotClient.SendVideoAsync(
+                    chatId: chatId,
+                    video: file,
+                    cancellationToken: cancellationToken
+                ).Result;
+            }
+            catch(Exception ex)
+            {
+                Log.Error(ex.Message);
+            }
         });
     }
     public static async void Photo(Context context, string path, CancellationToken cancellationToken = default(CancellationToken))
@@ -60,7 +74,7 @@ public static class Send
         {
             try
             {
-                new CancellationTokenSource().CancelAfter(7);
+                new CancellationTokenSource().CancelAfter(7000);
                 ChatId chatId = context.Update.Message.Chat.Id;
                 var fileStream = File.OpenRead(path);
                 InputFile file = new InputFileStream(fileStream);
@@ -73,7 +87,6 @@ public static class Send
             catch(Exception ex)
             {
                 Log.Error(ex.ToString());
-                throw ex;
             }
         });
     }
