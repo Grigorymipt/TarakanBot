@@ -24,6 +24,20 @@ public static class Globals
         }
         return responses;
     }
+    public static string GetCommand(string Key)
+    {
+        try 
+        {
+            var Value = responses.GetValueOrDefault(Key);
+            if(Value == default) throw new NullReferenceException($"Key {Key} not found.");
+            return Value;
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex.Message);
+            throw;
+        }
+    }
     public readonly static Dictionary<string, string> responses = GetDictionary();
 }
 public static class Program
