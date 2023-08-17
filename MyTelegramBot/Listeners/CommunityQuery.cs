@@ -6,7 +6,7 @@ public class CommunityQuery : Query, IListener
 {
     public CommunityQuery(Bot bot) : base(bot)
     {
-        Names = new[] { "/myHandshakes" };
+        Names = new[] { "/UserhubCommunity" };
         MessageToSend = new string[]{Globals.GetCommand("Community")
         };
     }

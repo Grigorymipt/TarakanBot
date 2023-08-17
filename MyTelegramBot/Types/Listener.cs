@@ -39,7 +39,7 @@ public abstract class Listener
     private string filePath;
     public bool fileToSend { get; set; } = false;
     protected string[] MessageToSend { get; init; } = {"This command is under development and not currently available."};
-
+    protected HandleParameters handleParameters;
     private bool withoutMessage = false;
     public bool WithoutMessage
     {
@@ -90,8 +90,8 @@ public abstract class Listener
     /// <summary>Handles the <c>Update</c> if it is successfully validated.</summary>
     public virtual async Task Handler(Context context, CancellationToken cancellationToken)
     {
-        var buttons = new Dictionary<string, string>(){};
-        var response = Run(context, cancellationToken, out buttons);
+        var handleParameters = GetSendParameters(context, cancellationToken);
+        var response = handleParameters.MessageToSend;
         Int64 chatId = ChatId(context);
         
         List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
@@ -133,6 +133,16 @@ public abstract class Listener
     protected virtual string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons) {
         buttons = new Dictionary<string, string>();
         return Run(context, cancellationToken);
+    }
+    protected virtual HandleParameters GetSendParameters(Context context, CancellationToken cancellationToken)
+    {
+        Dictionary<string, string> buttons;
+        var MessageToSend = Run(context, cancellationToken, out buttons);
+        HandleParameters handleParameters = new HandleParameters();
+        foreach(var button in buttons)
+            handleParameters.buttons.Add(button.Key, button.Value);
+        handleParameters.MessageToSend = MessageToSend;
+        return handleParameters;
     }
     /// <summary>Processes a command asynchronously.</summary>
     /// <returns>Command result string.</returns>
