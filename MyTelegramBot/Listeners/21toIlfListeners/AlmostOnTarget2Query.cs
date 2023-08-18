@@ -19,7 +19,7 @@ public class AlmostOnTarget2Query : Query, IListener
         if (user == null) throw new NullReferenceException("user not found");
         if (user.Channels.Count == 0) throw new NullReferenceException("user does not contain any channeles");
         foreach (var channel in user.Channels)
-            parameters.buttons.Add(channel, $"/selectChannelForListing ");
+            parameters.buttons.Add(channel, $"/selectChannelForListing {channel}");
         return parameters;
     }
 }
