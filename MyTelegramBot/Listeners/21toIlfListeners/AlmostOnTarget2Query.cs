@@ -2,7 +2,7 @@ using MongoDatabase.ModelTG;
 using MyTelegramBot.Types;
 using Telegram.Bot.Types;
 using InlineQuery = MyTelegramBot.Types.InlineQuery;
-
+using Serilog;
 namespace MyTelegramBot.Listeners;
 
 public class AlmostOnTarget2Query : Query, IListener
@@ -34,7 +34,7 @@ public class CheckChannelExistence : Query, IListener
     {
         var channelName = ArgumentParser.Parse(
             context.Update.CallbackQuery.Message.Text).ArgumentsText;
-
+        Log.Information("CheckChannelExistence: " + channelName);
         var userId = context.Update.CallbackQuery.From.Id;
 
         return context.BotClient.IsAdmin(channelName, userId).Result;
