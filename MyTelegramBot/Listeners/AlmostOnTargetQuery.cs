@@ -19,7 +19,7 @@ public class AlmostOnTargetQuery : InlineReply, IListener
         Buttons = new Dictionary<string, string>()
         {
             {Globals.GetCommand("sugaccepted"), "/suggestionAccepted"},
-            {Globals.GetCommand("payforlist"), "/buyListingNow"}
+            {Globals.GetCommand("PayForListing"), "/buyListingNow"}
         };
         // Console.WriteLine(context.Update.Message.From.Id);
         

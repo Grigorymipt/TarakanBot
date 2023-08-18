@@ -56,7 +56,7 @@ public class SubscribeTenChannelsQuery : Query, IListener
         {
             { Globals.GetCommand("subscribed"), "/subscribeListedChannel" }, // MakeLink
             { Globals.GetCommand("skip"), "/skipListedChannel" },
-            { Globals.GetCommand("blacklist"), "/blockListedChannel " },
+            { Globals.GetCommand("BlackListButton"), "/blockListedChannel " },
             { Globals.GetCommand("check"), "/iSubscribed" }
         };
         if(subscribes == null) throw new NullReferenceException("channels not found");

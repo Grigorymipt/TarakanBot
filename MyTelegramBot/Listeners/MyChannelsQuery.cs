@@ -13,7 +13,7 @@ public class MyChannelsQuery : Query, IListener
 
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> buttons)
     {
-        buttons = new Dictionary<string, string>(){{Globals.GetCommand("AddChannel"), "/addChannel"}};
+        buttons = new Dictionary<string, string>();
         foreach (var variableChannel 
                  in Database.GetUser(context.Update.CallbackQuery.From.Id).Channels)
         {
