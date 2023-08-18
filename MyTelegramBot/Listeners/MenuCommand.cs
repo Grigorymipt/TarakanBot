@@ -16,7 +16,7 @@ public class MenuCommand : Command, IListener
             { Globals.GetCommand("MyHandshakes"), "/myHandshakes" },
             { Globals.GetCommand("MyChannels"), "/myChannels" },
             { Globals.GetCommand("VipStatus"), "/myVipStatus" },
-            { Globals.GetCommand("catalog"), "/catalog" },
+            { Globals.GetCommand("Catalog"), "/catalog" },
             { Globals.GetCommand("Community"), "/UserhubCommunity" },
             { Globals.GetCommand("Promo"), "/promo" },
             { Globals.GetCommand("MyBalance"), "/myBalance" },

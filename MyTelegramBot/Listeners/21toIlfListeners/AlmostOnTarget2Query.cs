@@ -53,7 +53,7 @@ public class CheckChannelExistence : Query, IListener
         }
         else
         {
-            MessageToSend = Globals.GetCommand("notexists2");
+            MessageToSend = Globals.GetCommand("NotExists2");
             Buttons.Clear();
             Buttons.Add(Globals.GetCommand("trysendagain"), "/clear66step");
         }

@@ -22,7 +22,7 @@ public class CatalogCommand : Query, IListener
         {
             Buttons.Add(category.Title, "/smth");
         }
-        return Globals.GetCommand("catalog");
+        return Globals.GetCommand("Catalog");
     }
 }
 

@@ -14,7 +14,7 @@ public class SuggestionAcceptedQuery : Query, IListener
 
         //add logics to get creatives link
         creatives.Add("Креатив 1", "https://t.me/vokyj/5");
-        MessageToSend = new string[] {Globals.GetCommand("repost")};
+        MessageToSend = new string[] {Globals.GetCommand("Repost")};
         foreach (var creative in creatives)
         {
             MessageToSend[0] += "\n" + creative.Key + ": " + creative.Value;

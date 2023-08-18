@@ -7,7 +7,7 @@ public class ChoseCategoryQuery : Query, IListener
     public ChoseCategoryQuery(Bot bot) : base(bot)
     {
         Names = new[] { "/addChannel" };
-        MessageToSend = new string[] { Globals.GetCommand("choosecategory")};
+        MessageToSend = new string[] { Globals.GetCommand("ChooseCategory")};
     }
     protected override string Run(Context context, CancellationToken cancellationToken, out Dictionary<string, string> Buttons)
     {

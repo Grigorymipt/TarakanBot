@@ -128,7 +128,7 @@ public class ContinueToRW : Query, IListener // TODO: make abstract listener for
     public ContinueToRW(Bot bot) : base(bot)
     {
         Names = new[] {"/whatLike"};
-        MessageToSend = new string[] {Globals.GetCommand("channeladded"),
+        MessageToSend = new string[] {Globals.GetCommand("ChannelAdded"),
                          Globals.GetCommand("ChooseChannelForListingButton")
         };
         

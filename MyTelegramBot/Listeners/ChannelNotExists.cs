@@ -7,6 +7,6 @@ public class ChannelNotExists : Query, IListener
     public ChannelNotExists(Bot bot) : base(bot)
     {
         Names = new[] { "/channelExists" };
-        MessageToSend = new[] {Globals.GetCommand("notexists")};
+        MessageToSend = new[] {Globals.GetCommand("NotExists")};
     }
 }
