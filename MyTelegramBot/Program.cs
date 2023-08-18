@@ -35,6 +35,7 @@ public static class Globals
         catch (Exception ex)
         {
             Log.Error(ex.Message);
+            var Value = "Value not found for: " + Key;
             throw;
         }
     }

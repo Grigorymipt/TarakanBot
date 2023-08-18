@@ -35,7 +35,7 @@ public class CheckChannelExistence : Query, IListener
         var channelName = ArgumentParser.Parse(
             context.Update.CallbackQuery.Message.Text).ToString();
 
-        var userId = context.Update.Message.From.Id;
+        var userId = context.Update.CallbackQuery.From.Id;
 
         return context.BotClient.IsAdmin(channelName, userId).Result;
     }
