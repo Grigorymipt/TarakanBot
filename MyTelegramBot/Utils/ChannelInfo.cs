@@ -160,6 +160,7 @@ public static class ChannelInfo
 
     public static async Task<long> LoginChat(string channelName)
     {
+        channelName = channelName.First()=='@' ? channelName : "@" + channelName;
         try 
         {
             var message = await _botClient.SendTextMessageAsync(

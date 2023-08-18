@@ -28,8 +28,8 @@ public class User : Document
     public string UserName { get; set; }
     public string? MainChannel { get; set; }
     public string RefId { get; set; }
-    public List<string>? Children { get; set; } = new();
-    public List<string>? Channels { get; set; } = new();
+    public List<string> Children { get; set; } = new();
+    public List<string> Channels { get; set; } = new();
     public int? Messages { get; set; } = 0;
 
     public string? LastMessage { get; set; }
