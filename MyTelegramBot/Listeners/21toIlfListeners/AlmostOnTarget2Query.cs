@@ -58,7 +58,7 @@ public class CheckChannelExistence : Query, IListener
             Buttons.Add(Globals.GetCommand("trysendagain"), "/clear66step");
         }
         var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        string newChannel = context.Update.CallbackQuery.Text;
+        string newChannel = context.Update.CallbackQuery.Message.Text;
         var newUser = user;
         newUser.Channels.Add(newChannel); // FIXME: very strange behavior
         Channel channel = new Channel()
