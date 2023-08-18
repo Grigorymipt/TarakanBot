@@ -33,7 +33,7 @@ public class CheckChannelExistence : Query, IListener
     private bool ChannelExists(Context context, CancellationToken cancellationToken = default)
     {
         var channelName = ArgumentParser.Parse(
-            context.Update.CallbackQuery.Message.Text).ToString();
+            context.Update.CallbackQuery.Message.Text).ArgumentsText;
 
         var userId = context.Update.CallbackQuery.From.Id;
 
