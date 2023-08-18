@@ -19,7 +19,7 @@ public class HandshakeStatsQuery : Query, IListener
             { Globals.GetCommand("Day"), "/handshakeStatsFor " + Period.Day},
             { Globals.GetCommand("Week"), "/handshakeStatsFor " + Period.Week},
             { Globals.GetCommand("Month"), "/handshakeStatsFor " + Period.Month},
-            { Globals.GetCommand("Quarer"), "/handshakeStatsFor " + Period.Quarter},
+            { Globals.GetCommand("Quarter"), "/handshakeStatsFor " + Period.Quarter},
             { Globals.GetCommand("Year"), "/handshakeStatsFor " + Period.Year},
             { Globals.GetCommand("AllTime"), "/handshakeStatsFor " + Period.All},
         };

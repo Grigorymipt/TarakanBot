@@ -184,7 +184,7 @@ class CheckSubscriptions : SubscribeTenChannelsQuery, IListener
     {
         Names = new[] { "/iSubscribed" };
         MessageToSend = base.MessageToSend
-        .Append(Globals.GetCommand("subscribemore"))
+        .Append(Globals.GetCommand("SubscribeMore"))
         .Append(Globals.GetCommand("tenvips")).ToArray();
     
     }

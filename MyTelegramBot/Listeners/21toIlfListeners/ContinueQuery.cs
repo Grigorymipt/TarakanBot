@@ -20,7 +20,7 @@ public class ContinueQuery : Query, IListener
     {
         buttons = new Dictionary<string, string>();
         var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        var MessageToSend = Globals.GetCommand(Globals.GetCommand("choosenmore")) + (5 - user.Categories.Count);
+        var MessageToSend = Globals.GetCommand("choosenmore") + (5 - user.Categories.Count);
         if (user is { Categories.Count: >= 5 })
         {
             MessageToSend = Globals.GetCommand("nicetaste");
