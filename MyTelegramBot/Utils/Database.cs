@@ -28,7 +28,7 @@ public class Database
             Categories = new List<long>(),
             Children = new List<string>(),
         };
-        if (parent != null && parent.TelegramId != user.TelegramId)
+        if (parent != null && parent.UserName != user.UserName)
         {
             Console.WriteLine(parent.UserName);
             Log.Information(parent.UserName);

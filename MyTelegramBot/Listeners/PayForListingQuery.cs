@@ -42,72 +42,27 @@ public class BuyListingNow : Query, IListener
             new LabeledPrice("Listing", 10000)
         };
     }
-    protected override string Run(Context context, CancellationToken cancellationToken)
+    protected override HandleParameters GetSendParameters(Context context, CancellationToken cancellationToken)
     {
-        return MessageToSend[0];
-    }
-    public override async Task Handler(Context context, CancellationToken cancellationToken)
-    {
-        Log.Information("Start Handling Payment");
         var amount = "0.1";
         string link;
-        if(Environment.GetEnvironmentVariable("PaymendVendor") == "wallet")
-        {
-            link = await Crypto.CreateOrder.PostAsync(
+        CryproLinkParams cryproLinkParams = new(
                 currencyCode: "TON",
                 amount: amount,
-                description: "some description",
+                description: Globals.GetCommand("HundredForListing"),
                 customData: context.Update.CallbackQuery.From.Id + "ListingPayload",
-                externalId:  new Random().Next(0, 1000000).ToString(), //TODO REMOVE!!!
-                timeoutSeconds: 120,
+                externalId: "0", //TODO REMOVE!!!
+                timeoutSeconds: 600,
                 customerTelegramUserId: (int)context.Update.CallbackQuery.From.Id,
                 WpayStoreApiKey: Environment.GetEnvironmentVariable("WpayStoreApiKey")
             );
-        }
-        else
-            link = "google.com";//await Crypto.CreateOrder.PostAsync(
-        //     "TON",
-        //     amount.ToString(),
-        //     "some description",
-        //     customData: context.Update.CallbackQuery.From.Id + "ListingPayload",
-        //     externalId: "0", //TODO REMOVE!!!
-        //     timeoutSeconds: 120,
-        //     customerTelegramUserId: (int)context.Update.CallbackQuery.From.Id,
-        //     WpayStoreApiKey: Environment.GetEnvironmentVariable("WpayStoreApiKey")
-        // );
-        var buttons = new Dictionary<string, string>(){};
-        Log.Information("Get message");
-        string response = Task.Run(() => Run(context, cancellationToken, out buttons)).Result;
-        Log.Information("Message Received");
-        Int64 chatId = context.Update.CallbackQuery.Message.Chat.Id;
-        List<IEnumerable<InlineKeyboardButton>> categoryList = new List<IEnumerable<InlineKeyboardButton>>();
-        Log.Information("Setup reply buttons");
-        InlineKeyboardButton reply;
-        try
-        {
-            // Console.WriteLine("");
-            reply = InlineKeyboardButton
-                .WithUrl("Оплатить", link);
-        }
-        catch(Exception ex)
-        {
-            throw ex;
-        }
-
-        IEnumerable<InlineKeyboardButton> inlineKeyboardButton = new[] { reply };
-        categoryList.Add(inlineKeyboardButton);
-
-        IEnumerable<IEnumerable<InlineKeyboardButton>> enumerableList1 = categoryList;
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(enumerableList1);
-        Log.Information("Sending a message with a payment URL");
-        Message sentMessage = await context.BotClient.SendTextMessageAsync(
-            chatId: chatId,
-            text: response,
-            parseMode: Config.ParseMode,
-            replyMarkup: inlineKeyboardMarkup
-        );
-        Log.Information("Message sent successfull");
+        link = CryproLink.Get(cryproLinkParams);
+        HandleParameters handleParameters = new();
+        handleParameters.MessageToSend = Globals.GetCommand("HundredForListing");
+        handleParameters.links.Add(Globals.GetCommand("PayViaWallet"), link);
+        return handleParameters;
     }
+
 
 
         // var invoiceAsync = await context.BotClient.SendInvoiceAsync(

@@ -107,8 +107,10 @@ ChannelStats,Статистика канала
 SelectedChannel,Канал 
 ShowAllHandStats,🧑‍💻 Ник | Всего Рукопожатий | VIP
 VipChooseChannel,🏆 VIP статус \n Выберите канал:
+HundredForListing,HundredForListing
 FiftyMonth,$50 в месяц
 FiveHundYear,$500 в год
 ListngPayment,smth
 WaitForCryptoPayment,😇 Ожидаю подтверждение платежа в блокчейне. Как только платеж будет получен я вас оповещу!
 MyBalance,Баланс
+PayViaWallet,PayViaWallet
