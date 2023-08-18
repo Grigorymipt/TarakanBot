@@ -65,7 +65,7 @@ public class BuyVIPNow : Query, IListener
                 amount: amount,
                 description: Globals.GetCommand("VipStatus"),
                 customData: context.Update.CallbackQuery.From.Id + "ListingPayload",
-                externalId: "0", //TODO REMOVE!!!
+                externalId: new Random().Next(1, 100000).ToString(), //TODO REMOVE!!!
                 timeoutSeconds: 600,
                 customerTelegramUserId: (int)context.Update.CallbackQuery.From.Id,
                 WpayStoreApiKey: Environment.GetEnvironmentVariable("WpayStoreApiKey")
