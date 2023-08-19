@@ -52,7 +52,10 @@ public class Tarakan : Document
     }
     public DateTime? detectDateTime { get; set; } 
     public int place { get; set; }
-    public override void Create() => Database.CreateDocument(this).Wait();
+    public override void Create() 
+    {
+        if (Database.GetDocument<User, Guid>(u => u.Id, this.Id).Result == null) Database.CreateDocument(this).Wait();
+    }
     public override Tarakan Get() => Database.GetDocument<Tarakan, Guid>(u => u.Id, this.Id).Result;
     public override async Task Update()
     {
