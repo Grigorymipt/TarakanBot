@@ -15,7 +15,7 @@ public class TimeQuery : Query, IListener
     {
         HandleParameters handleParameters = new();
 
-        var user = Database.GetUser(context.Update.Message).Result;
+        var user = Database.GetUser(context.Update.CallbackQuery.From.Id).Result;
         if (user == null) throw new NullReferenceException("User not found");
 
         var arguments = ArgumentParser.Parse(context.Update.CallbackQuery.Data).Arguments;

@@ -15,7 +15,7 @@ public class WhereQuery : Query, IListener
     protected override HandleParameters GetSendParameters(Context context, CancellationToken cancellationToken)
     {
         HandleParameters handleParameters = new();
-        handleParameters.MessageToSend = Globals.GetCommand("When");
+        handleParameters.MessageToSend = Globals.GetCommand("DoRemember");
         var argument = ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText;
         handleParameters.buttons.Add(Globals.GetCommand("Remember"), $"/when {argument} yes");
         handleParameters.buttons.Add(Globals.GetCommand("NotRemember"), $"/when {argument} no");

@@ -44,11 +44,11 @@ public static class Program
 {
     public static async Task Main(string[] args)
     {
-        var elkConfiguration = EnvironmentBinder.Bind<ELKConfiguration>();
-        var logger =
-                LoggingConfigurator.ElasticLogger("tarakan");
-        Log.Logger = logger;
-        logger.Information("helloELKFromGrigorymipt");
+        // var elkConfiguration = EnvironmentBinder.Bind<ELKConfiguration>();
+        // var logger =
+        //         LoggingConfigurator.ElasticLogger("tarakan");
+        // Log.Logger = logger;
+        // logger.Information("helloELKFromGrigorymipt");
         Log.Information(Config.BotToken);
         TelegramBotClient botClient = new TelegramBotClient(Config.BotToken);
         Bot bot = new Bot(botClient: botClient, logger: new Logger<Bot>(new LoggerFactory()))

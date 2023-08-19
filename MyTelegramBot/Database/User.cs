@@ -43,16 +43,15 @@ public class Tarakan : Document
 {
     public Tarakan(Place place, DateTime detectDateTime)
     {
-        this.place = place;
+        this.place = (int)place;
         this.detectDateTime = detectDateTime;
     }
     public Tarakan(Place place)
     {
-        this.place = place;
+        this.place = (int)place;
     }
     public readonly DateTime? detectDateTime;
-    public readonly Place place;
-
+    public readonly int place;
     public override void Create() => Database.CreateDocument(this).Wait();
     public override Tarakan Get() => Database.GetDocument<Tarakan, Guid>(u => u.Id, this.Id).Result;
     public override async Task Update()

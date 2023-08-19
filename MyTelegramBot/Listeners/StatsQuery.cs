@@ -15,7 +15,7 @@ public class StatsQuery : Query, IListener
     protected override HandleParameters GetSendParameters(Context context, CancellationToken cancellationToken)
     {
         Place place = PlaceStruct.GetPlace(ArgumentParser.Parse(context.Update.CallbackQuery.Data).ArgumentsText);
-        List<Tarakan> documents = Database.GetDocumentMany<Tarakan, Place>(u => u.place, place).Result;
+        List<Tarakan> documents = Database.GetDocumentMany<Tarakan, int>(u => u.place, (int)place).Result;
         handleParameters.MessageToSend = Globals.GetCommand("Catalog") + documents.Count;
         return handleParameters;
     }
