@@ -4,8 +4,8 @@ namespace MyTelegramBot.Types;
 
 public abstract class Document
 {
-    public readonly Guid Id;
-    public readonly DateTime creationDateTime;
+    public Guid Id { get; set; } 
+    public DateTime creationDateTime { get; set; } 
 
     protected Document()
     {
@@ -26,9 +26,9 @@ public class User : Document
         this.UserName = UserName;
     }
     public long TelegramId { get; set; }
-    public readonly string? UserName;
-    public List<Guid> Tarakans = new();
-    public string LastMessage = "";
+    public string? UserName { get; set; } 
+    public List<Guid> Tarakans { get; set; } = new();
+    public string LastMessage { get; set; } = "";
 
     public override void Create() => Database.CreateDocument(this).Wait();
     public override User Get() => Database.GetDocument<User, Guid>(u => u.Id, this.Id).Result;
@@ -50,7 +50,7 @@ public class Tarakan : Document
     {
         this.place = (int)place;
     }
-    public readonly DateTime? detectDateTime;
+    public DateTime? detectDateTime { get; set; } 
     public int place { get; set; }
     public override void Create() => Database.CreateDocument(this).Wait();
     public override Tarakan Get() => Database.GetDocument<Tarakan, Guid>(u => u.Id, this.Id).Result;
