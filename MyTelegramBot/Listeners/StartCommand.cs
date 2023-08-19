@@ -18,7 +18,7 @@ public class StartCommand : Command, IListener{
         handleParameters.MessageToSend = Globals.GetCommand("Start");
         handleParameters.buttons.Add(Globals.GetCommand("StatsButton"), "/catalog");
         handleParameters.buttons.Add(Globals.GetCommand("AddTarakanButton"), "/addTarakan");
-        new User(context.Update.CallbackQuery.From.Id, context.Update.CallbackQuery.From.Username).Create();
+        new User(context.Update.Message.From.Id, context.Update.Message.From.Username).Create();
         return handleParameters;
     }
 }
