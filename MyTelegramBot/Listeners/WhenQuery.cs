@@ -27,7 +27,7 @@ public class WhenQuery : Query, IListener
         else
         {
             handleParameters.MessageToSend = Globals.GetCommand("Congratulations");
-            var user = Database.GetUser(context.Update.Message).Result;
+            var user = Database.GetUser(context.Update.CallbackQuery.From.Id).Result;
             if (user == null) throw new NullReferenceException("User not found");
             Tarakan tarakan = new(place, DateTime.Now);
             user.Tarakans.Add(tarakan.Id);
