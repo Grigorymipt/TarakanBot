@@ -22,10 +22,10 @@ public class User : Document
 {
     public User(long TelegramId, string? UserName = null)
     {
-        this.TelegramId = TelegramId.ToString();
+        this.TelegramId = TelegramId;
         this.UserName = UserName;
     }
-    public readonly string TelegramId;
+    public long TelegramId { get; set; }
     public readonly string? UserName;
     public List<Guid> Tarakans = new();
     public string LastMessage = "";
@@ -51,7 +51,7 @@ public class Tarakan : Document
         this.place = (int)place;
     }
     public readonly DateTime? detectDateTime;
-    public int place { get; set; }
+    public int place { get; }
     public override void Create() => Database.CreateDocument(this).Wait();
     public override Tarakan Get() => Database.GetDocument<Tarakan, Guid>(u => u.Id, this.Id).Result;
     public override async Task Update()

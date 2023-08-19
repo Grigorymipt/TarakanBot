@@ -14,8 +14,8 @@ public class Database
     readonly static MongoClient mongoClient = new(Environment.GetEnvironmentVariable("ConnectionString"));
     readonly static IMongoDatabase mongoDatabase = mongoClient.GetDatabase(Environment.GetEnvironmentVariable("DatabaseName"));
 
-    public static async Task<User> GetUser(Message message) => await GetDocument<User, string>(u => u.TelegramId, message.From.Id.ToString());
-    public static async Task<User> GetUser(long Id) => await GetDocument<User, string>(u => u.TelegramId, Id.ToString());
+    public static async Task<User> GetUser(Message message) => await GetDocument<User, long>(u => u.TelegramId, message.From.Id);
+    public static async Task<User> GetUser(long Id) => await GetDocument<User, long>(u => u.TelegramId, Id);
     
     public static async Task CreateDocument<TDocument>(TDocument document) 
         => await mongoDatabase.GetCollection<TDocument>(typeof(TDocument).ToString()).InsertOneAsync(document);
