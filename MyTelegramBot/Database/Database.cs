@@ -21,7 +21,7 @@ public class Database
         => await mongoDatabase.GetCollection<TDocument>(typeof(TDocument).ToString()).InsertOneAsync(document);
     
     public static async Task<TDocument> GetDocument<TDocument, TField>(Expression<Func<TDocument, TField>> findExpression, TField Id)
-        => await mongoDatabase.GetCollection<TDocument>(typeof(TDocument).ToString()).FindAsync(GetFilter(findExpression, Id)).Result.FirstAsync();
+        => await mongoDatabase.GetCollection<TDocument>(typeof(TDocument).ToString()).FindAsync(GetFilter(findExpression, Id)).Result.FirstOrDefaultAsync();
 
     public static async Task<List<TDocument>> GetDocumentMany<TDocument, TField>(Expression<Func<TDocument, TField>> findExpression, TField Id)
         => mongoDatabase.GetCollection<TDocument>(typeof(TDocument).ToString()).FindAsync(GetFilter(findExpression, Id)).Result.ToList();
