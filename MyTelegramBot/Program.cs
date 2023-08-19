@@ -6,7 +6,6 @@ using Serilog.Events;
 using Serilog.Sinks.File;
 using Serilog.Formatting.Json;
 using Serilog.Sinks.Elasticsearch;
-using SharpCompress.Common;
 
 namespace MyTelegramBot;
 
@@ -19,7 +18,7 @@ public static class Globals
         foreach(var line in lines)
         {
             string[] Line = line.Split(",", 2);
-            if(Line.Count() != 2) throw new ExtractionException("file is invalid");
+            if(Line.Count() != 2) throw new Exception("file is invalid");
             responses.Add(Line[0], Line[1]);
         }
         return responses;
@@ -47,14 +46,9 @@ public static class Program
     {
         var elkConfiguration = EnvironmentBinder.Bind<ELKConfiguration>();
         var logger =
-                LoggingConfigurator.ElasticLogger("userhub",
-                    elkConfiguration.Username, //todo: завести новое api 
-                    elkConfiguration.Password,
-                    elkConfiguration.Host);
+                LoggingConfigurator.ElasticLogger("tarakan");
         Log.Logger = logger;
         logger.Information("helloELKFromGrigorymipt");
-        Log.Information(Globals.GetCommand("laststep"));
-        Log.Information("helloELKFromGrigorymipt");
         Log.Information(Config.BotToken);
         TelegramBotClient botClient = new TelegramBotClient(Config.BotToken);
         Bot bot = new Bot(botClient: botClient, logger: new Logger<Bot>(new LoggerFactory()))

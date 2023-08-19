@@ -34,10 +34,6 @@ public abstract class Query : Listener
     {
         if (context.Update.Type != UpdateType.CallbackQuery)
             return false;
-        var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
-        if (user == null) return false;
-        if (user.RefId == null)
-            return false;
         
         string messageText = context.Update.CallbackQuery.Data;
         //Console.WriteLine(messageText);

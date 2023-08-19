@@ -9,16 +9,11 @@ namespace Bridge
 {
     public static class LoggingConfigurator
     {
-        public static ILogger ElasticLogger(string indexFormat, string httpUser, string httpPassword,
-            string url)
+        public static ILogger ElasticLogger(string indexFormat)
         {
             if (indexFormat == null) throw new ArgumentNullException(nameof(indexFormat));
-            if (httpUser == null) throw new ArgumentNullException(nameof(httpUser));
-            if (httpPassword == null) throw new ArgumentNullException(nameof(httpPassword));
-            if (url == null) throw new ArgumentNullException(nameof(url));
             
-            var cfg = LoggingConfigurator.ElasticConfiguration(indexFormat,
-                httpUser, httpPassword, url);
+            var cfg = LoggingConfigurator.ElasticConfiguration();
             
             var logger = cfg.CreateLogger();
 
@@ -30,34 +25,9 @@ namespace Bridge
             return dt.ToString("ddMMyyyy");
         }
 
-        public static LoggerConfiguration ElasticConfiguration(string indexFormat, string apiUser, string apiKey,
-            string url)
+        public static LoggerConfiguration ElasticConfiguration()
         {
             Serilog.Debugging.SelfLog.Enable(Console.WriteLine);
-
-            var elasticsearchSinkOptions = new ElasticsearchSinkOptions(new Uri(url))
-            {
-                ModifyConnectionSettings =
-                    x =>x.BasicAuthentication(apiUser, apiKey).EnableApiVersioningHeader(),
-                
-                AutoRegisterTemplate = true,
-                
-                AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv7, // < --this was the magic bullet
-                IndexFormat = $"{indexFormat}-{DateTime.UtcNow.ToddMMyyyy()}",
-                BatchAction = ElasticOpType.Index,
-                OverwriteTemplate = true,
-                TypeName = null,
-                FailureCallback = FailureCallback,
-
-                EmitEventFailure =// EmitEventFailureHandling.WriteToSelfLog |
-                    // EmitEventFailureHandling.WriteToFailureSink |
-                                  
-                    EmitEventFailureHandling.ThrowException,//|
-                //     EmitEventFailureHandling.RaiseCallback,
-#pragma warning disable CS0618
-                FailureSink = new FileSink("./failures.txt", new JsonFormatter(), null)
-#pragma warning restore CS0618
-            };
 
             return new LoggerConfiguration()
                     .Enrich.FromLogContext()
@@ -66,7 +36,6 @@ namespace Bridge
                     .Enrich.WithMachineName()
                     .Enrich.WithThreadId()
                     .Enrich.WithThreadName()
-                    .WriteTo.Elasticsearch(elasticsearchSinkOptions)
                     .WriteTo.Console();
         }
 

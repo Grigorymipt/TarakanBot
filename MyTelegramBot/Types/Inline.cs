@@ -1,7 +1,7 @@
-using MongoDatabase.ModelTG;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Serilog;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace MyTelegramBot.Types;
 /// <summary>
@@ -16,14 +16,13 @@ public abstract class InlineQuery : Query
     {
         buttons = new Dictionary<string, string>();
         // Console.WriteLine(context.Update.CallbackQuery.From.Id);
-        var user = Database.GetUser(context.Update.CallbackQuery.From.Id);
+        var user = Database.GetUser(context.Update.CallbackQuery.From.Id).Result;
         Console.WriteLine(MessageLabel);
         Log.Information(MessageLabel);
         user.LastMessage = MessageLabel;
-        user.Update();
+        user.Update().Wait();
         return MessageToSend[0];
     }
-    
 }
 /// <summary>
 /// Abstract Class <c>InlineReply</c> catch users reply on according <c>InlineQuery</c>
@@ -39,18 +38,16 @@ public abstract class InlineReply : Command
     {
         Log.Information(MessageLabel);
         await base.Handler(context, cancellationToken);
-        var user = Database.GetUser(context.Update.Message.From.Id);
+        var user = await Database.GetUser(context.Update.Message.From.Id);
         user.LastMessage = null;
-        user.Update();
+        await user.Update();
     }
     public override async Task<bool> Validate(Context context, CancellationToken cancellationToken)
     {
         if (context.Update.Type != UpdateType.Message)
             return false;
-        var user = Database.GetUser(context.Update.Message.From.Id);
+        var user = Database.GetUser(context.Update.Message.From.Id).Result;
         if (user == null) return false;
-        if (user.RefId == null)
-            return false;
         if (user.LastMessage == MessageLabel)
             return true;
         return false;

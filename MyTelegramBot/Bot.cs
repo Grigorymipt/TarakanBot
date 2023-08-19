@@ -1,6 +1,4 @@
 using System.Reflection;
-using MongoDatabase;
-using MongoDatabase.ModelTG;
 using MyTelegramBot.Types;
 using Serilog;
 using Telegram.Bot;
@@ -13,7 +11,6 @@ using Update = Telegram.Bot.Types.Update;
 using BotCommand = Telegram.Bot.Types.BotCommand;
 using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Types.Payments;
-using Crypto;
 
 namespace MyTelegramBot ;
 public class Bot {
@@ -41,63 +38,7 @@ public class Bot {
     {
         Log.Information("Initializing bot...");
         
-        var users = new UserRepository();
-        var su = new MongoDatabase.ModelTG.User()
-        {
-            TelegramId = 0,
-            UserName = "SuperUser"
-        };
-        users.CreateDocument(su);
-
-        List<string> CheckCategories = new List<string>()
-        {
-            "Новости и медиа" , 
-            "Технологии и IT",
-            "Финансы и инвестиции",
-            "Путешествия и туризм",
-            "Здоровье и фитнес",
-            "Мода и красота",
-            "Музыка и аудио",
-            "Спорт",
-            "Игры и гейминг",
-            "Искусство и дизайн",
-            "Психология и отношения",
-            "Образование и учеба",
-            "Животные и природа",
-            "Автомобили и техника",
-            "Дом и интерьер",
-            "Бизнес и стартапы",
-            "Красота и уход",
-            "Криптовалюты",
-            "Маркетинг/PR",
-            "Мотивация и саморазвитие",
-            "Наука",
-            "Недвижимость",
-            "Религия и духовность",
-            "Заработок",
-            "Ставки и азартные игры",
-            "Строительство и ремонт",
-            "18+",
-            "Хобби",
-            "Юриспруденция",
-            "Развлечения и отдых"
-        };
-
-        var collection = new CategoryRepository();
-        var i = collection.GetAllDocumentsAsync().Result.Count;
-        foreach (var variableCategory in CheckCategories)
-        {
-            var category = await Database.GetCategory(variableCategory);
-            if (category == null){
-                Category newCategory = new Category()
-                {
-                    TelegramId = i,
-                    Title = variableCategory
-                };
-                i+=1;
-                collection.CreateDocument(newCategory);
-            }
-        }        
+        new Types.User(0, "SuperUser").Create();
         
         using CancellationTokenSource cts = new CancellationTokenSource();
         //TODO: remove hardcode
@@ -113,7 +54,7 @@ public class Bot {
         listCommands.Add(new BotCommand()
         {
             Command = "menu",
-            Description = "Пользовательское меню"
+            Description = "Menu"
         });
         await _botClient.SetMyCommandsAsync(
             listCommands.AsEnumerable()
@@ -183,29 +124,6 @@ public class Bot {
         };
         return ErrorMessage;
     }
-    public async Task SuccessPayment(CreateOrder.ResponseWebHook responseWebhook, CancellationToken cancellationToken)
-    {
-        string customData = responseWebhook.payload.customData;
-        var dataSplited = customData.Split(' '); // Ex: "11011000101 listing"
-        var UserId = long.Parse(dataSplited[0]);
-        var Payload = dataSplited[1];
-        PreCheckoutQuery preCheckoutQuery = new PreCheckoutQuery()
-        {
-            Id = "d",
-            From = new User(){
-                Id = UserId,
-                IsBot = false,
-                FirstName = "",
-            },
-            Currency = responseWebhook.payload.orderAmount.currencyCode,
-            TotalAmount = int.Parse(responseWebhook.payload.orderAmount.amount),
-            InvoicePayload = Payload, // MB not message
-        };
-        Update update = new Update();
-        update.PreCheckoutQuery = preCheckoutQuery; 
-        await HandleUpdateAsync(_botClient, update, cancellationToken);
-    }   
-
     private static IEnumerable<Type> GetTypesImplementedBy<T>(Assembly assembly)
     {
         foreach (var type in assembly.GetTypes().Where(mytype => mytype.GetInterfaces().Contains(typeof(T))))

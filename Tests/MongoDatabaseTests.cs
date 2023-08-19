@@ -1,5 +1,4 @@
 using System;
-using Crypto;
 using MongoDB.Driver;
 using Xunit;
 using MongoDatabase;

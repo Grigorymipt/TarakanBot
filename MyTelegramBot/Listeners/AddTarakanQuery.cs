@@ -7,21 +7,19 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace MyTelegramBot.Listeners;
 
-public class CatalogCommand : Query, IListener
+public class AddTarakanQuery : Query, IListener
 {
-    public CatalogCommand(Bot bot): base(bot) {
-        Names = new string[]{"/catalog"};
+    public AddTarakanQuery(Bot bot): base(bot) {
+        Names = new string[]{"/addTarakan"};
     }
     protected override HandleParameters GetSendParameters(Context context, CancellationToken cancellationToken)
     {
         HandleParameters handleParameters = new();
+        handleParameters.MessageToSend = Globals.GetCommand("Where");
         foreach (Place place in Enum.GetValues(typeof(Place)))
         {        
-            handleParameters.buttons.Add(Globals.GetCommand(place.ToString()), $"/stats {place.ToString()}");
+            handleParameters.buttons.Add(Globals.GetCommand(place.ToString()), $"/where {place.ToString()}");
         }
-        handleParameters.MessageToSend = Globals.GetCommand("Catalog");
         return handleParameters;
     }
 }
-
-

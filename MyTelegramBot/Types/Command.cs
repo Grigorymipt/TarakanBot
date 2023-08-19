@@ -78,10 +78,6 @@ public abstract class Command : Listener
             return false;
         if (context.Update.Message!.Type != MessageType.Text)
             return false;
-        var user = Database.GetUser(context.Update.Message.From.Id);
-        if (user == null) return false;
-        if (user.RefId == null)
-            return false;
         string? inputText = context.Update.Message.Text;
         if (inputText == null) return false;
         string messageText = inputText.Replace($"@{Bot?.Me?.Username?.ToString()}","");
