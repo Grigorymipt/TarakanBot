@@ -30,7 +30,9 @@ public class WhenQuery : Query, IListener
             var user = Database.GetUser(context.Update.CallbackQuery.From.Id).Result;
             if (user == null) throw new NullReferenceException("User not found");
             Tarakan tarakan = new(place, DateTime.Now);
+            tarakan.Create();
             user.Tarakans.Add(tarakan.Id);
+            user.Update().Wait();
         }
         return handleParameters;
     }
