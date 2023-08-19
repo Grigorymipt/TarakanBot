@@ -18,7 +18,7 @@ public class StatsQuery : Query, IListener
         List<Tarakan> documents = Database.GetDocumentMany<Tarakan, int>(u => u.place, (int)place).Result;
         int tarakans = 0;
         if (documents != null) tarakans = documents.Count;
-        handleParameters.MessageToSend = Globals.GetCommand("Catalog") + documents.Count;
+        handleParameters.MessageToSend = Globals.GetCommand("Catalog") + tarakans;
         return handleParameters;
     }
 }

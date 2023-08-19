@@ -22,10 +22,10 @@ public class User : Document
 {
     public User(long TelegramId, string? UserName = null)
     {
-        this.TelegramId = TelegramId;
+        this.TelegramId = TelegramId.ToString();
         this.UserName = UserName;
     }
-    public readonly long TelegramId;
+    public readonly string TelegramId;
     public readonly string? UserName;
     public List<Guid> Tarakans = new();
     public string LastMessage = "";
